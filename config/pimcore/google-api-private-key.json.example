@@ -1,0 +1,6 @@
+{
+  "_comment": "Example only — DO NOT put real credentials here.",
+  "project_id": "your-project-id",
+  "client_email_example": "service-account@your-project.iam.gserviceaccount.com",
+  "private_key_example": "REPLACE_AT_RUNTIME_NO_BEGIN_END_BLOCK"
+}

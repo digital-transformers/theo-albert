@@ -1,0 +1,16 @@
+pimcore:
+    assets:
+        metadata:
+            predefined:
+                definitions:
+                    a5a47a71-b124-4e2c-98cf-525474b0ce11:
+                        name: 'Publication channel'
+                        description: null
+                        type: select
+                        targetSubtype: null
+                        data: null
+                        config: null
+                        language: null
+                        group: ''
+                        creationDate: 1753274806
+                        modificationDate: 1753274821

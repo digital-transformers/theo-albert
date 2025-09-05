@@ -1,0 +1,15 @@
+pimcore:
+    properties:
+        predefined:
+            definitions:
+                c06dd92d-670d-435d-a677-ebcf654c7d3a:
+                    name: 'Publication channel'
+                    description: ''
+                    key: new_key
+                    type: select
+                    data: A;B;C
+                    config: ''
+                    ctype: asset
+                    inheritable: false
+                    creationDate: 1753274737
+                    modificationDate: 1753275215

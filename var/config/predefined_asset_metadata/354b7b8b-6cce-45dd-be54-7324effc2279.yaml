@@ -1,0 +1,16 @@
+pimcore:
+    assets:
+        metadata:
+            predefined:
+                definitions:
+                    354b7b8b-6cce-45dd-be54-7324effc2279:
+                        name: 'New Definition'
+                        description: null
+                        type: input
+                        targetSubtype: null
+                        data: null
+                        config: null
+                        language: null
+                        group: null
+                        creationDate: 1753274797
+                        modificationDate: 1753274797

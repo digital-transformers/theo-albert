@@ -1,0 +1,13 @@
+pimcore_data_hub:
+    configurations:
+        SAP_markets_import:
+            general:
+                type: graphql
+                path: null
+                name: SAP_markets_import
+                modificationDate: 1753351591
+                createDate: 1753351591
+            workspaces: {  }
+            permissions:
+                user: {  }
+                role: {  }

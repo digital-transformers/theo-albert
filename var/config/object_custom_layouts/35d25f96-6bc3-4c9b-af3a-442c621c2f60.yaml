@@ -1,0 +1,15 @@
+pimcore:
+    objects:
+        custom_layouts:
+            definitions:
+                35d25f96-6bc3-4c9b-af3a-442c621c2f60:
+                    id: 35d25f96-6bc3-4c9b-af3a-442c621c2f60
+                    name: test-supplier
+                    description: ''
+                    creationDate: 1753277445
+                    modificationDate: 1757042247
+                    userOwner: 2
+                    userModification: 0
+                    classId: supplier
+                    layoutDefinitions: null
+                    default: 0
