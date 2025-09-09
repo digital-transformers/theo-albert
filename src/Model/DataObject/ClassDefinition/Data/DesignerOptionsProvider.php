@@ -25,7 +25,7 @@ class DesignerOptionsProvider implements SelectOptionsProviderInterface
             /** @var Designer $designer */
             $ln = trim((string) $designer->getLastName());
             $fn = trim((string) $designer->getFirstName());
-            $label = trim($ln . ' ' . $fn);
+            $label = trim($fn . ' ' . $ln);
 
             $options[] = [
                 'key'   => $label !== '' ? $label : ('#' . $designer->getId()),
