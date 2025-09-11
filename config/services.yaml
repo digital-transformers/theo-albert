@@ -67,6 +67,10 @@ services:
     App\Model\DataObject\ClassDefinition\Data\DesignerOptionsProvider:
       tags:
         - { name: pimcore.dataobject.class_definition.dynamic_options_provider }
+
+    App\Model\DataObject\ClassDefinition\Data\TarifCodeOptionsProvider:
+      tags:
+        - { name: pimcore.dataobject.class_definition.dynamic_options_provider }
     # Example custom templating helper
     # App\Templating\Helper\Example:
     #     # templating helpers need to be public as they
