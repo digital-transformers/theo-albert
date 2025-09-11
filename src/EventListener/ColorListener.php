@@ -12,26 +12,33 @@ final class ColorListener implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            DataObjectEvents::VALIDATE   => 'onValidate',  // show messages in UI
-            DataObjectEvents::PRE_ADD    => 'onPreSave',   // set composite name
+            DataObjectEvents::PRE_ADD    => 'onPreSave',
             DataObjectEvents::PRE_UPDATE => 'onPreSave',
         ];
     }
 
-    public function onValidate(DataObjectEvent $e): void
+    public function onPreSave(DataObjectEvent $e): void
     {
         $obj = $e->getObject();
-        if (!$obj instanceof Color) return;
+        if (!$obj instanceof Color) {
+            return;
+        }
 
-        // include unpublished relations (useful in admin)
+        // include unpublished relations in admin context
         $selected = $obj->getMultiColor(['unpublished' => true]) ?: [];
-        if (\count($selected) <= 1) return;
+        if (\count($selected) <= 1) {
+            return; // nothing to validate / build
+        }
 
+        // (1) Validate: none of the selected children can itself be "composite"
+        // If you actually mean "must not have MORE THAN ONE", change > 0 to > 1
         $offenders = [];
         foreach ($selected as $child) {
-            if (!$child instanceof Color) continue;
+            if (!$child instanceof Color) {
+                continue;
+            }
 
-            // prevent self-reference just in case
+            // avoid accidental self-reference
             if ($child->getId() === $obj->getId()) {
                 $offenders[] = ($child->getName() ?: $child->getCode() ?: $child->getFullPath()) . ' (self reference)';
                 continue;
@@ -44,26 +51,21 @@ final class ColorListener implements EventSubscriberInterface
         }
 
         if ($offenders) {
+            // This exception is shown in the Pimcore backend UI on save
             throw new ValidationException(sprintf(
                 'You cannot add colors that are themselves multi-color. Please remove: %s',
                 implode(', ', $offenders)
             ));
         }
-    }
 
-    public function onPreSave(DataObjectEvent $e): void
-    {
-        $obj = $e->getObject();
-        if (!$obj instanceof Color) return;
-
-        $selected = $obj->getMultiColor(['unpublished' => true]) ?: [];
-        if (\count($selected) <= 1) return;
-
+        // (2) Auto-build composite name as "A + B + C"
         $names = [];
         foreach ($selected as $child) {
             if ($child instanceof Color) {
-                $label = trim((string)($child->geCode() ?: ''));
-                if ($label !== '') $names[] = $label;
+                $label = trim((string)($child->getCode() ?: ''));
+                if ($label !== '') {
+                    $names[] = $label;
+                }
             }
         }
 
