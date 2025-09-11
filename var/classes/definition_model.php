@@ -16,7 +16,7 @@
  * - seriesCode [input]
  * - createDate [date]
  * - material [input]
- * - materialType [input]
+ * - materialType [select]
  * - metalFacepartTickness [numeric]
  * - metalTempleTickness [numeric]
  * - acetateFacepartTickness [numeric]
@@ -66,7 +66,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1757420170,
+   'modificationDate' => 1757555339,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => 'Pimcore\\Model\\DataObject\\Family',
@@ -517,7 +517,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'defaultValueGenerator' => '',
               )),
               3 => 
-              \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
                  'name' => 'materialType',
                  'title' => 'Material Type',
                  'tooltip' => '',
@@ -535,16 +535,17 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'blockedVarsForExport' => 
                 array (
                 ),
-                 'defaultValue' => NULL,
-                 'columnLength' => 190,
-                 'regex' => '',
-                 'regexFlags' => 
+                 'options' => 
                 array (
                 ),
-                 'unique' => false,
-                 'showCharCount' => false,
-                 'width' => '',
+                 'defaultValue' => '',
+                 'columnLength' => 190,
+                 'dynamicOptions' => false,
                  'defaultValueGenerator' => '',
+                 'width' => '',
+                 'optionsProviderType' => 'configure',
+                 'optionsProviderClass' => '',
+                 'optionsProviderData' => '',
               )),
               4 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(

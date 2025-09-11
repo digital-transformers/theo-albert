@@ -43,7 +43,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1757057996,
+   'modificationDate' => 1757554315,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -485,23 +485,23 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 array (
                   0 => 
                   array (
-                    'key' => 'A',
-                    'value' => 'A',
+                    'key' => 'January',
+                    'value' => 'jan',
                   ),
                   1 => 
                   array (
-                    'key' => 'B',
-                    'value' => 'B',
+                    'key' => 'April',
+                    'value' => 'apr',
                   ),
                   2 => 
                   array (
-                    'key' => 'C',
-                    'value' => 'C',
+                    'key' => 'Summer',
+                    'value' => 'sum',
                   ),
                   3 => 
                   array (
-                    'key' => 'D',
-                    'value' => 'D',
+                    'key' => 'Silmo',
+                    'value' => 'silmo',
                   ),
                 ),
                  'defaultValue' => '',
