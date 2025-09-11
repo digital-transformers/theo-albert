@@ -2,12 +2,78 @@ pimcore_data_hub:
     configurations:
         TarifCode:
             general:
-                type: graphql
-                path: null
+                active: true
+                type: dataImporterDataObject
                 name: TarifCode
-                modificationDate: 1757058201
-                createDate: 1753351591
-            workspaces: {  }
+                description: ''
+                group: ''
+                path: null
+                modificationDate: 1757557071
+                createDate: 1753352126
+            loaderConfig:
+                type: asset
+                settings:
+                    assetPath: '/Datasource Files/tarif-codes.json'
+            interpreterConfig:
+                type: json
+                settings:
+                    path: ''
+            resolverConfig:
+                elementType: dataObject
+                dataObjectClassId: tarifcode
+                loadingStrategy:
+                    type: attribute
+                    settings:
+                        dataSourceIndex: code
+                        attributeName: code
+                        language: ''
+                        includeUnpublished: true
+                createLocationStrategy:
+                    type: staticPath
+                    settings:
+                        path: /TarifCodes
+                locationUpdateStrategy:
+                    type: noChange
+                publishingStrategy:
+                    type: noChangePublishNew
+            processingConfig:
+                executionType: sequential
+                idDataIndex: code
+                doDeltaCheck: true
+                cleanup:
+                    strategy: unpublish
+            mappingConfig:
+                -
+                    label: code
+                    dataSourceIndex:
+                        - code
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: code
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: name
+                    dataSourceIndex:
+                        - name
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: name
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+            executionConfig:
+                scheduleType: recurring
+                cronDefinition: ''
+                scheduledAt: ''
             permissions:
                 user: {  }
                 role: {  }
+            workspaces: {  }
