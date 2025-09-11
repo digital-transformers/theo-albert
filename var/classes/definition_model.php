@@ -66,7 +66,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1757555339,
+   'modificationDate' => 1757555551,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => 'Pimcore\\Model\\DataObject\\Family',
@@ -535,15 +535,39 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'blockedVarsForExport' => 
                 array (
                 ),
-                 'options' =>
+                 'options' => 
+                array (
+                  0 => 
                   array (
-                  array('key' => 'Metal Single Colour', 'value' => 'metal-single-colour'),
-                  array('key' => 'Metal Bi-Colour',     'value' => 'metal-bi-colour'),
-                  array('key' => 'Acetat',              'value' => 'acetat'),
-                  array('key' => 'Metal-Acetat',       'value' => 'metal-acetat'),
-                  array('key' => 'Horn',                'value' => 'horn'),
-                  array('key' => 'Metal-Hoorn',         'value' => 'metal-horn'),
+                    'key' => 'Metal Single Color',
+                    'value' => 'metal-single-color',
                   ),
+                  1 => 
+                  array (
+                    'key' => 'Metal Bi-Color',
+                    'value' => 'metal-bi-color',
+                  ),
+                  2 => 
+                  array (
+                    'key' => 'Acetat',
+                    'value' => 'acetat',
+                  ),
+                  3 => 
+                  array (
+                    'key' => 'Metal-Acetat',
+                    'value' => 'metal-acetat',
+                  ),
+                  4 => 
+                  array (
+                    'key' => 'Horn',
+                    'value' => 'horn',
+                  ),
+                  5 => 
+                  array (
+                    'key' => 'Metal-Hoorn',
+                    'value' => 'metal-horn',
+                  ),
+                ),
                  'defaultValue' => '',
                  'columnLength' => 190,
                  'dynamicOptions' => false,
