@@ -12,61 +12,63 @@ final class ColorListener implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            DataObjectEvents::PRE_ADD    => 'onPreSave',
+            DataObjectEvents::VALIDATE   => 'onValidate',  // show messages in UI
+            DataObjectEvents::PRE_ADD    => 'onPreSave',   // set composite name
             DataObjectEvents::PRE_UPDATE => 'onPreSave',
         ];
     }
 
-    /**
-     * Rules:
-     * 1) If multiColor has > 1 items, none of those items may be composite themselves.
-     * 2) If multiColor has > 1 items, set current name = joined child names with " + ".
-     */
-    public function onPreSave(DataObjectEvent $e): void
+    public function onValidate(DataObjectEvent $e): void
     {
         $obj = $e->getObject();
-        if (!$obj instanceof Color) {
-            return;
-        }
+        if (!$obj instanceof Color) return;
 
-        $selected = $obj->getMultiColor();
-        if (!\is_array($selected) || \count($selected) <= 1) {
-            // 0 or 1 item -> no validation, no auto-name
-            return;
-        }
+        // include unpublished relations (useful in admin)
+        $selected = $obj->getMultiColor(['unpublished' => true]) ?: [];
+        if (\count($selected) <= 1) return;
 
-        // (1) Validate: children cannot themselves have multiColor
         $offenders = [];
         foreach ($selected as $child) {
-            if ($child instanceof Color) {
-                $childSelected = $child->getMultiColor();
-                if (\is_array($childSelected) && \count($childSelected) > 0) {
-                    $offenders[] = $child->getName() ?: $child->getCode() ?: $child->getFullPath();
-                }
+            if (!$child instanceof Color) continue;
+
+            // prevent self-reference just in case
+            if ($child->getId() === $obj->getId()) {
+                $offenders[] = ($child->getName() ?: $child->getCode() ?: $child->getFullPath()) . ' (self reference)';
+                continue;
+            }
+
+            $childSelected = $child->getMultiColor(['unpublished' => true]) ?: [];
+            if (\count($childSelected) > 0) {
+                $offenders[] = $child->getName() ?: $child->getCode() ?: $child->getFullPath();
             }
         }
 
         if ($offenders) {
-            throw new ValidationException(
-                sprintf(
-                    'You cannot add colors that are themselves multi-color. Please remove: %s',
-                    implode(', ', $offenders)
-                )
-            );
+            throw new ValidationException(sprintf(
+                'You cannot add colors that are themselves multi-color. Please remove: %s',
+                implode(', ', $offenders)
+            ));
         }
+    }
 
-        // (2) Auto-build composite name as "A + B + C"
+    public function onPreSave(DataObjectEvent $e): void
+    {
+        $obj = $e->getObject();
+        if (!$obj instanceof Color) return;
+
+        $selected = $obj->getMultiColor(['unpublished' => true]) ?: [];
+        if (\count($selected) <= 1) return;
+
         $names = [];
         foreach ($selected as $child) {
             if ($child instanceof Color) {
-                $label = trim((string)($child->getCode() ?: $child->getCode() ?: ''));
-                if ($label !== '') {
-                    $names[] = $label;
-                }
+                $label = trim((string)($child->geCode() ?: ''));
+                if ($label !== '') $names[] = $label;
             }
         }
+
         if ($names) {
-            $compositeName = implode('+', $names);
+            $compositeName = implode(' + ', $names);
             if ($obj->getCode() !== $compositeName) {
                 $obj->setName($compositeName);
             }
