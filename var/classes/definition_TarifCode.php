@@ -5,18 +5,18 @@
  * Variants: no
  *
  * Fields Summary:
- * - groupNum [input]
- * - groupName [input]
+ * - code [input]
+ * - name [input]
  */
 
 return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'dao' => NULL,
-   'id' => 'itemGroup',
-   'name' => 'SAPItemGroup',
+   'id' => 'tarifcode',
+   'name' => 'TarifCode',
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1757556294,
+   'modificationDate' => 1757556273,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -61,8 +61,8 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
         array (
           0 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
-             'name' => 'groupNum',
-             'title' => 'Num',
+             'name' => 'code',
+             'title' => 'Code',
              'tooltip' => '',
              'mandatory' => true,
              'noteditable' => false,
@@ -91,7 +91,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
           )),
           1 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
-             'name' => 'groupName',
+             'name' => 'name',
              'title' => 'Name',
              'tooltip' => '',
              'mandatory' => true,
