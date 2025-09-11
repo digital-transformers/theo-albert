@@ -34,6 +34,7 @@ final class ColorListener implements EventSubscriberInterface
         // If you actually mean "must not have MORE THAN ONE", change > 0 to > 1
         $offenders = [];
         foreach ($selected as $child) {
+            dd($child);
             if (!$child instanceof Color) {
                 continue;
             }
@@ -49,8 +50,6 @@ final class ColorListener implements EventSubscriberInterface
                 $offenders[] = $child->getCode() ?: $child->getFullPath();
             }
         }
-
-        dd($offenders);
 
         if ($offenders) {
             // This exception is shown in the Pimcore backend UI on save
