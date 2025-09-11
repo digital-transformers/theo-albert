@@ -82,9 +82,8 @@ services:
 
     # Listeners
     App\EventListener\PimcoreAdminListener:
-        class: App\EventListener\PimcoreAdminListener
         tags:
-          - { name: kernel.event_subscriber }
+          - { name: kernel.event_listener, event: pimcore.bundle_manager.paths.js, method: addJSFiles }
 
     App\EventListener\ColorListener:
         class: App\EventListener\ColorListener
