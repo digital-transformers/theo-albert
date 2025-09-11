@@ -59,7 +59,7 @@ final class ColorListener implements EventSubscriberInterface
         $names = [];
         foreach ($selected as $child) {
             if ($child instanceof Color) {
-                $label = trim((string)($child->getName() ?: $child->getCode() ?: ''));
+                $label = trim((string)($child->getCode() ?: $child->getCode() ?: ''));
                 if ($label !== '') {
                     $names[] = $label;
                 }
@@ -68,7 +68,7 @@ final class ColorListener implements EventSubscriberInterface
         if ($names) {
             $compositeName = implode(' + ', $names);
             dd($compositeName);
-            if ($obj->getName() !== $compositeName) {
+            if ($obj->geCode() !== $compositeName) {
                 $obj->setName($compositeName);
             }
         }
