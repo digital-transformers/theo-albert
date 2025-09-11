@@ -45,13 +45,12 @@ final class ColorListener implements EventSubscriberInterface
             }
 
             $childSelected = $child->getMultiColor(['unpublished' => true]) ?: [];
-            if (\count($childSelected) > 0) {
-                $offenders[] = $child->getName() ?: $child->getCode() ?: $child->getFullPath();
+            if (\count($childSelected) > 1) {
+                $offenders[] = $child->getCode() ?: $child->getFullPath();
             }
         }
 
         if ($offenders) {
-            dd($offenders);
             // This exception is shown in the Pimcore backend UI on save
             throw new ValidationException(sprintf(
                 'You cannot add colors that are themselves multi-color. Please remove: %s',
