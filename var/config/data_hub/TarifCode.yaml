@@ -8,7 +8,7 @@ pimcore_data_hub:
                 description: ''
                 group: ''
                 path: null
-                modificationDate: 1757557071
+                modificationDate: 1757557307
                 createDate: 1753352126
             loaderConfig:
                 type: asset
@@ -65,6 +65,19 @@ pimcore_data_hub:
                         type: direct
                         settings:
                             fieldName: name
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: KEY
+                    dataSourceIndex:
+                        - code
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: key
                             language: ''
                             writeIfTargetIsNotEmpty: true
                             writeIfSourceIsEmpty: true
