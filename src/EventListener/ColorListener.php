@@ -27,11 +27,6 @@ final class ColorListener implements EventSubscriberInterface
 
         // include unpublished relations in admin context
         $selected = $obj->getMultiColor(['unpublished' => true]) ?: [];
-        if (\count($selected) <= 1) {
-            return; // nothing to validate / build
-        }
-
-        dd('onPreSave');
         
         // (1) Validate: none of the selected children can itself be "composite"
         // If you actually mean "must not have MORE THAN ONE", change > 0 to > 1
@@ -59,6 +54,11 @@ final class ColorListener implements EventSubscriberInterface
                 'You cannot add colors that are themselves multi-color. Please remove: %s',
                 implode(', ', $offenders)
             ));
+        }
+
+        //skip if only one or none selected
+        if (\count($selected) <= 1) {
+            return; // nothing to validate / build
         }
 
         // (2) Auto-build composite name as "A + B + C"
