@@ -2,12 +2,91 @@ pimcore_data_hub:
     configurations:
         SAPItemGroupImport:
             general:
+                active: true
                 type: dataImporterDataObject
-                path: null
                 name: SAPItemGroupImport
-                modificationDate: 1757058105
+                description: ''
+                group: ''
+                path: null
+                modificationDate: 1757557873
                 createDate: 1753352126
-            workspaces: {  }
+            loaderConfig:
+                type: asset
+                settings:
+                    assetPath: '/Datasource Files/sap-item-groups.json'
+            interpreterConfig:
+                type: json
+                settings:
+                    path: ''
+            resolverConfig:
+                elementType: dataObject
+                dataObjectClassId: itemGroup
+                loadingStrategy:
+                    type: attribute
+                    settings:
+                        dataSourceIndex: groupNum
+                        attributeName: groupNum
+                        language: ''
+                        includeUnpublished: true
+                createLocationStrategy:
+                    type: staticPath
+                    settings:
+                        path: /SAPItemGroups
+                locationUpdateStrategy:
+                    type: noChange
+                publishingStrategy:
+                    type: noChangePublishNew
+            processingConfig:
+                executionType: sequential
+                idDataIndex: groupNum
+                doDeltaCheck: true
+                cleanup:
+                    strategy: unpublish
+            mappingConfig:
+                -
+                    label: groupNum
+                    dataSourceIndex:
+                        - groupNum
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: groupNum
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: groupName
+                    dataSourceIndex:
+                        - groupName
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: groupName
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: KEY
+                    dataSourceIndex:
+                        - groupNum
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: key
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+            executionConfig:
+                scheduleType: recurring
+                cronDefinition: ''
+                scheduledAt: ''
             permissions:
                 user: {  }
                 role: {  }
+            workspaces: {  }
