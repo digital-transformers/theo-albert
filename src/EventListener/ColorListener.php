@@ -51,6 +51,7 @@ final class ColorListener implements EventSubscriberInterface
         }
 
         if ($offenders) {
+            dd($offenders);
             // This exception is shown in the Pimcore backend UI on save
             throw new ValidationException(sprintf(
                 'You cannot add colors that are themselves multi-color. Please remove: %s',
