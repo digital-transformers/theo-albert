@@ -79,3 +79,8 @@ services:
     # App\EventListener\TestListener:
     #     tags:
     #         - { name: kernel.event_listener, event: pimcore.dataobject.preUpdate, method: onObjectPreUpdate }
+
+    # Listeners
+    App\EventListener\ColorListener:
+    tags:
+      - { name: kernel.event_subscriber }
