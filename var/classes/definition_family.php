@@ -10,6 +10,7 @@
  * - familyType [select]
  * - description [textarea]
  * - designers [multiselect]
+ * - designersRelation [advancedManyToManyObjectRelation]
  * - exchangeableBranches [select]
  * - exchangeableBranchesPartial [input]
  * - suppliers [advancedManyToManyObjectRelation]
@@ -43,7 +44,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1757554315,
+   'modificationDate' => 1757555813,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -247,6 +248,61 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderData' => '',
               )),
               5 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
+                 'name' => 'designersRelation',
+                 'title' => 'Designers relation',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => true,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => true,
+                 'invisible' => true,
+                 'visibleGridView' => true,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'classes' => 
+                array (
+                ),
+                 'displayMode' => NULL,
+                 'pathFormatterClass' => '',
+                 'maxItems' => NULL,
+                 'visibleFields' => '',
+                 'allowToCreateNewObject' => false,
+                 'allowToClearRelation' => true,
+                 'optimizedAdminLoading' => false,
+                 'enableTextSelection' => false,
+                 'visibleFieldDefinitions' => 
+                array (
+                ),
+                 'width' => '',
+                 'height' => '',
+                 'allowedClassId' => 'supplier',
+                 'columns' => 
+                array (
+                  0 => 
+                  array (
+                    'type' => 'multiselect',
+                    'position' => 1,
+                    'key' => 'supplierType',
+                    'label' => 'Supplier Type',
+                    'width' => NULL,
+                    'value' => 'Color;Acetate;Metal;Parts;Finishing',
+                  ),
+                ),
+                 'columnKeys' => 
+                array (
+                  0 => 'supplierType',
+                ),
+                 'enableBatchEdit' => false,
+                 'allowMultipleAssignments' => true,
+              )),
+              6 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
                  'name' => 'exchangeableBranches',
                  'title' => 'Exchangeable Branches',
@@ -292,7 +348,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderClass' => '',
                  'optionsProviderData' => '',
               )),
-              6 => 
+              7 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'exchangeableBranchesPartial',
                  'title' => 'Exchangeable Branches Partial',
@@ -322,7 +378,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              7 => 
+              8 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
                  'name' => 'suppliers',
                  'title' => 'Suppliers',
@@ -377,7 +433,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'enableBatchEdit' => false,
                  'allowMultipleAssignments' => true,
               )),
-              8 => 
+              9 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
                  'name' => 'phase',
                  'title' => 'Phase',
@@ -438,7 +494,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderClass' => '',
                  'optionsProviderData' => '',
               )),
-              9 => 
+              10 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Date::__set_state(array(
                  'name' => 'startDate',
                  'title' => 'Start Date',
@@ -462,7 +518,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'columnType' => 'date',
                  'defaultValueGenerator' => '',
               )),
-              10 => 
+              11 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
                  'name' => 'launchPeriod',
                  'title' => 'Launch Period',
@@ -513,7 +569,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderClass' => '',
                  'optionsProviderData' => '',
               )),
-              11 => 
+              12 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'launchYear',
                  'title' => 'Launch Year',
@@ -543,7 +599,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              12 => 
+              13 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
                  'name' => 'posMaterialProducts',
                  'title' => 'Pos Material Products',
@@ -583,7 +639,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
               )),
-              13 => 
+              14 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
                  'name' => 'servicePartProducts',
                  'title' => 'Service Part Products',
@@ -623,7 +679,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
               )),
-              14 => 
+              15 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
                  'name' => 'downloadableAssets',
                  'title' => 'Downloadable assets',

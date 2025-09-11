@@ -67,7 +67,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1757555694,
+   'modificationDate' => 1757555804,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => 'Pimcore\\Model\\DataObject\\Family',
@@ -1342,7 +1342,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                      'fieldtype' => '',
                      'relationType' => true,
                      'invisible' => true,
-                     'visibleGridView' => false,
+                     'visibleGridView' => true,
                      'visibleSearch' => false,
                      'blockedVarsForExport' => 
                     array (
