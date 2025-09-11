@@ -6,7 +6,7 @@
  * - name [input]
  * - supplier [manyToOneRelation]
  * - colors [multiselect]
- * - componingColors [advancedManyToManyObjectRelation]
+ * - composingColors [advancedManyToManyObjectRelation]
  * - cost [numeric]
  * - components [advancedManyToManyObjectRelation]
  */
@@ -185,8 +185,8 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
           )),
           4 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
-             'name' => 'componingColors',
-             'title' => 'Componing Colors',
+             'name' => 'composingColors',
+             'title' => 'Composing Colors',
              'tooltip' => '',
              'mandatory' => false,
              'noteditable' => false,
