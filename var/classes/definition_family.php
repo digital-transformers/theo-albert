@@ -10,7 +10,7 @@
  * - familyType [select]
  * - description [textarea]
  * - designers [multiselect]
- * - designersRelation [advancedManyToManyObjectRelation]
+ * - designersRelation [manyToManyRelation]
  * - exchangeableBranches [select]
  * - exchangeableBranchesPartial [input]
  * - suppliers [advancedManyToManyObjectRelation]
@@ -44,7 +44,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1757555813,
+   'modificationDate' => 1757563245,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -237,7 +237,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 array (
                 ),
                  'maxItems' => NULL,
-                 'renderType' => 'list',
+                 'renderType' => 'tags',
                  'dynamicOptions' => false,
                  'defaultValue' => NULL,
                  'height' => '',
@@ -248,7 +248,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderData' => '',
               )),
               5 => 
-              \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
+              \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyRelation::__set_state(array(
                  'name' => 'designersRelation',
                  'title' => 'Designers relation',
                  'tooltip' => '',
@@ -268,39 +268,37 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 ),
                  'classes' => 
                 array (
+                  0 => 
+                  array (
+                    'classes' => 'designer',
+                  ),
                 ),
                  'displayMode' => NULL,
                  'pathFormatterClass' => '',
                  'maxItems' => NULL,
-                 'visibleFields' => '',
-                 'allowToCreateNewObject' => false,
+                 'assetInlineDownloadAllowed' => false,
+                 'assetUploadPath' => '',
                  'allowToClearRelation' => true,
-                 'optimizedAdminLoading' => false,
-                 'enableTextSelection' => false,
-                 'visibleFieldDefinitions' => 
-                array (
-                ),
-                 'width' => '',
-                 'height' => '',
-                 'allowedClassId' => 'supplier',
-                 'columns' => 
+                 'objectsAllowed' => true,
+                 'assetsAllowed' => false,
+                 'assetTypes' => 
                 array (
                   0 => 
                   array (
-                    'type' => 'multiselect',
-                    'position' => 1,
-                    'key' => 'supplierType',
-                    'label' => 'Supplier Type',
-                    'width' => NULL,
-                    'value' => 'Color;Acetate;Metal;Parts;Finishing',
+                    'assetTypes' => '',
                   ),
                 ),
-                 'columnKeys' => 
+                 'documentsAllowed' => false,
+                 'documentTypes' => 
                 array (
-                  0 => 'supplierType',
+                  0 => 
+                  array (
+                    'documentTypes' => '',
+                  ),
                 ),
-                 'enableBatchEdit' => false,
-                 'allowMultipleAssignments' => true,
+                 'enableTextSelection' => false,
+                 'width' => '',
+                 'height' => '',
               )),
               6 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(

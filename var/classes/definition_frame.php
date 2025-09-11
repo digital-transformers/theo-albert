@@ -61,7 +61,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1757420222,
+   'modificationDate' => 1757563317,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => 'Pimcore\\Model\\DataObject\\Model',
@@ -966,18 +966,49 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'blockedVarsForExport' => 
                 array (
                 ),
-                 'options' =>
+                 'options' => 
+                array (
+                  0 => 
                   array (
-                  array('key' => 'In Case',               'value' => 'in-case'),
-                  array('key' => 'Out of Case',           'value' => 'out-of-case'),
-                  array('key' => 'Coming in Case',        'value' => 'coming-in-case'),
-                  array('key' => 'In Sparecase',          'value' => 'in-sparecase'),
-                  array('key' => 'Out of Sparecase',      'value' => 'out-of-sparecase'),
-                  array('key' => 'Coming in Sparecase',   'value' => 'coming-in-sparecase'),
-                  array('key' => 'Going Out of Case',     'value' => 'going-out-of-case'),
-                  array('key' => 'Going Out of Sparecase','value' => 'going-out-of-sparecase'),
+                    'key' => 'In Case',
+                    'value' => 'in-case',
                   ),
-
+                  1 => 
+                  array (
+                    'key' => 'Out of Case',
+                    'value' => 'out-of-case',
+                  ),
+                  2 => 
+                  array (
+                    'key' => 'Coming in Case',
+                    'value' => 'coming-in-case',
+                  ),
+                  3 => 
+                  array (
+                    'key' => 'In Sparecase',
+                    'value' => 'in-sparecase',
+                  ),
+                  4 => 
+                  array (
+                    'key' => 'Out of Sparecase',
+                    'value' => 'out-of-sparecase',
+                  ),
+                  5 => 
+                  array (
+                    'key' => 'Coming in Sparecase',
+                    'value' => 'coming-in-sparecase',
+                  ),
+                  6 => 
+                  array (
+                    'key' => 'Going Out of Case',
+                    'value' => 'going-out-of-case',
+                  ),
+                  7 => 
+                  array (
+                    'key' => 'Going Out of Sparecase',
+                    'value' => 'going-out-of-sparecase',
+                  ),
+                ),
                  'defaultValue' => '',
                  'columnLength' => 190,
                  'dynamicOptions' => false,
@@ -1162,33 +1193,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-            ),
-             'locked' => false,
-             'blockedVarsForExport' => 
-            array (
-            ),
-             'fieldtype' => 'panel',
-             'layout' => NULL,
-             'border' => false,
-             'icon' => '',
-             'labelWidth' => 100,
-             'labelAlign' => 'left',
-          )),
-          2 => 
-          \Pimcore\Model\DataObject\ClassDefinition\Layout\Panel::__set_state(array(
-             'name' => 'Commercial data',
-             'type' => NULL,
-             'region' => NULL,
-             'title' => 'Commercial data',
-             'width' => '',
-             'height' => '',
-             'collapsible' => false,
-             'collapsed' => false,
-             'bodyStyle' => '',
-             'datatype' => 'layout',
-             'children' => 
-            array (
-              0 => 
+              19 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Country::__set_state(array(
                  'name' => 'countryOfOrigin',
                  'title' => 'Country Of Origin',
@@ -1217,7 +1222,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderData' => NULL,
                  'restrictTo' => '',
               )),
-              1 => 
+              20 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'dsArtCat',
                  'title' => 'DS_ArtCat',
@@ -1247,7 +1252,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              2 => 
+              21 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'dsType',
                  'title' => 'DS_Type',
@@ -1277,7 +1282,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              3 => 
+              22 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'dsSize',
                  'title' => 'DS_Size',
@@ -1307,7 +1312,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              4 => 
+              23 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect::__set_state(array(
                  'name' => 'dsTarif',
                  'title' => 'Ds Tarif',
@@ -1342,7 +1347,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderClass' => '',
                  'optionsProviderData' => '',
               )),
-              5 => 
+              24 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'intrastatCode',
                  'title' => 'Intrastat Code',
@@ -1384,7 +1389,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'labelWidth' => 100,
              'labelAlign' => 'left',
           )),
-          3 => 
+          2 => 
           \Pimcore\Model\DataObject\ClassDefinition\Layout\Panel::__set_state(array(
              'name' => 'Pricing',
              'type' => NULL,
@@ -1472,7 +1477,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'labelWidth' => 100,
              'labelAlign' => 'left',
           )),
-          4 => 
+          3 => 
           \Pimcore\Model\DataObject\ClassDefinition\Layout\Panel::__set_state(array(
              'name' => 'Marketing',
              'type' => NULL,

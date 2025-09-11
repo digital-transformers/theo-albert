@@ -8,7 +8,7 @@
  * - itemCode [input]
  * - itemName [input]
  * - itemGroup [manyToManyObjectRelation]
- * - tarifCode [input]
+ * - tarifCode [manyToOneRelation]
  * - supplier [manyToOneRelation]
  * - linkedFamilies [reverseObjectRelation]
  * - linkedModels [reverseObjectRelation]
@@ -28,7 +28,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1757042424,
+   'modificationDate' => 1757563184,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -172,7 +172,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'height' => '',
           )),
           3 => 
-          \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
+          \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
              'name' => 'tarifCode',
              'title' => 'Tarif Code',
              'tooltip' => '',
@@ -183,23 +183,35 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'style' => '',
              'permissions' => NULL,
              'fieldtype' => '',
-             'relationType' => false,
+             'relationType' => true,
              'invisible' => false,
              'visibleGridView' => false,
              'visibleSearch' => false,
              'blockedVarsForExport' => 
             array (
             ),
-             'defaultValue' => NULL,
-             'columnLength' => 190,
-             'regex' => '',
-             'regexFlags' => 
+             'classes' => 
+            array (
+              0 => 
+              array (
+                'classes' => 'TarifCode',
+              ),
+            ),
+             'displayMode' => 'grid',
+             'pathFormatterClass' => '',
+             'assetInlineDownloadAllowed' => false,
+             'assetUploadPath' => '',
+             'allowToClearRelation' => true,
+             'objectsAllowed' => true,
+             'assetsAllowed' => false,
+             'assetTypes' => 
             array (
             ),
-             'unique' => false,
-             'showCharCount' => false,
+             'documentsAllowed' => false,
+             'documentTypes' => 
+            array (
+            ),
              'width' => '',
-             'defaultValueGenerator' => '',
           )),
           4 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(

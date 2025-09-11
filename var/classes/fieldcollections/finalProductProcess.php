@@ -5,7 +5,7 @@
  * - code [input]
  * - name [input]
  * - supplier [manyToOneRelation]
- * - colors [select]
+ * - colors [multiselect]
  * - composingColors [advancedManyToManyObjectRelation]
  * - cost [numeric]
  * - components [advancedManyToManyObjectRelation]
@@ -149,7 +149,7 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
              'width' => '',
           )),
           3 => 
-          \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
+          \Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect::__set_state(array(
              'name' => 'colors',
              'title' => 'Colors',
              'tooltip' => '',
@@ -167,16 +167,15 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
              'blockedVarsForExport' => 
             array (
             ),
-             'options' => 
-            array (
-            ),
-             'defaultValue' => '',
-             'columnLength' => 190,
+             'maxItems' => NULL,
+             'renderType' => 'tags',
              'dynamicOptions' => false,
-             'defaultValueGenerator' => '',
+             'defaultValue' => NULL,
+             'height' => '',
              'width' => '',
-             'optionsProviderType' => 'configure',
-             'optionsProviderClass' => '',
+             'defaultValueGenerator' => '',
+             'optionsProviderType' => 'class',
+             'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\ColorOptionsProvider',
              'optionsProviderData' => '',
           )),
           4 => 
@@ -192,7 +191,7 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
              'permissions' => NULL,
              'fieldtype' => '',
              'relationType' => true,
-             'invisible' => false,
+             'invisible' => true,
              'visibleGridView' => false,
              'visibleSearch' => false,
              'blockedVarsForExport' => 
