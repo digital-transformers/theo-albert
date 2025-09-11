@@ -67,6 +67,7 @@ final class ColorListener implements EventSubscriberInterface
         }
         if ($names) {
             $compositeName = implode(' + ', $names);
+            dd($compositeName);
             if ($obj->getName() !== $compositeName) {
                 $obj->setName($compositeName);
             }
