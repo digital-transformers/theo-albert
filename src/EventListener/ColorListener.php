@@ -1,7 +1,7 @@
 <?php
 namespace App\EventListener;
 
-use App\Model\DataObject\Color;
+use Pimcore\Model\DataObject\Color;
 use Pimcore\Event\DataObjectEvents;
 use Pimcore\Event\Model\DataObjectEvent;
 use Pimcore\Model\Element\ValidationException;
