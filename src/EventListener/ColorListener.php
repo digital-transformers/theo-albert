@@ -1,12 +1,13 @@
 <?php
 namespace App\EventListener;
 
+use App\Model\DataObject\Color;
 use Pimcore\Event\DataObjectEvents;
 use Pimcore\Event\Model\DataObjectEvent;
 use Pimcore\Model\Element\ValidationException;
-use App\Model\DataObject\Color;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-final class ColorListener
+final class ColorListener implements EventSubscriberInterface
 {
     public static function getSubscribedEvents(): array
     {
@@ -17,9 +18,9 @@ final class ColorListener
     }
 
     /**
-     * - If multiColor has >1 items:
-     *   (1) ensure none of the selected colors is itself a composite (has multiColor set)
-     *   (2) set current object's name to the joined names of selected items with " + "
+     * Rules:
+     * 1) If multiColor has > 1 items, none of those items may be composite themselves.
+     * 2) If multiColor has > 1 items, set current name = joined child names with " + ".
      */
     public function onPreSave(DataObjectEvent $e): void
     {
@@ -29,42 +30,42 @@ final class ColorListener
         }
 
         $selected = $obj->getMultiColor();
-        if (!is_array($selected) || count($selected) <= 1) {
-            // Not a composite (or only 1 item) -> do nothing to name
+        if (!\is_array($selected) || \count($selected) <= 1) {
+            // 0 or 1 item -> no validation, no auto-name
             return;
         }
 
-        // (1) Validation: each selected color must not itself be a composite
+        // (1) Validate: children cannot themselves have multiColor
         $offenders = [];
         foreach ($selected as $child) {
             if ($child instanceof Color) {
                 $childSelected = $child->getMultiColor();
-                if (is_array($childSelected) && count($childSelected) > 0) {
-                    // Prefer showing something recognizable to the editor
+                if (\is_array($childSelected) && \count($childSelected) > 0) {
                     $offenders[] = $child->getName() ?: $child->getCode() ?: $child->getFullPath();
                 }
             }
         }
 
-        if (!empty($offenders)) {
-            // This message is shown in the Pimcore backend UI
-            $msg = sprintf(
-                "You cannot add colors that are themselves multi-color. Please remove: %s",
-                implode(', ', $offenders)
+        if ($offenders) {
+            throw new ValidationException(
+                sprintf(
+                    'You cannot add colors that are themselves multi-color. Please remove: %s',
+                    implode(', ', $offenders)
+                )
             );
-            throw new ValidationException($msg);
         }
 
-        // (2) Auto-build the name: join selected item names with " + "
+        // (2) Auto-build composite name as "A + B + C"
         $names = [];
         foreach ($selected as $child) {
             if ($child instanceof Color) {
-                $names[] = trim((string) $child->getName());
+                $label = trim((string)($child->getName() ?: $child->getCode() ?: ''));
+                if ($label !== '') {
+                    $names[] = $label;
+                }
             }
         }
-
-        $names = array_filter($names, static fn($n) => $n !== '');
-        if (!empty($names)) {
+        if ($names) {
             $compositeName = implode(' + ', $names);
             if ($obj->getName() !== $compositeName) {
                 $obj->setName($compositeName);
