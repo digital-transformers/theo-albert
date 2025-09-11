@@ -30,7 +30,6 @@ final class ColorListener implements EventSubscriberInterface
         }
 
         $selected = $obj->getMultiColor();
-        dd($selected);
         if (!\is_array($selected) || \count($selected) <= 1) {
             // 0 or 1 item -> no validation, no auto-name
             return;
