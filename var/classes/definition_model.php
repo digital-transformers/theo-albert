@@ -535,9 +535,15 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'blockedVarsForExport' => 
                 array (
                 ),
-                 'options' => 
-                array (
-                ),
+                 'options' =>
+                  array (
+                  array('key' => 'Metal Single Colour', 'value' => 'metal-single-colour'),
+                  array('key' => 'Metal Bi-Colour',     'value' => 'metal-bi-colour'),
+                  array('key' => 'Acetat',              'value' => 'acetat'),
+                  array('key' => 'Metal-Acetat',       'value' => 'metal-acetat'),
+                  array('key' => 'Horn',                'value' => 'horn'),
+                  array('key' => 'Metal-Hoorn',         'value' => 'metal-horn'),
+                  ),
                  'defaultValue' => '',
                  'columnLength' => 190,
                  'dynamicOptions' => false,
