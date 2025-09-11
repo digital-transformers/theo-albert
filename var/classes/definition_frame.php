@@ -61,7 +61,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1757563317,
+   'modificationDate' => 1757563669,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => 'Pimcore\\Model\\DataObject\\Model',
@@ -1331,20 +1331,15 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'blockedVarsForExport' => 
                 array (
                 ),
-                 'options' => 
-                array (
-                ),
                  'maxItems' => NULL,
                  'renderType' => 'list',
                  'dynamicOptions' => false,
-                 'defaultValue' => 
-                array (
-                ),
+                 'defaultValue' => NULL,
                  'height' => '',
                  'width' => '',
                  'defaultValueGenerator' => '',
-                 'optionsProviderType' => 'configure',
-                 'optionsProviderClass' => '',
+                 'optionsProviderType' => 'class',
+                 'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\TarifCodeOptionsProvider',
                  'optionsProviderData' => '',
               )),
               24 => 

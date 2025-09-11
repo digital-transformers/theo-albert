@@ -8,7 +8,8 @@
  * - itemCode [input]
  * - itemName [input]
  * - itemGroup [manyToManyObjectRelation]
- * - tarifCode [manyToOneRelation]
+ * - tarifCode [multiselect]
+ * - tarifCodeRelation [manyToOneRelation]
  * - supplier [manyToOneRelation]
  * - linkedFamilies [reverseObjectRelation]
  * - linkedModels [reverseObjectRelation]
@@ -28,7 +29,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1757563184,
+   'modificationDate' => 1757563724,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -172,7 +173,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'height' => '',
           )),
           3 => 
-          \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
+          \Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect::__set_state(array(
              'name' => 'tarifCode',
              'title' => 'Tarif Code',
              'tooltip' => '',
@@ -183,8 +184,38 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'style' => '',
              'permissions' => NULL,
              'fieldtype' => '',
-             'relationType' => true,
+             'relationType' => false,
              'invisible' => false,
+             'visibleGridView' => false,
+             'visibleSearch' => false,
+             'blockedVarsForExport' => 
+            array (
+            ),
+             'maxItems' => NULL,
+             'renderType' => 'tags',
+             'dynamicOptions' => false,
+             'defaultValue' => NULL,
+             'height' => '',
+             'width' => '',
+             'defaultValueGenerator' => '',
+             'optionsProviderType' => 'class',
+             'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\TarifCodeOptionsProvider',
+             'optionsProviderData' => '',
+          )),
+          4 => 
+          \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
+             'name' => 'tarifCodeRelation',
+             'title' => 'Tarif Code Relation',
+             'tooltip' => '',
+             'mandatory' => false,
+             'noteditable' => false,
+             'index' => false,
+             'locked' => false,
+             'style' => '',
+             'permissions' => NULL,
+             'fieldtype' => '',
+             'relationType' => true,
+             'invisible' => true,
              'visibleGridView' => false,
              'visibleSearch' => false,
              'blockedVarsForExport' => 
@@ -213,7 +244,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
             ),
              'width' => '',
           )),
-          4 => 
+          5 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
              'name' => 'supplier',
              'title' => 'Supplier',
@@ -255,7 +286,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
             ),
              'width' => '',
           )),
-          5 => 
+          6 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ReverseObjectRelation::__set_state(array(
              'name' => 'linkedFamilies',
              'title' => 'Linked Families',
@@ -295,7 +326,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'ownerFieldName' => 'posMaterialProducts',
              'lazyLoading' => true,
           )),
-          6 => 
+          7 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ReverseObjectRelation::__set_state(array(
              'name' => 'linkedModels',
              'title' => 'Linked Models',
@@ -335,7 +366,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'ownerFieldName' => 'posMaterialProducts',
              'lazyLoading' => true,
           )),
-          7 => 
+          8 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ReverseObjectRelation::__set_state(array(
              'name' => 'linkedFrames',
              'title' => 'Linked Frames',
