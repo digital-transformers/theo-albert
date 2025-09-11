@@ -30,11 +30,12 @@ final class ColorListener implements EventSubscriberInterface
             return; // nothing to validate / build
         }
 
+        dd($selected);
+
         // (1) Validate: none of the selected children can itself be "composite"
         // If you actually mean "must not have MORE THAN ONE", change > 0 to > 1
         $offenders = [];
         foreach ($selected as $child) {
-            dd($child);
             if (!$child instanceof Color) {
                 continue;
             }
