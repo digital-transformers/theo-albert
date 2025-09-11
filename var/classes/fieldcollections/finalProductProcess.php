@@ -149,9 +149,9 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
              'width' => '',
           )),
           3 => 
-          \Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect::__set_state(array(
-             'name' => 'colors',
-             'title' => 'Colors',
+          \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
+             'name' => 'color',
+             'title' => 'Primary color',
              'tooltip' => '',
              'mandatory' => false,
              'noteditable' => false,
@@ -160,28 +160,35 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
              'style' => '',
              'permissions' => NULL,
              'fieldtype' => '',
-             'relationType' => false,
+             'relationType' => true,
              'invisible' => false,
              'visibleGridView' => false,
              'visibleSearch' => false,
              'blockedVarsForExport' => 
             array (
             ),
-             'options' => 
+             'classes' => 
+            array (
+              0 => 
+              array (
+                'classes' => 'colour',
+              ),
+            ),
+             'displayMode' => 'grid',
+             'pathFormatterClass' => '',
+             'assetInlineDownloadAllowed' => false,
+             'assetUploadPath' => '',
+             'allowToClearRelation' => true,
+             'objectsAllowed' => true,
+             'assetsAllowed' => false,
+             'assetTypes' => 
             array (
             ),
-             'maxItems' => NULL,
-             'renderType' => 'list',
-             'dynamicOptions' => false,
-             'defaultValue' => 
+             'documentsAllowed' => false,
+             'documentTypes' => 
             array (
             ),
-             'height' => '',
              'width' => '',
-             'defaultValueGenerator' => '',
-             'optionsProviderType' => 'configure',
-             'optionsProviderClass' => '',
-             'optionsProviderData' => '',
           )),
           4 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
