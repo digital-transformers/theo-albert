@@ -966,9 +966,18 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'blockedVarsForExport' => 
                 array (
                 ),
-                 'options' => 
-                array (
-                ),
+                 'options' =>
+                  array (
+                  array('key' => 'In Case',               'value' => 'in-case'),
+                  array('key' => 'Out of Case',           'value' => 'out-of-case'),
+                  array('key' => 'Coming in Case',        'value' => 'coming-in-case'),
+                  array('key' => 'In Sparecase',          'value' => 'in-sparecase'),
+                  array('key' => 'Out of Sparecase',      'value' => 'out-of-sparecase'),
+                  array('key' => 'Coming in Sparecase',   'value' => 'coming-in-sparecase'),
+                  array('key' => 'Going Out of Case',     'value' => 'going-out-of-case'),
+                  array('key' => 'Going Out of Sparecase','value' => 'going-out-of-sparecase'),
+                  ),
+
                  'defaultValue' => '',
                  'columnLength' => 190,
                  'dynamicOptions' => false,
