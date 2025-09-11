@@ -82,6 +82,6 @@ services:
 
     # Listeners
     App\EventListener\ColorListener:
-    class: App\EventListener\ColorListener
-    tags:
-      - { name: kernel.event_subscriber }
+        class: App\EventListener\ColorListener
+        tags:
+          - { name: kernel.event_subscriber }
