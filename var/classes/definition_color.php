@@ -22,7 +22,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => 'Color',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1757036526,
+   'modificationDate' => 1757556005,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -131,23 +131,83 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
             array (
             ),
              'options' => 
+            array (
+              0 => 
               array (
-                array('key' => 'Transparent',  'value' => '01_transparent'),
-                array('key' => 'Black',        'value' => '02_black'),
-                array('key' => 'Blue',         'value' => '03_blue'),
-                array('key' => 'Brown',        'value' => '04_brown'),
-                array('key' => 'Gold',         'value' => '05_gold'),
-                array('key' => 'Grey',         'value' => '06_grey'),
-                array('key' => 'Green',        'value' => '07_green'),
-                array('key' => 'Orange',       'value' => '08_orange'),
-                array('key' => 'Pink',         'value' => '09_pink'),
-                array('key' => 'Purple',       'value' => '10_purple'),
-                array('key' => 'Red',          'value' => '11_red'),
-                array('key' => 'Silver',       'value' => '12_silver'),
-                array('key' => 'White',        'value' => '13_white'),
-                array('key' => 'Yellow',       'value' => '14_yellow'),
-                array('key' => 'Multi colour', 'value' => '15_multi-colour'),
+                'key' => 'Transparent',
+                'value' => '01_transparent',
               ),
+              1 => 
+              array (
+                'key' => 'Black',
+                'value' => '02_black',
+              ),
+              2 => 
+              array (
+                'key' => 'Blue',
+                'value' => '03_blue',
+              ),
+              3 => 
+              array (
+                'key' => 'Brown',
+                'value' => '04_brown',
+              ),
+              4 => 
+              array (
+                'key' => 'Gold',
+                'value' => '05_gold',
+              ),
+              5 => 
+              array (
+                'key' => 'Grey',
+                'value' => '06_grey',
+              ),
+              6 => 
+              array (
+                'key' => 'Green',
+                'value' => '07_green',
+              ),
+              7 => 
+              array (
+                'key' => 'Orange',
+                'value' => '08_orange',
+              ),
+              8 => 
+              array (
+                'key' => 'Pink',
+                'value' => '09_pink',
+              ),
+              9 => 
+              array (
+                'key' => 'Purple',
+                'value' => '10_purple',
+              ),
+              10 => 
+              array (
+                'key' => 'Red',
+                'value' => '11_red',
+              ),
+              11 => 
+              array (
+                'key' => 'Silver',
+                'value' => '12_silver',
+              ),
+              12 => 
+              array (
+                'key' => 'White',
+                'value' => '13_white',
+              ),
+              13 => 
+              array (
+                'key' => 'Yellow',
+                'value' => '14_yellow',
+              ),
+              14 => 
+              array (
+                'key' => 'Multi colour',
+                'value' => '15_multi-colour',
+              ),
+            ),
              'defaultValue' => '',
              'columnLength' => 190,
              'dynamicOptions' => false,
@@ -162,9 +222,9 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'name' => 'code',
              'title' => 'Code',
              'tooltip' => '',
-             'mandatory' => false,
+             'mandatory' => true,
              'noteditable' => false,
-             'index' => false,
+             'index' => true,
              'locked' => false,
              'style' => '',
              'permissions' => NULL,
@@ -182,7 +242,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'regexFlags' => 
             array (
             ),
-             'unique' => false,
+             'unique' => true,
              'showCharCount' => false,
              'width' => '',
              'defaultValueGenerator' => '',
@@ -192,7 +252,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'name' => 'name',
              'title' => 'Name',
              'tooltip' => '',
-             'mandatory' => false,
+             'mandatory' => true,
              'noteditable' => false,
              'index' => false,
              'locked' => false,
