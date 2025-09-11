@@ -24,7 +24,7 @@ final class PimcoreAdminListener
             array_merge(
                 $event->getPaths(),
                 [
-                    '/bundles/app/admin/color-autoname.js',
+                    '/app/admin/color-autoname.js',
                 ]
             )
         );
