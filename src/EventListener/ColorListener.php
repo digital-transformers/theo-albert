@@ -50,6 +50,8 @@ final class ColorListener implements EventSubscriberInterface
             }
         }
 
+        dd($offenders);
+
         if ($offenders) {
             // This exception is shown in the Pimcore backend UI on save
             throw new ValidationException(sprintf(
