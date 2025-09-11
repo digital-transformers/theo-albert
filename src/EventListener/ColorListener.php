@@ -25,6 +25,7 @@ final class ColorListener implements EventSubscriberInterface
     public function onPreSave(DataObjectEvent $e): void
     {
         $obj = $e->getObject();
+        dd($obj);
         if (!$obj instanceof Color) {
             return;
         }
