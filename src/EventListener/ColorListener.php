@@ -19,7 +19,7 @@ final class ColorListener implements EventSubscriberInterface
 
     public function onPreSave(DataObjectEvent $e): void
     {
-    dd('onPreSave');
+
         $obj = $e->getObject();
         if (!$obj instanceof Color) {
             return;
@@ -31,6 +31,7 @@ final class ColorListener implements EventSubscriberInterface
             return; // nothing to validate / build
         }
 
+        dd('onPreSave');
         
         // (1) Validate: none of the selected children can itself be "composite"
         // If you actually mean "must not have MORE THAN ONE", change > 0 to > 1
