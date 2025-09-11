@@ -11,6 +11,9 @@
  * -- description [textarea]
  * - category [select]
  * - publicationChannels [multiselect]
+ * - linkedFamilies [reverseObjectRelation]
+ * - linkedModels [reverseObjectRelation]
+ * - linkedFrames [reverseObjectRelation]
  */
 
 return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
@@ -20,7 +23,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1757037548,
+   'modificationDate' => 1757058035,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -284,6 +287,126 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'optionsProviderType' => 'configure',
              'optionsProviderClass' => '',
              'optionsProviderData' => '',
+          )),
+          4 => 
+          \Pimcore\Model\DataObject\ClassDefinition\Data\ReverseObjectRelation::__set_state(array(
+             'name' => 'linkedFamilies',
+             'title' => 'Linked Families',
+             'tooltip' => '',
+             'mandatory' => false,
+             'noteditable' => false,
+             'index' => false,
+             'locked' => false,
+             'style' => '',
+             'permissions' => NULL,
+             'fieldtype' => '',
+             'relationType' => true,
+             'invisible' => false,
+             'visibleGridView' => false,
+             'visibleSearch' => false,
+             'blockedVarsForExport' => 
+            array (
+            ),
+             'classes' => 
+            array (
+            ),
+             'displayMode' => NULL,
+             'pathFormatterClass' => '',
+             'maxItems' => NULL,
+             'visibleFields' => 'code,name',
+             'allowToCreateNewObject' => false,
+             'allowToClearRelation' => true,
+             'optimizedAdminLoading' => false,
+             'enableTextSelection' => false,
+             'visibleFieldDefinitions' => 
+            array (
+            ),
+             'width' => '',
+             'height' => '',
+             'ownerClassName' => 'family',
+             'ownerClassId' => 'family',
+             'ownerFieldName' => 'downloadableAssets',
+             'lazyLoading' => true,
+          )),
+          5 => 
+          \Pimcore\Model\DataObject\ClassDefinition\Data\ReverseObjectRelation::__set_state(array(
+             'name' => 'linkedModels',
+             'title' => 'Linked Models',
+             'tooltip' => '',
+             'mandatory' => false,
+             'noteditable' => false,
+             'index' => false,
+             'locked' => false,
+             'style' => '',
+             'permissions' => NULL,
+             'fieldtype' => '',
+             'relationType' => true,
+             'invisible' => false,
+             'visibleGridView' => false,
+             'visibleSearch' => false,
+             'blockedVarsForExport' => 
+            array (
+            ),
+             'classes' => 
+            array (
+            ),
+             'displayMode' => NULL,
+             'pathFormatterClass' => '',
+             'maxItems' => NULL,
+             'visibleFields' => 'code,name',
+             'allowToCreateNewObject' => false,
+             'allowToClearRelation' => true,
+             'optimizedAdminLoading' => false,
+             'enableTextSelection' => false,
+             'visibleFieldDefinitions' => 
+            array (
+            ),
+             'width' => '',
+             'height' => '',
+             'ownerClassName' => 'model',
+             'ownerClassId' => 'baseProduct',
+             'ownerFieldName' => 'downloadableAssets',
+             'lazyLoading' => true,
+          )),
+          6 => 
+          \Pimcore\Model\DataObject\ClassDefinition\Data\ReverseObjectRelation::__set_state(array(
+             'name' => 'linkedFrames',
+             'title' => 'Linked Frames',
+             'tooltip' => '',
+             'mandatory' => false,
+             'noteditable' => false,
+             'index' => false,
+             'locked' => false,
+             'style' => '',
+             'permissions' => NULL,
+             'fieldtype' => '',
+             'relationType' => true,
+             'invisible' => false,
+             'visibleGridView' => false,
+             'visibleSearch' => false,
+             'blockedVarsForExport' => 
+            array (
+            ),
+             'classes' => 
+            array (
+            ),
+             'displayMode' => NULL,
+             'pathFormatterClass' => '',
+             'maxItems' => NULL,
+             'visibleFields' => 'code,name',
+             'allowToCreateNewObject' => false,
+             'allowToClearRelation' => true,
+             'optimizedAdminLoading' => false,
+             'enableTextSelection' => false,
+             'visibleFieldDefinitions' => 
+            array (
+            ),
+             'width' => '',
+             'height' => '',
+             'ownerClassName' => 'frame',
+             'ownerClassId' => 'finishedProduct',
+             'ownerFieldName' => 'downloadableAssets',
+             'lazyLoading' => true,
           )),
         ),
          'locked' => false,

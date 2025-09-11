@@ -1,0 +1,13 @@
+pimcore_data_hub:
+    configurations:
+        SAPItemGroupImport:
+            general:
+                type: dataImporterDataObject
+                path: null
+                name: SAPItemGroupImport
+                modificationDate: 1757058105
+                createDate: 1753352126
+            workspaces: {  }
+            permissions:
+                user: {  }
+                role: {  }

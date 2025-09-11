@@ -1,0 +1,13 @@
+pimcore_data_hub:
+    configurations:
+        SAPPricelistImport:
+            general:
+                type: dataImporterDataObject
+                path: null
+                name: SAPPricelistImport
+                modificationDate: 1757058116
+                createDate: 1753352126
+            workspaces: {  }
+            permissions:
+                user: {  }
+                role: {  }

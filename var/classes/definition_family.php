@@ -19,6 +19,7 @@
  * - launchYear [numeric]
  * - posMaterialProducts [manyToManyObjectRelation]
  * - servicePartProducts [manyToManyObjectRelation]
+ * - downloadableAssets [manyToManyObjectRelation]
  * - basePrice [fieldcollections]
  * - pricing [fieldcollections]
  * - imageGallery [imageGallery]
@@ -42,7 +43,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1757042071,
+   'modificationDate' => 1757057996,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -622,6 +623,46 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
               )),
+              14 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
+                 'name' => 'downloadableAssets',
+                 'title' => 'Downloadable assets',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => true,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'classes' => 
+                array (
+                  0 => 
+                  array (
+                    'classes' => 'downloadableAsset',
+                  ),
+                ),
+                 'displayMode' => 'grid',
+                 'pathFormatterClass' => '',
+                 'maxItems' => NULL,
+                 'visibleFields' => 'title',
+                 'allowToCreateNewObject' => false,
+                 'allowToClearRelation' => true,
+                 'optimizedAdminLoading' => false,
+                 'enableTextSelection' => false,
+                 'visibleFieldDefinitions' => 
+                array (
+                ),
+                 'width' => '',
+                 'height' => '',
+              )),
             ),
              'locked' => false,
              'blockedVarsForExport' => 
@@ -868,10 +909,6 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 ),
                  'classes' => 
                 array (
-                  0 => 
-                  array (
-                    'classes' => '',
-                  ),
                 ),
                  'displayMode' => NULL,
                  'pathFormatterClass' => '',
@@ -915,10 +952,6 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'documentsAllowed' => false,
                  'documentTypes' => 
                 array (
-                  0 => 
-                  array (
-                    'documentTypes' => '',
-                  ),
                 ),
                  'enableTextSelection' => false,
                  'width' => '',

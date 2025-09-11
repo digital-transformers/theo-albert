@@ -1,11 +1,11 @@
 pimcore_data_hub:
     configurations:
-        SAP_test_importer:
+        SAPSupplierImport:
             general:
                 type: dataImporterDataObject
                 path: null
-                name: SAP_test_importer
-                modificationDate: 1753352126
+                name: SAPSupplierImport
+                modificationDate: 1757058086
                 createDate: 1753352126
             workspaces: {  }
             permissions:

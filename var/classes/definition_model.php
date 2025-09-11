@@ -12,6 +12,7 @@
  * - planAttachment [advancedManyToManyRelation]
  * - posMaterialProducts [manyToManyObjectRelation]
  * - servicePartProducts [manyToManyObjectRelation]
+ * - downloadableAssets [manyToManyObjectRelation]
  * - seriesCode [input]
  * - createDate [date]
  * - material [input]
@@ -42,6 +43,8 @@
  * - templeTipMaterial [input]
  * - templeTipSurface [input]
  * - toolingSamplesGalleery [imageGallery]
+ * - basicUDI [input]
+ * - masterUDI [input]
  * - finalProductDetails [fieldcollections]
  * - finalProducts [manyToManyObjectRelation]
  * - imageGallery [imageGallery]
@@ -63,7 +66,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1757042162,
+   'modificationDate' => 1757420170,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => 'Pimcore\\Model\\DataObject\\Family',
@@ -353,6 +356,46 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'pathFormatterClass' => '',
                  'maxItems' => NULL,
                  'visibleFields' => 'code,name',
+                 'allowToCreateNewObject' => false,
+                 'allowToClearRelation' => true,
+                 'optimizedAdminLoading' => false,
+                 'enableTextSelection' => false,
+                 'visibleFieldDefinitions' => 
+                array (
+                ),
+                 'width' => '',
+                 'height' => '',
+              )),
+              7 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
+                 'name' => 'downloadableAssets',
+                 'title' => 'Downloadable assets',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => true,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'classes' => 
+                array (
+                  0 => 
+                  array (
+                    'classes' => 'downloadableAsset',
+                  ),
+                ),
+                 'displayMode' => 'grid',
+                 'pathFormatterClass' => '',
+                 'maxItems' => NULL,
+                 'visibleFields' => 'title',
                  'allowToCreateNewObject' => false,
                  'allowToClearRelation' => true,
                  'optimizedAdminLoading' => false,
@@ -1347,6 +1390,66 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'predefinedDataTemplates' => '',
                  'height' => '',
                  'width' => '',
+              )),
+              22 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
+                 'name' => 'basicUDI',
+                 'title' => 'Basic UDI',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'defaultValue' => NULL,
+                 'columnLength' => 190,
+                 'regex' => '',
+                 'regexFlags' => 
+                array (
+                ),
+                 'unique' => false,
+                 'showCharCount' => false,
+                 'width' => '',
+                 'defaultValueGenerator' => '',
+              )),
+              23 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
+                 'name' => 'masterUDI',
+                 'title' => 'Master UDI',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'defaultValue' => NULL,
+                 'columnLength' => 190,
+                 'regex' => '',
+                 'regexFlags' => 
+                array (
+                ),
+                 'unique' => false,
+                 'showCharCount' => false,
+                 'width' => '',
+                 'defaultValueGenerator' => '',
               )),
             ),
              'locked' => false,
