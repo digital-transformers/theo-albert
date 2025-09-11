@@ -84,23 +84,23 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'blockedVarsForExport' => 
             array (
             ),
-            'options' => 
+             'options' => 
             array (
-              array('key' => 'Transparent',  'value' => '1'),
-              array('key' => 'Black',        'value' => '2'),
-              array('key' => 'Blue',         'value' => '3'),
-              array('key' => 'Brown',        'value' => '4'),
-              array('key' => 'Gold',         'value' => '5'),
-              array('key' => 'Grey',         'value' => '6'),
-              array('key' => 'Green',        'value' => '7'),
-              array('key' => 'Orange',       'value' => '8'),
-              array('key' => 'Pink',         'value' => '9'),
-              array('key' => 'Purple',       'value' => '10'),
-              array('key' => 'Red',          'value' => '11'),
-              array('key' => 'Silver',       'value' => '12'),
-              array('key' => 'White',        'value' => '13'),
-              array('key' => 'Yellow',       'value' => '14'),
-              array('key' => 'Multi colour', 'value' => '15'),
+              0 => 
+              array (
+                'key' => 'Acetate',
+                'value' => 'acetate',
+              ),
+              1 => 
+              array (
+                'key' => 'Metal Bi-Color',
+                'value' => 'metal-bi-color',
+              ),
+              2 => 
+              array (
+                'key' => 'Metal Single Color',
+                'value' => 'metal-single-color',
+              ),
             ),
              'defaultValue' => '',
              'columnLength' => 190,
@@ -131,18 +131,23 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
             array (
             ),
              'options' => 
-            array (
-              0 => 
               array (
-                'key' => 'Transparent',
-                'value' => '01',
+                array('key' => 'Transparent',  'value' => '01_transparent'),
+                array('key' => 'Black',        'value' => '02_black'),
+                array('key' => 'Blue',         'value' => '03_blue'),
+                array('key' => 'Brown',        'value' => '04_brown'),
+                array('key' => 'Gold',         'value' => '05_gold'),
+                array('key' => 'Grey',         'value' => '06_grey'),
+                array('key' => 'Green',        'value' => '07_green'),
+                array('key' => 'Orange',       'value' => '08_orange'),
+                array('key' => 'Pink',         'value' => '09_pink'),
+                array('key' => 'Purple',       'value' => '10_purple'),
+                array('key' => 'Red',          'value' => '11_red'),
+                array('key' => 'Silver',       'value' => '12_silver'),
+                array('key' => 'White',        'value' => '13_white'),
+                array('key' => 'Yellow',       'value' => '14_yellow'),
+                array('key' => 'Multi colour', 'value' => '15_multi-colour'),
               ),
-              1 => 
-              array (
-                'key' => 'Blue',
-                'value' => '02_Blue',
-              ),
-            ),
              'defaultValue' => '',
              'columnLength' => 190,
              'dynamicOptions' => false,
