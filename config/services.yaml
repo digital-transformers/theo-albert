@@ -81,6 +81,11 @@ services:
     #         - { name: kernel.event_listener, event: pimcore.dataobject.preUpdate, method: onObjectPreUpdate }
 
     # Listeners
+    App\EventListener\PimcoreAdminListener:
+        class: App\EventListener\PimcoreAdminListener
+        tags:
+          - { name: kernel.event_subscriber }
+
     App\EventListener\ColorListener:
         class: App\EventListener\ColorListener
         tags:

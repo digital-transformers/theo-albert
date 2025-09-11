@@ -11,5 +11,4 @@ return [
     Pimcore\Bundle\GenericExecutionEngineBundle\PimcoreGenericExecutionEngineBundle::class => ['all' => true],
     PimcoreDataHubBundle::class => ['all' => true],
     PimcoreDataImporterBundle::class => ['all' => true],
-    App\AppBundle::class => ['all' => true],
 ];
