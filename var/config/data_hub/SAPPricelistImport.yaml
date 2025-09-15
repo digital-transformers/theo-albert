@@ -8,7 +8,7 @@ pimcore_data_hub:
                 description: ''
                 group: ''
                 path: null
-                modificationDate: 1757911922
+                modificationDate: 1757912258
                 createDate: 1753352126
             loaderConfig:
                 type: asset
@@ -116,6 +116,7 @@ pimcore_data_hub:
                         loadStrategy: attribute
                         attributeDataObjectClassId: pricelist
                         attributeName: code
+                        partialMatch: 'on'
                         attributeLanguage: ''
                     transformationResultType: dataObject
                     dataTarget:
@@ -131,6 +132,7 @@ pimcore_data_hub:
                                 loadStrategy: attribute
                                 attributeDataObjectClassId: pricelist
                                 attributeName: code
+                                partialMatch: 'on'
                                 attributeLanguage: ''
                             type: loadDataObject
             executionConfig:
