@@ -104,3 +104,7 @@ services:
       tags:
         - { name: kernel.event_listener, event: pimcore.admin.object.list.beforeListLoad, method: onBeforeListLoad }
         - { name: kernel.event_listener, event: pimcore.dataobject.get.preSendData, method: onPreSendData }
+
+    App\EventSubscriber\OwnerAutoAssignSubscriber:
+      tags:
+        - { name: kernel.event_listener, event: pimcore.dataobject.preAdd, method: onPreAdd }
