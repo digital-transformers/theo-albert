@@ -8,7 +8,7 @@ pimcore_data_hub:
                 description: ''
                 group: ''
                 path: null
-                modificationDate: 1757910744
+                modificationDate: 1757910798
                 createDate: 1753352126
             loaderConfig:
                 type: asset
@@ -39,7 +39,6 @@ pimcore_data_hub:
             processingConfig:
                 executionType: sequential
                 idDataIndex: code
-                doDeltaCheck: true
                 cleanup:
                     strategy: unpublish
             mappingConfig:

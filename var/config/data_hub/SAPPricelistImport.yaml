@@ -2,12 +2,142 @@ pimcore_data_hub:
     configurations:
         SAPPricelistImport:
             general:
+                active: true
                 type: dataImporterDataObject
-                path: null
                 name: SAPPricelistImport
-                modificationDate: 1757058116
+                description: ''
+                group: ''
+                path: null
+                modificationDate: 1757911922
                 createDate: 1753352126
-            workspaces: {  }
+            loaderConfig:
+                type: asset
+                settings:
+                    assetPath: '/Datasource Files/sap-pricelists.json'
+            interpreterConfig:
+                type: json
+                settings:
+                    path: ''
+            resolverConfig:
+                elementType: dataObject
+                dataObjectClassId: pricelist
+                loadingStrategy:
+                    type: attribute
+                    settings:
+                        dataSourceIndex: Listnum
+                        attributeName: code
+                        language: ''
+                        includeUnpublished: true
+                createLocationStrategy:
+                    type: staticPath
+                    settings:
+                        path: /SetupData/SAPPricelists
+                locationUpdateStrategy:
+                    type: noChange
+                publishingStrategy:
+                    type: noChangePublishNew
+            processingConfig:
+                executionType: sequential
+                idDataIndex: Listnum
+                cleanup:
+                    strategy: unpublish
+            mappingConfig:
+                -
+                    label: listNum
+                    dataSourceIndex:
+                        - Listnum
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: code
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: listName
+                    dataSourceIndex:
+                        - Listname
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: name
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: KEY
+                    dataSourceIndex:
+                        - Listname
+                        - Listnum
+                    settings:
+                        glue: '|'
+                        search: /
+                        replace: '-'
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: key
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline:
+                        -
+                            settings:
+                                glue: '|'
+                            type: combine
+                        -
+                            settings:
+                                search: /
+                                replace: '-'
+                            type: stringReplace
+                -
+                    label: currency
+                    dataSourceIndex:
+                        - Currency
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: currency
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: baseNum
+                    dataSourceIndex:
+                        - Base_Num
+                    settings:
+                        loadStrategy: attribute
+                        attributeDataObjectClassId: pricelist
+                        attributeName: code
+                        attributeLanguage: ''
+                    transformationResultType: dataObject
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: basePricelist
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline:
+                        -
+                            settings:
+                                loadStrategy: attribute
+                                attributeDataObjectClassId: pricelist
+                                attributeName: code
+                                attributeLanguage: ''
+                            type: loadDataObject
+            executionConfig:
+                scheduleType: recurring
+                cronDefinition: ''
+                scheduledAt: ''
             permissions:
                 user: {  }
                 role: {  }
+            workspaces: {  }
