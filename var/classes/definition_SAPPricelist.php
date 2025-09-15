@@ -20,7 +20,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1757556304,
+   'modificationDate' => 1757914086,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -201,7 +201,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
             array (
               0 => 
               array (
-                'classes' => 'pricelist',
+                'classes' => 'SAPPricelist',
               ),
             ),
              'displayMode' => 'grid',

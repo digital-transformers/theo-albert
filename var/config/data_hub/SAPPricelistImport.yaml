@@ -8,7 +8,7 @@ pimcore_data_hub:
                 description: ''
                 group: ''
                 path: null
-                modificationDate: 1757912258
+                modificationDate: 1757913906
                 createDate: 1753352126
             loaderConfig:
                 type: asset
@@ -118,6 +118,7 @@ pimcore_data_hub:
                         attributeName: code
                         partialMatch: 'on'
                         attributeLanguage: ''
+                        loadUnpublished: 'on'
                     transformationResultType: dataObject
                     dataTarget:
                         type: direct
@@ -134,9 +135,10 @@ pimcore_data_hub:
                                 attributeName: code
                                 partialMatch: 'on'
                                 attributeLanguage: ''
+                                loadUnpublished: 'on'
                             type: loadDataObject
             executionConfig:
-                scheduleType: recurring
+                scheduleType: job
                 cronDefinition: ''
                 scheduledAt: ''
             permissions:
