@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
-use Pimcore\Bundle\AdminBundle\Event\Object\ListBeforeListLoadEvent;
 use Pimcore\Bundle\AdminBundle\Event\DataObject\GetPreSendDataEvent;
 use Pimcore\Model\DataObject\AbstractObject;
 use Pimcore\Model\User;
 use Pimcore\Security\User\TokenStorageUserResolver;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\EventDispatcher\GenericEvent;            // add this
+use Pimcore\Model\DataObject\Listing as ObjectListing;  
 
 final class OwnObjectsOnlySubscriber implements EventSubscriberInterface
 {
@@ -38,10 +39,16 @@ final class OwnObjectsOnlySubscriber implements EventSubscriberInterface
         return array_values(array_unique($roots));
     }
 
-    public function onBeforeListLoad(ListBeforeListLoadEvent $event): void
+    public function onBeforeListLoad(GenericEvent $event): void
     {
         $user = $this->userResolver->getUser();
         if (!$user || !$user->isAllowed('see_own_objects_only')) {
+            return;
+        }
+
+        $list = $event->getSubject();
+        // Guard: only act on object listings
+        if (!$list instanceof ObjectListing) {
             return;
         }
 
