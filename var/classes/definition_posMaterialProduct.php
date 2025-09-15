@@ -7,7 +7,8 @@
  * Fields Summary:
  * - itemCode [input]
  * - itemName [input]
- * - itemGroup [manyToManyObjectRelation]
+ * - itemGroup [multiselect]
+ * - itemGroupRelation [manyToManyObjectRelation]
  * - tarifCode [multiselect]
  * - tarifCodeRelation [manyToOneRelation]
  * - supplier [manyToOneRelation]
@@ -29,7 +30,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1757563724,
+   'modificationDate' => 1757564675,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -77,9 +78,9 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'name' => 'itemCode',
              'title' => 'Code',
              'tooltip' => '',
-             'mandatory' => false,
+             'mandatory' => true,
              'noteditable' => false,
-             'index' => false,
+             'index' => true,
              'locked' => false,
              'style' => '',
              'permissions' => NULL,
@@ -97,7 +98,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'regexFlags' => 
             array (
             ),
-             'unique' => false,
+             'unique' => true,
              'showCharCount' => false,
              'width' => '',
              'defaultValueGenerator' => '',
@@ -107,9 +108,9 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'name' => 'itemName',
              'title' => 'Name',
              'tooltip' => '',
-             'mandatory' => false,
+             'mandatory' => true,
              'noteditable' => false,
-             'index' => false,
+             'index' => true,
              'locked' => false,
              'style' => '',
              'permissions' => NULL,
@@ -133,7 +134,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'defaultValueGenerator' => '',
           )),
           2 => 
-          \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
+          \Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect::__set_state(array(
              'name' => 'itemGroup',
              'title' => 'Item Group',
              'tooltip' => '',
@@ -144,8 +145,38 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'style' => '',
              'permissions' => NULL,
              'fieldtype' => '',
-             'relationType' => true,
+             'relationType' => false,
              'invisible' => false,
+             'visibleGridView' => false,
+             'visibleSearch' => false,
+             'blockedVarsForExport' => 
+            array (
+            ),
+             'maxItems' => NULL,
+             'renderType' => 'tags',
+             'dynamicOptions' => false,
+             'defaultValue' => NULL,
+             'height' => '',
+             'width' => '',
+             'defaultValueGenerator' => '',
+             'optionsProviderType' => 'class',
+             'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\SAPItemGroupOptionsProvider',
+             'optionsProviderData' => '',
+          )),
+          3 => 
+          \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
+             'name' => 'itemGroupRelation',
+             'title' => 'Item Group Relation',
+             'tooltip' => '',
+             'mandatory' => false,
+             'noteditable' => false,
+             'index' => false,
+             'locked' => false,
+             'style' => '',
+             'permissions' => NULL,
+             'fieldtype' => '',
+             'relationType' => true,
+             'invisible' => true,
              'visibleGridView' => false,
              'visibleSearch' => false,
              'blockedVarsForExport' => 
@@ -172,7 +203,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'height' => '',
           )),
-          3 => 
+          4 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect::__set_state(array(
              'name' => 'tarifCode',
              'title' => 'Tarif Code',
@@ -202,7 +233,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\TarifCodeOptionsProvider',
              'optionsProviderData' => '',
           )),
-          4 => 
+          5 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
              'name' => 'tarifCodeRelation',
              'title' => 'Tarif Code Relation',
@@ -244,7 +275,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
             ),
              'width' => '',
           )),
-          5 => 
+          6 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
              'name' => 'supplier',
              'title' => 'Supplier',
@@ -286,7 +317,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
             ),
              'width' => '',
           )),
-          6 => 
+          7 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ReverseObjectRelation::__set_state(array(
              'name' => 'linkedFamilies',
              'title' => 'Linked Families',
@@ -326,7 +357,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'ownerFieldName' => 'posMaterialProducts',
              'lazyLoading' => true,
           )),
-          7 => 
+          8 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ReverseObjectRelation::__set_state(array(
              'name' => 'linkedModels',
              'title' => 'Linked Models',
@@ -366,7 +397,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'ownerFieldName' => 'posMaterialProducts',
              'lazyLoading' => true,
           )),
-          8 => 
+          9 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ReverseObjectRelation::__set_state(array(
              'name' => 'linkedFrames',
              'title' => 'Linked Frames',
