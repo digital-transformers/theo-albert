@@ -96,3 +96,11 @@ services:
         class: App\EventListener\ColorListener
         tags:
           - { name: kernel.event_subscriber }
+
+    # CUSTOM PERMISSIONS
+    App\EventSubscriber\OwnObjectsOnlySubscriber:
+      arguments:
+        $excludedClasses: []   # e.g. ['News','Category'] if you want global class bypass
+      tags:
+        - { name: kernel.event_listener, event: pimcore.admin.object.list.beforeListLoad, method: onBeforeListLoad }
+        - { name: kernel.event_listener, event: pimcore.dataobject.get.preSendData, method: onPreSendData }

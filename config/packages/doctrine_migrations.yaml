@@ -1,4 +1,4 @@
 doctrine_migrations:
   migrations_paths:
     DoctrineMigrations: '%kernel.project_dir%/migrations'   # keep default if you still use it
-    #App\Migrations: '%kernel.project_dir%/src/Migrations'    # <-- add this
+    #php bin/console doctrine:migrations:migrate --prefix=App\\MigrationsApp\Migrations: '%kernel.project_dir%/src/Migrations'    # <-- add this
