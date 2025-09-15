@@ -8,7 +8,7 @@ pimcore_data_hub:
                 description: ''
                 group: ''
                 path: null
-                modificationDate: 1757557873
+                modificationDate: 1757910757
                 createDate: 1753352126
             loaderConfig:
                 type: asset
@@ -72,6 +72,7 @@ pimcore_data_hub:
                 -
                     label: KEY
                     dataSourceIndex:
+                        - groupName
                         - groupNum
                     transformationResultType: default
                     dataTarget:
@@ -81,7 +82,20 @@ pimcore_data_hub:
                             language: ''
                             writeIfTargetIsNotEmpty: true
                             writeIfSourceIsEmpty: true
-                    transformationPipeline: {  }
+                    settings:
+                        glue: '|'
+                        search: /
+                        replace: '-'
+                    transformationPipeline:
+                        -
+                            settings:
+                                glue: '|'
+                            type: combine
+                        -
+                            settings:
+                                search: /
+                                replace: '-'
+                            type: stringReplace
             executionConfig:
                 scheduleType: recurring
                 cronDefinition: ''

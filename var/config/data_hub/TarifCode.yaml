@@ -8,7 +8,7 @@ pimcore_data_hub:
                 description: ''
                 group: ''
                 path: null
-                modificationDate: 1757910547
+                modificationDate: 1757910744
                 createDate: 1753352126
             loaderConfig:
                 type: asset
@@ -72,10 +72,10 @@ pimcore_data_hub:
                 -
                     label: KEY
                     dataSourceIndex:
-                        - code
                         - name
+                        - code
                     settings:
-                        glue: '  - '
+                        glue: '|'
                         search: /
                         replace: '-'
                     transformationResultType: default
@@ -89,7 +89,7 @@ pimcore_data_hub:
                     transformationPipeline:
                         -
                             settings:
-                                glue: '  - '
+                                glue: '|'
                             type: combine
                         -
                             settings:
