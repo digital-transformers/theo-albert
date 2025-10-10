@@ -1,5 +1,10 @@
 console.log('[datahub-control] loaded');
 
+if (window.pimcore && pimcore.settings && pimcore.settings.csrfToken) {
+  Ext.Ajax.defaultHeaders = Ext.Ajax.defaultHeaders || {};
+  Ext.Ajax.defaultHeaders['X-pimcore-csrf-token'] = pimcore.settings.csrfToken;
+}
+
 // Namespace
 pimcore.registerNS("app.datahub");
 app.datahub = app.datahub || {};
