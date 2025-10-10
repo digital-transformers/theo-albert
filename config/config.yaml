@@ -1,10 +1,6 @@
 imports:
     - { resource: 'local/' }
 
-pimcore_admin:
-  admin_csp_header:
-    enabled: false
-
 pimcore:
   workflows:
         workflow:
