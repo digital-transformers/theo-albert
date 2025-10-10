@@ -8,41 +8,44 @@ pimcore_data_hub:
                 description: ''
                 group: ''
                 path: null
-                modificationDate: 1759497921
+                modificationDate: 1760076519
                 createDate: 1753352126
             loaderConfig:
-                type: upload
+                type: asset
                 settings:
-                    uploadFilePath: SAPSupplierImport/upload.import
+                    assetPath: '/Datasource Files/sap-suppliers.json'
             interpreterConfig:
-                type: xlsx
+                type: json
                 settings:
-                    skipFirstRow: true
-                    sheetName: Sheet1
+                    path: ''
             resolverConfig:
                 elementType: dataObject
                 dataObjectClassId: supplier
                 loadingStrategy:
-                    type: notLoad
+                    type: attribute
+                    settings:
+                        dataSourceIndex: CardCode
+                        attributeName: code
+                        language: ''
                 createLocationStrategy:
                     type: staticPath
                     settings:
-                        path: /Home/SetupData/SAPSuppliers
+                        path: /SetupData/SAPSuppliers
                 locationUpdateStrategy:
                     type: noChange
                 publishingStrategy:
                     type: noChangePublishNew
             processingConfig:
-                executionType: parallel
+                executionType: sequential
                 doArchiveImportFile: true
-                idDataIndex: '0'
+                idDataIndex: CardCode
                 cleanup:
                     strategy: unpublish
             mappingConfig:
                 -
-                    label: 'new column'
+                    label: CardCode
                     dataSourceIndex:
-                        - '0'
+                        - CardCode
                     transformationResultType: default
                     dataTarget:
                         type: direct
@@ -53,9 +56,9 @@ pimcore_data_hub:
                             writeIfSourceIsEmpty: true
                     transformationPipeline: {  }
                 -
-                    label: 'new column'
+                    label: CardName
                     dataSourceIndex:
-                        - '1'
+                        - CardName
                     transformationResultType: default
                     dataTarget:
                         type: direct
@@ -66,9 +69,9 @@ pimcore_data_hub:
                             writeIfSourceIsEmpty: true
                     transformationPipeline: {  }
                 -
-                    label: 'new column'
+                    label: Country
                     dataSourceIndex:
-                        - '2'
+                        - Country
                     transformationResultType: default
                     dataTarget:
                         type: direct
@@ -78,6 +81,26 @@ pimcore_data_hub:
                             writeIfTargetIsNotEmpty: true
                             writeIfSourceIsEmpty: true
                     transformationPipeline: {  }
+                -
+                    label: KEY
+                    dataSourceIndex:
+                        - CardName
+                        - CardCode
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: key
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    settings:
+                        glue: ' |'
+                    transformationPipeline:
+                        -
+                            settings:
+                                glue: ' |'
+                            type: combine
             executionConfig:
                 scheduleType: recurring
                 cronDefinition: ''
