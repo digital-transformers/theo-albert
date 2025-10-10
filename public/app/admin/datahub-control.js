@@ -209,15 +209,27 @@ app.datahub.getPanel = function () {
 })();
 
 
+/**
+ * Add a top menu button next to the search that opens the panel.
+ * No auto-open; user clicks to open.
+ */
 (function addTopMenuButton() {
   try {
-    if (typeof Ext === 'undefined' || !window.pimcore) {
+    if (typeof Ext === 'undefined' || !window.pimcore || !pimcore.globalmanager) {
       return setTimeout(addTopMenuButton, 200);
     }
-    var navEl = Ext.get('pimcore_menu_search');
-    var tabs  = Ext.getCmp('pimcore_panel_tabs');
-    if (!navEl || !tabs) {
+
+    const navEl = Ext.get('pimcore_menu_search');     // anchor in top navbar
+    const tabs  = Ext.getCmp('pimcore_panel_tabs');   // main tab panel
+    const user  = pimcore.globalmanager.get("user");
+
+    if (!navEl || !tabs || !user) {
       return setTimeout(addTopMenuButton, 200);
+    }
+
+    // optional: hide button unless admin or has the permission
+    if (!user.admin && !(user.isAllowed && user.isAllowed('datahub_control'))) {
+      return; // don't render button
     }
 
     if (!Ext.get('pimcore_menu_datahubcontrol')) {
@@ -227,10 +239,13 @@ app.datahub.getPanel = function () {
         '</li>',
         'before'
       );
+
       btn.on("mousedown", function () {
-        var panel = Ext.getCmp('datahub-control-panel') || app.datahub.getPanel();
-        tabs.add(panel); tabs.setActiveTab(panel);
+        const panel = Ext.getCmp('datahub-control-panel') || app.datahub.getPanel();
+        tabs.add(panel);
+        tabs.setActiveTab(panel);
       });
+
       pimcore.helpers.initMenuTooltips();
       console.log('[datahub-control] top menu button added');
     }
