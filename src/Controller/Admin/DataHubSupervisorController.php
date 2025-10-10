@@ -1,7 +1,9 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use Pimcore\Bundle\AdminBundle\Security\User\TokenStorageUserResolver;
 use Pimcore\Tool\Console as PimcoreConsole;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -13,6 +15,9 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/admin/datahub-supervisor')]
 final class DataHubSupervisorController extends AbstractController
 {
+    public function __construct(private TokenStorageUserResolver $userResolver) {}
+
+    // ====== Config/paths ======
     private const CACHE_NS = 'datahub_single';
     private const PID_KEY  = 'pid';
 
@@ -30,9 +35,25 @@ final class DataHubSupervisorController extends AbstractController
 
     private function phpCli(): string
     {
-        // Use Pimcore’s helper to get the actual PHP CLI binary
-        $php = PimcoreConsole::getPhpCli();
-        return $php ?: '/usr/bin/php';
+        // Use Pimcore helper to get the *CLI* php binary (not php-fpm)
+        return PimcoreConsole::getPhpCli() ?: '/usr/bin/php';
+    }
+
+    private function assertAdminOrAllowed(): void
+    {
+        $user = $this->userResolver->getUser(); // Pimcore Admin user
+        if (!$user || (!$user->isAdmin() && !$user->isAllowed('datahub_control'))) {
+            throw $this->createAccessDeniedException('Not allowed');
+        }
+    }
+
+    private function isRunning(int $pid): bool
+    {
+        if ($pid <= 0) return false;
+        if (function_exists('posix_kill')) {
+            return @posix_kill($pid, 0);
+        }
+        return file_exists("/proc/{$pid}");
     }
 
     private function tail(string $file, int $lines): string
@@ -48,20 +69,12 @@ final class DataHubSupervisorController extends AbstractController
         fclose($f); return $buf;
     }
 
-    private function isRunning(int $pid): bool
-    {
-        if ($pid <= 0) return false;
-        // posix_kill may be disabled; try it, else /proc
-        if (function_exists('posix_kill')) {
-            return @posix_kill($pid, 0);
-        }
-        return file_exists("/proc/{$pid}");
-    }
+    // ====== Endpoints ======
 
     #[Route('/start', name: 'datahub_supervisor_start', methods: ['POST'])]
     public function start(Request $r): JsonResponse
     {
-        $this->denyAccessUnlessGranted('datahub_control');
+        $this->assertAdminOrAllowed();
 
         $cache   = new FilesystemAdapter(self::CACHE_NS);
         $pidItem = $cache->getItem(self::PID_KEY);
@@ -70,6 +83,7 @@ final class DataHubSupervisorController extends AbstractController
             return new JsonResponse(['ok' => false, 'msg' => 'Already running'], 409);
         }
 
+        // housekeeping
         @unlink($this->stopFlag());
         @touch($this->logPath());
 
@@ -115,10 +129,8 @@ final class DataHubSupervisorController extends AbstractController
             ], 500);
         }
 
-        // Save PID (may be the shell’s PID; good enough for liveness)
         $pid = (int)$proc->getPid();
         $pidItem->set($pid);
-        // Expire in 6h; renewed by /status if still running
         $pidItem->expiresAfter(6 * 3600);
         $cache->save($pidItem);
 
@@ -134,7 +146,7 @@ final class DataHubSupervisorController extends AbstractController
     #[Route('/stop', name: 'datahub_supervisor_stop', methods: ['POST'])]
     public function stop(): JsonResponse
     {
-        $this->denyAccessUnlessGranted('datahub_control');
+        $this->assertAdminOrAllowed();
 
         @touch($this->stopFlag());
         $cache = new FilesystemAdapter(self::CACHE_NS);
@@ -146,7 +158,7 @@ final class DataHubSupervisorController extends AbstractController
     #[Route('/status', name: 'datahub_supervisor_status', methods: ['GET'])]
     public function status(): JsonResponse
     {
-        $this->denyAccessUnlessGranted('datahub_control');
+        $this->assertAdminOrAllowed();
 
         $cache = new FilesystemAdapter(self::CACHE_NS);
         $pid   = (int)$cache->getItem(self::PID_KEY)->get();
@@ -155,7 +167,6 @@ final class DataHubSupervisorController extends AbstractController
         if (!$alive) {
             $cache->deleteItem(self::PID_KEY);
         } else {
-            // refresh TTL while alive
             $item = $cache->getItem(self::PID_KEY);
             $item->set($pid);
             $item->expiresAfter(6 * 3600);
@@ -174,7 +185,7 @@ final class DataHubSupervisorController extends AbstractController
     #[Route('/log', name: 'datahub_supervisor_log', methods: ['GET'])]
     public function log(Request $r): JsonResponse
     {
-        $this->denyAccessUnlessGranted('datahub_control');
+        $this->assertAdminOrAllowed();
 
         $lines = max(50, min(2000, (int)$r->query->get('lines', 400)));
         return new JsonResponse(['log' => $this->tail($this->logPath(), $lines)]);
