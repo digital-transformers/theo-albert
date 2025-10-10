@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
-use Pimcore\Bundle\AdminBundle\Security\User\TokenStorageUserResolver;
 use Pimcore\Tool\Console as PimcoreConsole;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -11,11 +10,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 #[Route('/admin/datahub-supervisor')]
 final class DataHubSupervisorController extends AbstractController
 {
-    public function __construct(private TokenStorageUserResolver $userResolver) {}
+    public function __construct(private TokenStorageInterface $tokenStorage) {}
 
     // ====== Config/paths ======
     private const CACHE_NS = 'datahub_single';
@@ -39,10 +39,23 @@ final class DataHubSupervisorController extends AbstractController
         return PimcoreConsole::getPhpCli() ?: '/usr/bin/php';
     }
 
+    private function getAdminUser(): ?object
+    {
+        $token = $this->tokenStorage->getToken();
+        if (!$token) return null;
+        $user = $token->getUser();
+        return \is_object($user) ? $user : null; // Pimcore wraps admin users
+    }
+
     private function assertAdminOrAllowed(): void
     {
-        $user = $this->userResolver->getUser(); // Pimcore Admin user
-        if (!$user || (!$user->isAdmin() && !$user->isAllowed('datahub_control'))) {
+        $user = $this->getAdminUser();
+        // Pimcore admin user wrappers expose isAdmin() / isAllowed()
+        if (
+            !$user
+            || (method_exists($user, 'isAdmin') && !$user->isAdmin()
+                && !(method_exists($user, 'isAllowed') && $user->isAllowed('datahub_control')))
+        ) {
             throw $this->createAccessDeniedException('Not allowed');
         }
     }
@@ -83,14 +96,12 @@ final class DataHubSupervisorController extends AbstractController
             return new JsonResponse(['ok' => false, 'msg' => 'Already running'], 409);
         }
 
-        // housekeeping
         @unlink($this->stopFlag());
         @touch($this->logPath());
 
         $profile = preg_replace('/[^\w\-]+/','', (string)$r->request->get('profile','default'));
         $extra   = (string)$r->request->get('extra','');
 
-        // Build the console command
         $cmd = [
             $this->phpCli(),
             'bin/console',
@@ -105,7 +116,6 @@ final class DataHubSupervisorController extends AbstractController
             }
         }
 
-        // Wrapper: obey stop flag, append to log
         $wrapper = sprintf(
             'while [ ! -f %s ]; do %s >> %s 2>&1; code=$?; break; done; exit $code',
             escapeshellarg($this->stopFlag()),
