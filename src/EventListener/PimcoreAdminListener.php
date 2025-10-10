@@ -10,16 +10,14 @@ final class PimcoreAdminListener implements EventSubscriberInterface
 {
     public static function getSubscribedEvents(): array
     {
-        return [
-            BundleManagerEvents::JS_PATHS => 'addJSFiles',
-        ];
+        return [ BundleManagerEvents::JS_PATHS => 'addJSFiles' ];
     }
 
     public function addJSFiles(PathsEvent $event): void
     {
         $event->addPaths([
-            '/app/admin/datahub-control.js',      
             '/app/admin/color-autoname.js',
+            '/app/admin/datahub-control.js',
         ]);
     }
 }
