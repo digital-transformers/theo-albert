@@ -22,16 +22,38 @@ app.datahub.ControlPanel = Class.create({
   }
 });
 
-(function addToolbarButtonWhenReady(){
-  try {
-    var toolbar = pimcore.globalmanager.get("layout_toolbar");
-    var portal  = pimcore.globalmanager.get("layout_portal");
+// Register a plugin that runs when Pimcore Admin is ready
+pimcore.plugin.broker.registerPlugin({
+  getClassName: function () { return "app.DataHubControlPlugin"; },
+
+  pimcoreReady: function () {
+    // Try both ways to get the toolbar, depending on Pimcore version
+    var toolbar =
+      pimcore.globalmanager.get("layout_toolbar") ||
+      (pimcore.globalmanager.get("layout") && pimcore.globalmanager.get("layout").toolbar);
+
+    var portal = pimcore.globalmanager.get("layout_portal");
+
+    console.log('[datahub-control] pimcoreReady, toolbar:', !!toolbar, 'portal:', !!portal);
+
     if (!toolbar || !portal) {
-      // Admin not fully initialized yet — retry shortly
-      return setTimeout(addToolbarButtonWhenReady, 300);
+      // As a fallback, open the panel automatically so you at least see it
+      try {
+        var p = new app.datahub.ControlPanel().getPanel();
+        if (portal) {
+          portal.add(p);
+          portal.setActiveTab(p);
+        } else {
+          // very old/edge: use global tab panel
+          pimcore.globalmanager.get("layout_portal").add(p);
+        }
+      } catch (e) {
+        console.warn('[datahub-control] fallback open failed', e);
+      }
+      return;
     }
 
-    // Avoid duplicates if script is reloaded
+    // Avoid duplicates
     if (!toolbar.findById('datahub-import-btn')) {
       toolbar.add({
         id: 'datahub-import-btn',
@@ -46,8 +68,5 @@ app.datahub.ControlPanel = Class.create({
       toolbar.doLayout();
       console.log('[datahub-control] toolbar button added');
     }
-  } catch(e) {
-    console.error('[datahub-control] init error', e);
-    setTimeout(addToolbarButtonWhenReady, 500);
   }
-})();
+});
