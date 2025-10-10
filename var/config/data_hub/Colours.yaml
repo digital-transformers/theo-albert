@@ -1,43 +1,48 @@
 pimcore_data_hub:
     configurations:
-        SAPSupplierImport:
+        Colours:
             general:
                 active: true
                 type: dataImporterDataObject
-                name: SAPSupplierImport
+                name: Colours
                 description: ''
                 group: ''
                 path: null
-                modificationDate: 1759497921
-                createDate: 1753352126
+                modificationDate: 1759497790
+                createDate: 1759495565
             loaderConfig:
                 type: upload
                 settings:
-                    uploadFilePath: SAPSupplierImport/upload.import
+                    uploadFilePath: Colours/upload.import
             interpreterConfig:
-                type: xlsx
+                type: csv
                 settings:
                     skipFirstRow: true
-                    sheetName: Sheet1
+                    delimiter: "\t"
+                    enclosure: '"'
+                    escape: \
             resolverConfig:
                 elementType: dataObject
-                dataObjectClassId: supplier
+                dataObjectClassId: color
                 loadingStrategy:
-                    type: notLoad
+                    type: id
+                    settings:
+                        dataSourceIndex: '0'
                 createLocationStrategy:
                     type: staticPath
                     settings:
-                        path: /Home/SetupData/SAPSuppliers
+                        path: /
                 locationUpdateStrategy:
-                    type: noChange
+                    type: staticPath
+                    settings:
+                        path: /
                 publishingStrategy:
                     type: noChangePublishNew
             processingConfig:
-                executionType: parallel
-                doArchiveImportFile: true
+                executionType: sequential
                 idDataIndex: '0'
                 cleanup:
-                    strategy: unpublish
+                    strategy: delete
             mappingConfig:
                 -
                     label: 'new column'
@@ -55,7 +60,7 @@ pimcore_data_hub:
                 -
                     label: 'new column'
                     dataSourceIndex:
-                        - '1'
+                        - '2'
                     transformationResultType: default
                     dataTarget:
                         type: direct
@@ -68,20 +73,33 @@ pimcore_data_hub:
                 -
                     label: 'new column'
                     dataSourceIndex:
-                        - '2'
+                        - '5'
                     transformationResultType: default
                     dataTarget:
                         type: direct
                         settings:
-                            fieldName: country
+                            fieldName: colorType
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: 'new column'
+                    dataSourceIndex:
+                        - '8'
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: genericColor
                             language: ''
                             writeIfTargetIsNotEmpty: true
                             writeIfSourceIsEmpty: true
                     transformationPipeline: {  }
             executionConfig:
-                scheduleType: recurring
+                scheduleType: job
                 cronDefinition: ''
-                scheduledAt: ''
+                scheduledAt: '03-10-2025 15:00'
             permissions:
                 user:
                     -

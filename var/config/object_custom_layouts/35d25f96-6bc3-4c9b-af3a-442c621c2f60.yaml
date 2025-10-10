@@ -7,7 +7,7 @@ pimcore:
                     name: test-supplier
                     description: ''
                     creationDate: 1753277445
-                    modificationDate: 1757556127
+                    modificationDate: 1760067976
                     userOwner: 2
                     userModification: 0
                     classId: supplier

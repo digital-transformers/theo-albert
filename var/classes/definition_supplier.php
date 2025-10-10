@@ -19,7 +19,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1757556126,
+   'modificationDate' => 1760067976,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -183,13 +183,17 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
             ),
              'classes' => 
             array (
+              0 => 
+              array (
+                'classes' => 'SAPPricelist',
+              ),
             ),
              'displayMode' => 'grid',
              'pathFormatterClass' => '',
              'assetInlineDownloadAllowed' => false,
              'assetUploadPath' => '',
              'allowToClearRelation' => true,
-             'objectsAllowed' => false,
+             'objectsAllowed' => true,
              'assetsAllowed' => false,
              'assetTypes' => 
             array (
