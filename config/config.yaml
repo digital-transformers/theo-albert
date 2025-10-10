@@ -1,6 +1,12 @@
 imports:
     - { resource: 'local/' }
 
+pimcore_admin:
+  frontend:
+    js:
+      - /app/admin/color-autoname.js
+      - /app/admin/datahub-control.js
+
 
 pimcore:
   workflows:
