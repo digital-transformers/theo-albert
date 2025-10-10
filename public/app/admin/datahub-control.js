@@ -175,3 +175,35 @@ app.datahub.getPanel = function () {
     setTimeout(waitThenOpenTab, 400);
   }
 })();
+
+
+(function addTopMenuButton() {
+  try {
+    if (typeof Ext === 'undefined' || !window.pimcore) {
+      return setTimeout(addTopMenuButton, 200);
+    }
+    var navEl = Ext.get('pimcore_menu_search');
+    var tabs  = Ext.getCmp('pimcore_panel_tabs');
+    if (!navEl || !tabs) {
+      return setTimeout(addTopMenuButton, 200);
+    }
+
+    if (!Ext.get('pimcore_menu_datahubcontrol')) {
+      const btn = navEl.insertSibling(
+        '<li id="pimcore_menu_datahubcontrol" data-menu-tooltip="Data Import" class="pimcore_menu_item pimcore_menu_needs_children">' +
+          '<img src="/bundles/pimcoreadmin/img/flat-white-icons/import.svg" alt="Data Import" />' +
+        '</li>',
+        'before'
+      );
+      btn.on("mousedown", function () {
+        var panel = Ext.getCmp('datahub-control-panel') || app.datahub.getPanel();
+        tabs.add(panel); tabs.setActiveTab(panel);
+      });
+      pimcore.helpers.initMenuTooltips();
+      console.log('[datahub-control] top menu button added');
+    }
+  } catch (e) {
+    console.error('[datahub-control] top menu add error', e);
+    setTimeout(addTopMenuButton, 400);
+  }
+})();
