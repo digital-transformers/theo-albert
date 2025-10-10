@@ -82,6 +82,18 @@ final class DataHubSupervisorController extends AbstractController
         fclose($f); return $buf;
     }
 
+    private function sanitizeConsoleOutput(string $s): string
+    {
+        // strip ANSI escape sequences
+        $s = preg_replace('/\x1B\[[0-9;]*[A-Za-z]/', '', $s) ?? $s;
+        // turn carriage-returns from progress bars into newlines
+        $s = str_replace("\r", "\n", $s);
+        // collapse excessive blank lines
+        $s = preg_replace("/\n{3,}/", "\n\n", $s) ?? $s;
+
+        return $s;
+    }
+
     // ====== Endpoints ======
 
     #[Route('/start', name: 'datahub_supervisor_start', methods: ['POST'])]
@@ -107,7 +119,9 @@ final class DataHubSupervisorController extends AbstractController
             'bin/console',
             'datahub:data-importer:process-queue-sequential',
             '--no-interaction',
-            '--ansi',
+            '--no-ansi',
+            '--env=dev',
+            '--no-debug',
         ];
         if ($extra) {
             foreach (preg_split('/\s+/', trim($extra)) as $opt) {
@@ -197,6 +211,8 @@ final class DataHubSupervisorController extends AbstractController
         $this->assertAdminOrAllowed();
 
         $lines = max(50, min(2000, (int)$r->query->get('lines', 400)));
-        return new JsonResponse(['log' => $this->tail($this->logPath(), $lines)]);
+        $raw   = $this->tail($this->logPath(), $lines);
+
+        return new JsonResponse(['log' => $this->sanitizeConsoleOutput($raw)]);
     }
 }
