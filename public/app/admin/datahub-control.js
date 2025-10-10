@@ -22,42 +22,27 @@ app.datahub.ControlPanel = Class.create({
   }
 });
 
-// Register a plugin that runs when Pimcore Admin is ready
-pimcore.plugin.broker.registerPlugin({
-  getClassName: function () { return "app.DataHubControlPlugin"; },
-
-  pimcoreReady: function () {
-    // Try both ways to get the toolbar, depending on Pimcore version
-    var toolbar =
-      pimcore.globalmanager.get("layout_toolbar") ||
-      (pimcore.globalmanager.get("layout") && pimcore.globalmanager.get("layout").toolbar);
-
-    var portal = pimcore.globalmanager.get("layout_portal");
-
-    console.log('[datahub-control] pimcoreReady, toolbar:', !!toolbar, 'portal:', !!portal);
-
-    if (!toolbar || !portal) {
-      // As a fallback, open the panel automatically so you at least see it
-      try {
-        var p = new app.datahub.ControlPanel().getPanel();
-        if (portal) {
-          portal.add(p);
-          portal.setActiveTab(p);
-        } else {
-          // very old/edge: use global tab panel
-          pimcore.globalmanager.get("layout_portal").add(p);
-        }
-      } catch (e) {
-        console.warn('[datahub-control] fallback open failed', e);
-      }
-      return;
+(function waitForAdmin(){
+  try {
+    // check for Ext + core layout components
+    if (typeof Ext === 'undefined' || !window.pimcore || !pimcore.globalmanager) {
+      return setTimeout(waitForAdmin, 200);
     }
 
-    // Avoid duplicates
+    var layout   = pimcore.globalmanager.get("layout");
+    var portal   = pimcore.globalmanager.get("layout_portal");
+    var toolbar  = pimcore.globalmanager.get("layout_toolbar") || (layout && layout.toolbar);
+
+    // wait until both exist
+    if (!portal || !toolbar) {
+      return setTimeout(waitForAdmin, 200);
+    }
+
+    // avoid duplicates
     if (!toolbar.findById('datahub-import-btn')) {
       toolbar.add({
         id: 'datahub-import-btn',
-        text: t("Data Import"),
+        text: "Data Import",
         iconCls: "pimcore_icon_import",
         handler: function () {
           var panel = new app.datahub.ControlPanel().getPanel();
@@ -68,5 +53,8 @@ pimcore.plugin.broker.registerPlugin({
       toolbar.doLayout();
       console.log('[datahub-control] toolbar button added');
     }
+  } catch (e) {
+    console.error('[datahub-control] init error', e);
+    setTimeout(waitForAdmin, 400);
   }
-});
+})();
