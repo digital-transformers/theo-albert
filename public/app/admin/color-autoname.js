@@ -1,62 +1,64 @@
-(function () {
-  console.log('[color-autoname] loaded');
-  class ColorAutoNamePlugin extends pimcore.plugin.admin {
-    getClassName() { return "ColorAutoNamePlugin"; }
+// public/app/admin/color-autoname.js
+console.log('[color-autoname] loaded');
 
-    initialize() {
-      // Run when an object editor opens
-      pimcore.events.on("postOpenObject", this.onPostOpenObject.bind(this));
+(function init() {
+  try {
+    // wait until Pimcore Admin is fully booted
+    var toolbar = pimcore?.globalmanager?.get?.("layout_toolbar");
+    if (!toolbar || typeof Ext === 'undefined' || !pimcore?.plugin?.broker) {
+      return setTimeout(init, 300);
     }
 
-    onPostOpenObject(objectEditor /* pimcore.object.edit */, type) {
-      try {
-        const data = objectEditor?.data?.general || {};
-        if (data.className !== 'color') {
-          return; // only for Color class
-        }
+    // register a lightweight admin plugin (no extends)
+    if (!window.__colorAutonameRegistered) {
+      window.__colorAutonameRegistered = true;
 
-        // Access fields by name from the editor
-        const fields = objectEditor?.dataFields || {};
-        const multi = fields['multiColor'];
-        const nameField = fields['name'];
+      pimcore.plugin.broker.registerPlugin({
+        getClassName: function () { return "app.ColorAutoNamePlugin"; },
+        initialize: function () {
+          // run when an object editor opens
+          pimcore.events.on("postOpenObject", function (objectEditor /* pimcore.object.edit */, type) {
+            try {
+              const data = objectEditor?.data?.general || {};
+              if ((data.className || '').toLowerCase() !== 'color') return;
 
-        if (!multi || !nameField || !multi.grid || !multi.grid.getStore) {
-          return;
-        }
+              const fields = objectEditor?.dataFields || {};
+              const multi = fields['multiColor'];
+              const nameField = fields['name'];
 
-        const store = multi.grid.getStore();
+              if (!multi || !nameField || !multi.grid || !multi.grid.getStore) return;
 
-        const recompute = () => {
-          try {
-            const names = [];
-            store.each(rec => {
-              // visibleFields: 'code,name' -> both exist in the store if configured
-              const n = (rec.get('name') || rec.get('code') || rec.get('path') || '').toString().trim();
-              if (n) names.push(n);
-            });
+              const store = multi.grid.getStore();
 
-            if (names.length > 1) {
-              nameField.setValue(names.join(' + '));
+              const recompute = () => {
+                try {
+                  const names = [];
+                  store.each(rec => {
+                    const n = (rec.get('name') || rec.get('code') || rec.get('path') || '').toString().trim();
+                    if (n) names.push(n);
+                  });
+                  if (names.length > 1) {
+                    nameField.setValue(names.join(' + '));
+                  }
+                } catch (e) {
+                  console.warn('[color-autoname] recompute error', e);
+                }
+              };
+
+              store.on('datachanged', recompute);
+              store.on('update', recompute);
+              Ext.defer(recompute, 100);
+            } catch (e) {
+              console.warn('[color-autoname] init error', e);
             }
-            // If 0/1 item, do nothing (keeps manual control)
-          } catch (e) {
-            // be silent in UI, but log in console for debugging
-            console.warn('ColorAutoNamePlugin recompute error', e);
-          }
-        };
+          });
+        }
+      });
 
-        // Recompute when rows are added/removed/edited
-        store.on('datachanged', recompute);
-        store.on('update', recompute);
-
-        // Also recompute right after opening, in case there’s existing data
-        Ext.defer(recompute, 100);
-      } catch (e) {
-        console.warn('ColorAutoNamePlugin init error', e);
-      }
+      console.log('[color-autoname] plugin registered');
     }
+  } catch (e) {
+    console.error('[color-autoname] init error', e);
+    setTimeout(init, 500);
   }
-
-  new ColorAutoNamePlugin();
 })();
-s
