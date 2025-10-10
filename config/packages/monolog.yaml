@@ -1,0 +1,9 @@
+# config/packages/monolog.yaml
+monolog:
+  channels: [ datahub ]
+  handlers:
+    datahub_stream:
+      type: stream
+      path: '%kernel.project_dir%/var/log/datahub-importer.log'
+      level: info
+      channels: ['datahub']

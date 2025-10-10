@@ -1,0 +1,7 @@
+# config/packages/pimcore_admin.yaml
+pimcore_admin:
+  admin_permissions:
+    definitions:
+      datahub_control:
+        group: 'Data Import'
+        label: 'Control DataHub queue'

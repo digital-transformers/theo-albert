@@ -25,6 +25,7 @@ final class PimcoreAdminListener
                 $event->getPaths(),
                 [
                     '/app/admin/color-autoname.js',
+                    '/app/admin/datahub-control.js',
                 ]
             )
         );
