@@ -8,7 +8,7 @@ pimcore_data_hub:
                 description: ''
                 group: ''
                 path: null
-                modificationDate: 1757910792
+                modificationDate: 1760069450
                 createDate: 1753352126
             loaderConfig:
                 type: asset
@@ -73,6 +73,10 @@ pimcore_data_hub:
                     dataSourceIndex:
                         - groupName
                         - groupNum
+                    settings:
+                        glue: '|'
+                        search: /
+                        replace: '-'
                     transformationResultType: default
                     dataTarget:
                         type: direct
@@ -81,10 +85,6 @@ pimcore_data_hub:
                             language: ''
                             writeIfTargetIsNotEmpty: true
                             writeIfSourceIsEmpty: true
-                    settings:
-                        glue: '|'
-                        search: /
-                        replace: '-'
                     transformationPipeline:
                         -
                             settings:
