@@ -106,7 +106,6 @@ final class DataHubSupervisorController extends AbstractController
             $this->phpCli(),
             'bin/console',
             'datahub:data-importer:process-queue-sequential',
-            '--profile='.$profile,
             '--no-interaction',
             '--ansi',
         ];
