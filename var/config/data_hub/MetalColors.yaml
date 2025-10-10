@@ -1,19 +1,19 @@
 pimcore_data_hub:
     configurations:
-        Colours:
+        MetalColors:
             general:
                 active: true
                 type: dataImporterDataObject
-                name: Colours
+                name: MetalColors
                 description: ''
                 group: ''
                 path: null
-                modificationDate: 1759497790
+                modificationDate: 1760082312
                 createDate: 1759495565
             loaderConfig:
-                type: upload
+                type: asset
                 settings:
-                    uploadFilePath: Colours/upload.import
+                    assetPath: '/Datasource Files/ColorsMetal.csv'
             interpreterConfig:
                 type: csv
                 settings:
@@ -25,17 +25,18 @@ pimcore_data_hub:
                 elementType: dataObject
                 dataObjectClassId: color
                 loadingStrategy:
-                    type: id
+                    type: attribute
                     settings:
                         dataSourceIndex: '0'
+                        attributeName: code
+                        language: ''
+                        includeUnpublished: true
                 createLocationStrategy:
                     type: staticPath
                     settings:
-                        path: /
+                        path: /SetupData/Colours/Metal
                 locationUpdateStrategy:
-                    type: staticPath
-                    settings:
-                        path: /
+                    type: noChange
                 publishingStrategy:
                     type: noChangePublishNew
             processingConfig:
@@ -45,7 +46,7 @@ pimcore_data_hub:
                     strategy: delete
             mappingConfig:
                 -
-                    label: 'new column'
+                    label: Code
                     dataSourceIndex:
                         - '0'
                     transformationResultType: default
@@ -58,7 +59,7 @@ pimcore_data_hub:
                             writeIfSourceIsEmpty: true
                     transformationPipeline: {  }
                 -
-                    label: 'new column'
+                    label: Name
                     dataSourceIndex:
                         - '2'
                     transformationResultType: default
@@ -71,7 +72,7 @@ pimcore_data_hub:
                             writeIfSourceIsEmpty: true
                     transformationPipeline: {  }
                 -
-                    label: 'new column'
+                    label: Type
                     dataSourceIndex:
                         - '5'
                     transformationResultType: default
@@ -84,7 +85,7 @@ pimcore_data_hub:
                             writeIfSourceIsEmpty: true
                     transformationPipeline: {  }
                 -
-                    label: 'new column'
+                    label: Generic
                     dataSourceIndex:
                         - '8'
                     transformationResultType: default
@@ -96,10 +97,42 @@ pimcore_data_hub:
                             writeIfTargetIsNotEmpty: true
                             writeIfSourceIsEmpty: true
                     transformationPipeline: {  }
+                -
+                    label: KEY
+                    dataSourceIndex:
+                        - '0'
+                        - '2'
+                    settings:
+                        search: /
+                        replace: '-'
+                        glue: '|'
+                        mode: both
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: key
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline:
+                        -
+                            settings:
+                                search: /
+                                replace: '-'
+                            type: stringReplace
+                        -
+                            settings:
+                                glue: '|'
+                            type: combine
+                        -
+                            settings:
+                                mode: both
+                            type: trim
             executionConfig:
                 scheduleType: job
                 cronDefinition: ''
-                scheduledAt: '03-10-2025 15:00'
+                scheduledAt: ''
             permissions:
                 user:
                     -

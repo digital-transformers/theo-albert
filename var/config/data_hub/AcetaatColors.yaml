@@ -1,51 +1,54 @@
 pimcore_data_hub:
     configurations:
-        SAPSupplierImport:
+        AcetaatColors:
             general:
                 active: true
                 type: dataImporterDataObject
-                name: SAPSupplierImport
+                name: AcetaatColors
                 description: ''
                 group: ''
                 path: null
-                modificationDate: 1760080072
-                createDate: 1753352126
+                modificationDate: 1760081530
+                createDate: 1759495565
             loaderConfig:
                 type: asset
                 settings:
-                    assetPath: '/Datasource Files/sap-suppliers.json'
+                    assetPath: '/Datasource Files/ColorsAcetaat.csv'
             interpreterConfig:
-                type: json
+                type: csv
                 settings:
-                    path: ''
+                    skipFirstRow: true
+                    delimiter: "\t"
+                    enclosure: '"'
+                    escape: \
             resolverConfig:
                 elementType: dataObject
-                dataObjectClassId: supplier
+                dataObjectClassId: color
                 loadingStrategy:
                     type: attribute
                     settings:
-                        dataSourceIndex: CardCode
+                        dataSourceIndex: '0'
                         attributeName: code
                         language: ''
+                        includeUnpublished: true
                 createLocationStrategy:
                     type: staticPath
                     settings:
-                        path: /SetupData/SAPSuppliers
+                        path: /SetupData/Colours/Acetaat
                 locationUpdateStrategy:
                     type: noChange
                 publishingStrategy:
                     type: noChangePublishNew
             processingConfig:
                 executionType: sequential
-                doArchiveImportFile: true
-                idDataIndex: CardCode
+                idDataIndex: '0'
                 cleanup:
-                    strategy: unpublish
+                    strategy: delete
             mappingConfig:
                 -
-                    label: CardCode
+                    label: Code
                     dataSourceIndex:
-                        - CardCode
+                        - '0'
                     transformationResultType: default
                     dataTarget:
                         type: direct
@@ -56,9 +59,9 @@ pimcore_data_hub:
                             writeIfSourceIsEmpty: true
                     transformationPipeline: {  }
                 -
-                    label: CardName
+                    label: Name
                     dataSourceIndex:
-                        - CardName
+                        - '2'
                     transformationResultType: default
                     dataTarget:
                         type: direct
@@ -69,14 +72,27 @@ pimcore_data_hub:
                             writeIfSourceIsEmpty: true
                     transformationPipeline: {  }
                 -
-                    label: Country
+                    label: Type
                     dataSourceIndex:
-                        - Country
+                        - '5'
                     transformationResultType: default
                     dataTarget:
                         type: direct
                         settings:
-                            fieldName: country
+                            fieldName: colorType
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: Generic
+                    dataSourceIndex:
+                        - '8'
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: genericColor
                             language: ''
                             writeIfTargetIsNotEmpty: true
                             writeIfSourceIsEmpty: true
@@ -84,10 +100,13 @@ pimcore_data_hub:
                 -
                     label: KEY
                     dataSourceIndex:
-                        - CardName
-                        - CardCode
+                        - '0'
+                        - '2'
                     settings:
                         glue: '|'
+                        search: /
+                        replace: '-'
+                        mode: both
                     transformationResultType: default
                     dataTarget:
                         type: direct
@@ -99,12 +118,21 @@ pimcore_data_hub:
                     transformationPipeline:
                         -
                             settings:
+                                search: /
+                                replace: '-'
+                            type: stringReplace
+                        -
+                            settings:
                                 glue: '|'
                             type: combine
+                        -
+                            settings:
+                                mode: both
+                            type: trim
             executionConfig:
-                scheduleType: recurring
+                scheduleType: job
                 cronDefinition: ''
-                scheduledAt: ''
+                scheduledAt: '03-10-2025 15:00'
             permissions:
                 user:
                     -

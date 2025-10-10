@@ -22,7 +22,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => 'Color',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1757556319,
+   'modificationDate' => 1760081700,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -135,77 +135,77 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
               0 => 
               array (
                 'key' => 'Transparent',
-                'value' => '01_transparent',
+                'value' => '1',
               ),
               1 => 
               array (
                 'key' => 'Black',
-                'value' => '02_black',
+                'value' => '2',
               ),
               2 => 
               array (
                 'key' => 'Blue',
-                'value' => '03_blue',
+                'value' => '3',
               ),
               3 => 
               array (
                 'key' => 'Brown',
-                'value' => '04_brown',
+                'value' => '4',
               ),
               4 => 
               array (
                 'key' => 'Gold',
-                'value' => '05_gold',
+                'value' => '5',
               ),
               5 => 
               array (
                 'key' => 'Grey',
-                'value' => '06_grey',
+                'value' => '6',
               ),
               6 => 
               array (
                 'key' => 'Green',
-                'value' => '07_green',
+                'value' => '7',
               ),
               7 => 
               array (
                 'key' => 'Orange',
-                'value' => '08_orange',
+                'value' => '8',
               ),
               8 => 
               array (
                 'key' => 'Pink',
-                'value' => '09_pink',
+                'value' => '9',
               ),
               9 => 
               array (
                 'key' => 'Purple',
-                'value' => '10_purple',
+                'value' => '10',
               ),
               10 => 
               array (
                 'key' => 'Red',
-                'value' => '11_red',
+                'value' => '11',
               ),
               11 => 
               array (
                 'key' => 'Silver',
-                'value' => '12_silver',
+                'value' => '12',
               ),
               12 => 
               array (
                 'key' => 'White',
-                'value' => '13_white',
+                'value' => '13',
               ),
               13 => 
               array (
                 'key' => 'Yellow',
-                'value' => '14_yellow',
+                'value' => '14',
               ),
               14 => 
               array (
                 'key' => 'Multi colour',
-                'value' => '15_multi-colour',
+                'value' => '15',
               ),
             ),
              'defaultValue' => '',
