@@ -1,15 +1,14 @@
 console.log('[datahub-control] loaded');
 
-if (window.pimcore && pimcore.settings && pimcore.settings.csrfToken) {
+if (window.pimcore?.settings?.csrfToken) {
   Ext.Ajax.defaultHeaders = Ext.Ajax.defaultHeaders || {};
   Ext.Ajax.defaultHeaders['X-pimcore-csrf-token'] = pimcore.settings.csrfToken;
 }
 
-// Namespace
 pimcore.registerNS("app.datahub");
 app.datahub = app.datahub || {};
 
-// Panel factory (no Class.create)
+// Panel factory
 app.datahub.getPanel = function () {
   var existing = Ext.getCmp('datahub-control-panel');
   if (existing) return existing;
@@ -33,8 +32,7 @@ app.datahub.getPanel = function () {
             { xtype: 'textfield', id: 'dhc-profile', width: 220, emptyText: 'profile (optional)' },
             { xtype: 'textfield', id: 'dhc-extra',   width: 280, emptyText: 'extra args (e.g. --limit=500)' },
             {
-              text: 'Start',
-              iconCls: 'pimcore_icon_apply',
+              text: 'Start', iconCls: 'pimcore_icon_apply',
               handler: function () {
                 const profile = Ext.getCmp('dhc-profile').getValue() || 'default';
                 const extra   = Ext.getCmp('dhc-extra').getValue() || '';
@@ -48,8 +46,7 @@ app.datahub.getPanel = function () {
               }
             },
             {
-              text: 'Stop',
-              iconCls: 'pimcore_icon_stop',
+              text: 'Stop', iconCls: 'pimcore_icon_stop',
               handler: function () {
                 Ext.Ajax.request({
                   url: '/admin/datahub-supervisor/stop',
@@ -59,50 +56,26 @@ app.datahub.getPanel = function () {
                 });
               }
             },
-            '-',
-            {
-              text: 'Refresh Status',
-              handler: function(){ app.datahub.refreshStatusOnce(); }
-            },
+            '-', { text: 'Refresh Status', handler: function(){ app.datahub.refreshStatusOnce(); } },
             { xtype: 'checkbox', id: 'dhc-autorefresh', boxLabel: 'Auto-refresh', checked: true },
             '->',
             {
               text: 'Clear Log',
               handler: function () {
-                const box = Ext.getCmp('dhc-log');
-                if (box) box.setValue('');
-                // temporarily pause auto-refresh so we don't instantly re-fill from the old file
-                const auto = Ext.getCmp('dhc-autorefresh');
-                const prev = auto && auto.getValue();
-                if (auto) auto.setValue(false);
-
+                const box = Ext.getCmp('dhc-log'); if (box) box.setValue('');
+                const auto = Ext.getCmp('dhc-autorefresh'); const prev = auto && auto.getValue(); if (auto) auto.setValue(false);
                 Ext.Ajax.request({
-                  url: '/admin/datahub-supervisor/log/clear',
-                  method: 'POST',
-                  success: function () {
-                    // small delay then resume if it was on
-                    setTimeout(function(){
-                      if (auto) auto.setValue(prev);
-                    }, 800);
-                    pimcore.helpers.showNotification('OK','Log cleared','success');
-                  },
-                  failure: function () {
-                    pimcore.helpers.showNotification('Error','Failed to clear log','error');
-                    if (auto) auto.setValue(prev);
-                  }
+                  url: '/admin/datahub-supervisor/log/clear', method: 'POST',
+                  success: function () { setTimeout(function(){ if (auto) auto.setValue(prev); }, 800); pimcore.helpers.showNotification('OK','Log cleared','success'); },
+                  failure: function () { pimcore.helpers.showNotification('Error','Failed to clear log','error'); if (auto) auto.setValue(prev); }
                 });
               }
             }
-
           ]
         },
         {
-          xtype: 'displayfield',
-          id: 'dhc-status',
-          width: '100%',
-          fieldLabel: 'Workers',
-          labelWidth: 70,
-          value: '—',
+          xtype: 'displayfield', id: 'dhc-status', width: '100%',
+          fieldLabel: 'Workers', labelWidth: 70, value: '—',
           renderer: function(v){ return v; }
         },
         { xtype: 'textarea', id: 'dhc-log', width: '100%', height: 420, readOnly: true }
@@ -110,8 +83,7 @@ app.datahub.getPanel = function () {
     }]
   });
 
-  // start polling when first created
-  app.datahub.startPolling();
+  app.datahub.startPolling(); // starts only after user opens the panel
   return panel;
 };
 
@@ -122,29 +94,23 @@ app.datahub.getPanel = function () {
   function poll(){
     try{
       const auto = Ext.getCmp('dhc-autorefresh');
-      if (!auto || !auto.getValue()) {
-        timer = setTimeout(poll, 2000);
-        return;
-      }
+      if (!auto || !auto.getValue()) { timer = setTimeout(poll, 2000); return; }
 
       Ext.Ajax.request({
-        url: '/admin/datahub-supervisor/status',
-        method: 'GET',
+        url: '/admin/datahub-supervisor/status', method: 'GET',
         success: function (resp) {
           try {
             const d = Ext.decode(resp.responseText);
             const html = (d.workers || []).map(w =>
               `${Ext.util.Format.htmlEncode(w.name)}: ${Ext.util.Format.htmlEncode(w.state)}`
             ).join('<br/>') || 'No data';
-            const st = Ext.getCmp('dhc-status');
-            if (st) st.setValue(html);
+            const st = Ext.getCmp('dhc-status'); if (st) st.setValue(html);
           } catch(e){}
         }
       });
 
       Ext.Ajax.request({
-        url: '/admin/datahub-supervisor/log?lines=400',
-        method: 'GET',
+        url: '/admin/datahub-supervisor/log?lines=400', method: 'GET',
         success: function (resp) {
           try {
             const d = Ext.decode(resp.responseText);
@@ -158,9 +124,7 @@ app.datahub.getPanel = function () {
         },
         callback: function(){ timer = setTimeout(poll, 2000); }
       });
-    } catch(e){
-      timer = setTimeout(poll, 2500);
-    }
+    } catch(e){ timer = setTimeout(poll, 2500); }
   }
 
   app.datahub.startPolling = function(){
@@ -170,67 +134,32 @@ app.datahub.getPanel = function () {
 
   app.datahub.refreshStatusOnce = function(){
     Ext.Ajax.request({
-      url: '/admin/datahub-supervisor/status',
-      method: 'GET',
+      url: '/admin/datahub-supervisor/status', method: 'GET',
       success: function (resp) {
         try {
           const d = Ext.decode(resp.responseText);
           const html = (d.workers || []).map(w =>
             `${Ext.util.Format.htmlEncode(w.name)}: ${Ext.util.Format.htmlEncode(w.state)}`
           ).join('<br/>') || 'No data';
-          const st = Ext.getCmp('dhc-status');
-          if (st) st.setValue(html);
+          const st = Ext.getCmp('dhc-status'); if (st) st.setValue(html);
         } catch(e){}
       }
     });
   };
 })();
 
-// Auto-open tab
-(function waitThenOpenTab() {
-  try {
-    if (typeof Ext === 'undefined' || !window.pimcore || !pimcore.globalmanager) {
-      return setTimeout(waitThenOpenTab, 200);
-    }
-    var tabs = Ext.getCmp("pimcore_panel_tabs");
-    if (!tabs) {
-      return setTimeout(waitThenOpenTab, 200);
-    }
-    if (!Ext.getCmp('datahub-control-panel')) {
-      var panel = app.datahub.getPanel();   // <— no constructor; factory function
-      tabs.add(panel);
-      tabs.setActiveTab(panel);
-      console.log('[datahub-control] panel opened');
-    }
-  } catch (e) {
-    console.error('[datahub-control] open error', e);
-    setTimeout(waitThenOpenTab, 400);
-  }
-})();
-
-
-/**
- * Add a top menu button next to the search that opens the panel.
- * No auto-open; user clicks to open.
- */
+// Button-only: add icon next to search; open panel on click
 (function addTopMenuButton() {
   try {
     if (typeof Ext === 'undefined' || !window.pimcore || !pimcore.globalmanager) {
       return setTimeout(addTopMenuButton, 200);
     }
-
-    const navEl = Ext.get('pimcore_menu_search');     // anchor in top navbar
-    const tabs  = Ext.getCmp('pimcore_panel_tabs');   // main tab panel
+    const navEl = Ext.get('pimcore_menu_search');
+    const tabs  = Ext.getCmp('pimcore_panel_tabs');
     const user  = pimcore.globalmanager.get("user");
+    if (!navEl || !tabs || !user) return setTimeout(addTopMenuButton, 200);
 
-    if (!navEl || !tabs || !user) {
-      return setTimeout(addTopMenuButton, 200);
-    }
-
-    // optional: hide button unless admin or has the permission
-    if (!user.admin && !(user.isAllowed && user.isAllowed('datahub_control'))) {
-      return; // don't render button
-    }
+    if (!user.admin && !(user.isAllowed && user.isAllowed('datahub_control'))) return;
 
     if (!Ext.get('pimcore_menu_datahubcontrol')) {
       const btn = navEl.insertSibling(
@@ -239,13 +168,10 @@ app.datahub.getPanel = function () {
         '</li>',
         'before'
       );
-
       btn.on("mousedown", function () {
         const panel = Ext.getCmp('datahub-control-panel') || app.datahub.getPanel();
-        tabs.add(panel);
-        tabs.setActiveTab(panel);
+        tabs.add(panel); tabs.setActiveTab(panel);
       });
-
       pimcore.helpers.initMenuTooltips();
       console.log('[datahub-control] top menu button added');
     }
