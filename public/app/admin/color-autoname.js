@@ -1,5 +1,4 @@
 (function () {
-  console.log('[color-autoname] loaded');
   class ColorAutoNamePlugin extends pimcore.plugin.admin {
     getClassName() { return "ColorAutoNamePlugin"; }
 
