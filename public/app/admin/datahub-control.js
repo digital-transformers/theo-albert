@@ -1,24 +1,20 @@
-// public/app/admin/datahub-control.js  (or /bundles/app/js/... if that's your path)
-
 console.log('[datahub-control] loaded');
 
 pimcore.registerNS("app.datahub.ControlPanel");
 
 app.datahub.ControlPanel = Class.create({
-  getClassName: function () { return "app.datahub.ControlPanel"; },
-
   initialize: function () {},
-
   getPanel: function () {
     if (!this.panel) {
       this.panel = new Ext.Panel({
         title: "DataHub Import Control",
         iconCls: "pimcore_icon_import",
+        closable: true,
         layout: "fit",
         items: [{
           xtype: "panel",
           bodyStyle: "padding:12px",
-          html: "<b>It works!</b> Hook your Start/Stop/Status here."
+          html: "<b>It works!</b> Hook Start/Stop/Status here."
         }]
       });
     }
@@ -26,21 +22,32 @@ app.datahub.ControlPanel = Class.create({
   }
 });
 
-// Add an entry in the top toolbar that opens the panel
-pimcore.plugin.broker.registerPlugin({
-  initialize: function () {
+(function addToolbarButtonWhenReady(){
+  try {
     var toolbar = pimcore.globalmanager.get("layout_toolbar");
-    if (!toolbar) return;
+    var portal  = pimcore.globalmanager.get("layout_portal");
+    if (!toolbar || !portal) {
+      // Admin not fully initialized yet — retry shortly
+      return setTimeout(addToolbarButtonWhenReady, 300);
+    }
 
-    toolbar.add({
-      text: t("Data Import"),
-      iconCls: "pimcore_icon_import",
-      handler: function () {
-        var panel = new app.datahub.ControlPanel().getPanel();
-        var portal = pimcore.globalmanager.get("layout_portal");
-        portal.add(panel);
-        portal.setActiveTab(panel);
-      }
-    });
+    // Avoid duplicates if script is reloaded
+    if (!toolbar.findById('datahub-import-btn')) {
+      toolbar.add({
+        id: 'datahub-import-btn',
+        text: t("Data Import"),
+        iconCls: "pimcore_icon_import",
+        handler: function () {
+          var panel = new app.datahub.ControlPanel().getPanel();
+          portal.add(panel);
+          portal.setActiveTab(panel);
+        }
+      });
+      toolbar.doLayout();
+      console.log('[datahub-control] toolbar button added');
+    }
+  } catch(e) {
+    console.error('[datahub-control] init error', e);
+    setTimeout(addToolbarButtonWhenReady, 500);
   }
-});
+})();
