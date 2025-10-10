@@ -215,4 +215,15 @@ final class DataHubSupervisorController extends AbstractController
 
         return new JsonResponse(['log' => $this->sanitizeConsoleOutput($raw)]);
     }
+
+    #[Route('/log/clear', name: 'datahub_supervisor_log_clear', methods: ['POST'])]
+    public function logClear(): JsonResponse
+    {
+        $this->assertAdminOrAllowed();
+
+        // Truncate the file
+        @file_put_contents($this->logPath(), '');
+        return new JsonResponse(['ok' => true]);
+    }
+
 }

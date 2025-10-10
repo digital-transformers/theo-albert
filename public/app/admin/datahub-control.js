@@ -66,7 +66,34 @@ app.datahub.getPanel = function () {
             },
             { xtype: 'checkbox', id: 'dhc-autorefresh', boxLabel: 'Auto-refresh', checked: true },
             '->',
-            { text: 'Clear Log', handler: function(){ const b=Ext.getCmp('dhc-log'); if(b) b.setValue(''); } }
+            {
+              text: 'Clear Log',
+              handler: function () {
+                const box = Ext.getCmp('dhc-log');
+                if (box) box.setValue('');
+                // temporarily pause auto-refresh so we don't instantly re-fill from the old file
+                const auto = Ext.getCmp('dhc-autorefresh');
+                const prev = auto && auto.getValue();
+                if (auto) auto.setValue(false);
+
+                Ext.Ajax.request({
+                  url: '/admin/datahub-supervisor/log/clear',
+                  method: 'POST',
+                  success: function () {
+                    // small delay then resume if it was on
+                    setTimeout(function(){
+                      if (auto) auto.setValue(prev);
+                    }, 800);
+                    pimcore.helpers.showNotification('OK','Log cleared','success');
+                  },
+                  failure: function () {
+                    pimcore.helpers.showNotification('Error','Failed to clear log','error');
+                    if (auto) auto.setValue(prev);
+                  }
+                });
+              }
+            }
+
           ]
         },
         {
