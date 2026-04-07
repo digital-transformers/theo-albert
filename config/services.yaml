@@ -110,5 +110,6 @@ services:
         - { name: kernel.event_listener, event: pimcore.dataobject.preAdd, method: onPreAdd }
 
     App\EventSubscriber\ObjectKeyAutofillSubscriber:
+      autoconfigure: false
       tags:
         - { name: kernel.event_subscriber }

@@ -30,15 +30,15 @@ final class ObjectKeyAutofillSubscriber implements EventSubscriberInterface
         }
 
         match (strtolower((string) $object->getClassName())) {
-            'family' => $this->autofillFamily($object, $key),
+            'family', 'model' => $this->autofillCodeAndName($object, $key),
             'frame' => $this->setIfEmpty($object, 'Code', $key),
             default => null,
         };
     }
 
-    private function autofillFamily(object $object, string $key): void
+    private function autofillCodeAndName(object $object, string $key): void
     {
-        if (!preg_match('/^\s*(\d+)\s+-\s+(.+?)\s*$/', $key, $matches)) {
+        if (!preg_match('/^\s*(.+?)\s+-\s+(.+?)\s*$/', $key, $matches)) {
             return;
         }
 

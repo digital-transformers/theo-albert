@@ -23,12 +23,24 @@ final class ObjectKeyAutofillSubscriberTest extends Unit
     {
         $object = new ObjectKeyAutofillTestObject();
         $object->setClassName('family');
-        $object->setKey('12345 - Test Family');
+        $object->setKey('FAM-12345 - Test Family');
 
         $this->subscriber->onPreAdd(new DataObjectEvent($object));
 
-        self::assertSame('12345', $object->getCode());
+        self::assertSame('FAM-12345', $object->getCode());
         self::assertSame('Test Family', $object->getName());
+    }
+
+    public function testModelCodeAndNameAreFilledFromMatchingKey(): void
+    {
+        $object = new ObjectKeyAutofillTestObject();
+        $object->setClassName('model');
+        $object->setKey('MOD-001 - Test Model');
+
+        $this->subscriber->onPreAdd(new DataObjectEvent($object));
+
+        self::assertSame('MOD-001', $object->getCode());
+        self::assertSame('Test Model', $object->getName());
     }
 
     public function testFrameCodeIsFilledFromKey(): void
