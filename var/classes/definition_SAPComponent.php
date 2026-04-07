@@ -25,7 +25,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => 'SAPComponent',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1775543260,
+   'modificationDate' => 1775545229,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -149,13 +149,17 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
             ),
              'classes' => 
             array (
+              0 => 
+              array (
+                'classes' => 'SAPItemGroup',
+              ),
             ),
              'displayMode' => 'grid',
              'pathFormatterClass' => '',
              'assetInlineDownloadAllowed' => false,
              'assetUploadPath' => '',
              'allowToClearRelation' => true,
-             'objectsAllowed' => false,
+             'objectsAllowed' => true,
              'assetsAllowed' => false,
              'assetTypes' => 
             array (
@@ -259,6 +263,26 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
             ),
              'options' => 
             array (
+              0 => 
+              array (
+                'key' => 'Detail',
+                'value' => 'detail',
+              ),
+              1 => 
+              array (
+                'key' => 'Eartip',
+                'value' => 'eartip',
+              ),
+              2 => 
+              array (
+                'key' => 'Lens',
+                'value' => 'lens',
+              ),
+              3 => 
+              array (
+                'key' => 'Other',
+                'value' => 'other',
+              ),
             ),
              'maxItems' => NULL,
              'renderType' => 'list',
