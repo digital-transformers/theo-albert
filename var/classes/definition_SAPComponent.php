@@ -8,8 +8,9 @@
  * Fields Summary:
  * - itemCode [input]
  * - itemName [input]
- * - itemGroup [manyToManyObjectRelation]
+ * - itemGroup [manyToOneRelation]
  * - process [manyToOneRelation]
+ * - importType [input]
  * - itemType [multiselect]
  * - linkedColor [select]
  * - cost [numeric]
@@ -24,7 +25,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => 'SAPComponent',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1757556284,
+   'modificationDate' => 1775543260,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -128,7 +129,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'defaultValueGenerator' => '',
           )),
           2 => 
-          \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
+          \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
              'name' => 'itemGroup',
              'title' => 'Item Group',
              'tooltip' => '',
@@ -151,19 +152,19 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
             ),
              'displayMode' => 'grid',
              'pathFormatterClass' => '',
-             'maxItems' => NULL,
-             'visibleFields' => 
+             'assetInlineDownloadAllowed' => false,
+             'assetUploadPath' => '',
+             'allowToClearRelation' => true,
+             'objectsAllowed' => false,
+             'assetsAllowed' => false,
+             'assetTypes' => 
             array (
             ),
-             'allowToCreateNewObject' => false,
-             'allowToClearRelation' => true,
-             'optimizedAdminLoading' => false,
-             'enableTextSelection' => false,
-             'visibleFieldDefinitions' => 
+             'documentsAllowed' => false,
+             'documentTypes' => 
             array (
             ),
              'width' => '',
-             'height' => '',
           )),
           3 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
@@ -208,6 +209,36 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
           )),
           4 => 
+          \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
+             'name' => 'importType',
+             'title' => 'Import Type',
+             'tooltip' => '',
+             'mandatory' => false,
+             'noteditable' => true,
+             'index' => false,
+             'locked' => false,
+             'style' => '',
+             'permissions' => NULL,
+             'fieldtype' => '',
+             'relationType' => false,
+             'invisible' => true,
+             'visibleGridView' => false,
+             'visibleSearch' => false,
+             'blockedVarsForExport' => 
+            array (
+            ),
+             'defaultValue' => '',
+             'columnLength' => 190,
+             'regex' => '',
+             'regexFlags' => 
+            array (
+            ),
+             'unique' => false,
+             'showCharCount' => false,
+             'width' => '',
+             'defaultValueGenerator' => '',
+          )),
+          5 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect::__set_state(array(
              'name' => 'itemType',
              'title' => 'Type',
@@ -231,6 +262,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
             ),
              'maxItems' => NULL,
              'renderType' => 'list',
+             'enforceValidation' => false,
              'dynamicOptions' => false,
              'defaultValue' => 
             array (
@@ -242,7 +274,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'optionsProviderClass' => '',
              'optionsProviderData' => '',
           )),
-          5 => 
+          6 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
              'name' => 'linkedColor',
              'title' => 'Linked Color',
@@ -264,13 +296,14 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'defaultValue' => NULL,
              'columnLength' => 190,
              'dynamicOptions' => false,
+             'enforceValidation' => false,
              'defaultValueGenerator' => '',
              'width' => '',
              'optionsProviderType' => 'class',
              'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\ColorOptionsProvider',
              'optionsProviderData' => '',
           )),
-          6 => 
+          7 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
              'name' => 'cost',
              'title' => 'Cost',
@@ -300,7 +333,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
-          7 => 
+          8 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
              'name' => 'supplier',
              'title' => 'Supplier',
@@ -342,7 +375,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
             ),
              'width' => '',
           )),
-          8 => 
+          9 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
              'name' => 'supCatNum',
              'title' => 'Supplier ItemCode',

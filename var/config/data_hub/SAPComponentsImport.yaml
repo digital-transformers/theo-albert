@@ -1,0 +1,219 @@
+pimcore_data_hub:
+    configurations:
+        SAPComponentsImport:
+            general:
+                active: true
+                type: dataImporterDataObject
+                name: SAPComponentsImport
+                description: ''
+                group: ''
+                path: null
+                modificationDate: 1775543412
+                createDate: 1753352126
+            loaderConfig:
+                type: asset
+                settings:
+                    assetPath: '/Datasource Files/sap-component.json'
+            interpreterConfig:
+                type: json
+                settings:
+                    path: ''
+            resolverConfig:
+                elementType: dataObject
+                dataObjectClassId: component
+                loadingStrategy:
+                    type: attribute
+                    settings:
+                        dataSourceIndex: ItemCode
+                        attributeName: itemCode
+                        language: ''
+                        includeUnpublished: true
+                createLocationStrategy:
+                    type: staticPath
+                    settings:
+                        path: /SetupData/SAPComponents
+                locationUpdateStrategy:
+                    type: noChange
+                publishingStrategy:
+                    type: noChangePublishNew
+            processingConfig:
+                executionType: sequential
+                idDataIndex: ItemCode
+                cleanup:
+                    strategy: unpublish
+            mappingConfig:
+                -
+                    label: ItemCode
+                    dataSourceIndex:
+                        - ItemCode
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: itemCode
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: ItemName
+                    dataSourceIndex:
+                        - ItemName
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: itemName
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: KEY
+                    dataSourceIndex:
+                        - ItemCode
+                        - ItemName
+                    settings:
+                        glue: '|'
+                        search: /
+                        replace: '-'
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: key
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline:
+                        -
+                            settings:
+                                glue: '|'
+                            type: combine
+                        -
+                            settings:
+                                search: /
+                                replace: '-'
+                            type: stringReplace
+                -
+                    label: ItemGroup
+                    dataSourceIndex:
+                        - ItemGroup
+                    settings:
+                        loadStrategy: attribute
+                        attributeDataObjectClassId: itemGroup
+                        attributeName: groupNum
+                        attributeLanguage: ''
+                    transformationResultType: dataObject
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: itemGroup
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline:
+                        -
+                            settings:
+                                loadStrategy: attribute
+                                attributeDataObjectClassId: itemGroup
+                                attributeName: groupNum
+                                attributeLanguage: ''
+                            type: loadDataObject
+                -
+                    label: Process
+                    dataSourceIndex:
+                        - Process
+                    settings:
+                        loadStrategy: attribute
+                        attributeDataObjectClassId: process
+                        attributeName: code
+                        attributeLanguage: ''
+                    transformationResultType: dataObject
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: process
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline:
+                        -
+                            settings:
+                                loadStrategy: attribute
+                                attributeDataObjectClassId: process
+                                attributeName: code
+                                attributeLanguage: ''
+                            type: loadDataObject
+                -
+                    label: Type
+                    dataSourceIndex:
+                        - Type
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: importType
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: LinkedColor
+                    dataSourceIndex:
+                        - 'linked color'
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: linkedColor
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: Supplier
+                    dataSourceIndex:
+                        - Supplier
+                    transformationResultType: dataObject
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: supplier
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    settings:
+                        loadStrategy: attribute
+                        attributeDataObjectClassId: supplier
+                        attributeName: code
+                        attributeLanguage: ''
+                    transformationPipeline:
+                        -
+                            settings:
+                                loadStrategy: attribute
+                                attributeDataObjectClassId: supplier
+                                attributeName: code
+                                attributeLanguage: ''
+                            type: loadDataObject
+                -
+                    label: SupCatNum
+                    dataSourceIndex:
+                        - SupCatNum
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: supCatNum
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+            executionConfig:
+                scheduleType: job
+                cronDefinition: ''
+                scheduledAt: ''
+            permissions:
+                user: {  }
+                role: {  }
+            workspaces: {  }
