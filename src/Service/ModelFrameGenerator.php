@@ -26,23 +26,20 @@ final class ModelFrameGenerator
         ?array $submittedDetails = null,
         ?User $user = null,
         ?array $submittedFinalProducts = null,
-        ?string $submittedModelCode = null,
     ): array {
         $created = [];
         $createdFrames = [];
         $skipped = [];
         $errors = [];
-        $modelCode = $submittedModelCode !== null
-            ? $this->normalizeString($submittedModelCode)
-            : $this->normalizeString($model->getCode());
 
         foreach ($this->resolveDetails($model, $submittedDetails) as $index => $detail) {
+            $baseCode = $this->normalizeString($detail['code'] ?? null);
             $baseName = $this->normalizeString($detail['name'] ?? null);
             $supplier = $detail['supplier'] ?? null;
 
             if ($detail['colorIds'] === []) {
                 $skipped[] = [
-                    'code' => $modelCode,
+                    'code' => $baseCode,
                     'reason' => sprintf('Fieldcollection item %d has no selected colors', $index + 1),
                 ];
                 continue;
@@ -52,13 +49,13 @@ final class ModelFrameGenerator
                 $color = Color::getById((int) $colorId, ['force' => true]);
                 if (!$color instanceof Color) {
                     $skipped[] = [
-                        'code' => $this->joinNonEmpty([$modelCode, (string) $colorId], ' + '),
+                        'code' => $this->joinNonEmpty([$baseCode, (string) $colorId], ' + '),
                         'reason' => sprintf('Color object %s was not found', (string) $colorId),
                     ];
                     continue;
                 }
 
-                $code = $this->joinNonEmpty([$modelCode, $this->normalizeString($color->getCode())], ' + ');
+                $code = $this->joinNonEmpty([$baseCode, $this->normalizeString($color->getCode())], ' + ');
                 $name = $this->joinNonEmpty([$baseName, $this->normalizeString($color->getName())], '  ');
 
                 if ($code === '') {

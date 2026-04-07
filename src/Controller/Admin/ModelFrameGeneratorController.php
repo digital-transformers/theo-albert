@@ -52,13 +52,11 @@ final class ModelFrameGeneratorController extends AbstractController
         $submittedData = $this->extractSubmittedData($request);
         $submittedDetails = $this->extractSubmittedDetails($submittedData);
         $submittedFinalProducts = $this->extractSubmittedFinalProducts($submittedData);
-        $submittedModelCode = $this->extractSubmittedModelCode($submittedData);
         $result = $this->frameGenerator->generate(
             $model,
             $submittedDetails,
             $user,
-            $submittedFinalProducts,
-            $submittedModelCode
+            $submittedFinalProducts
         );
 
         return new JsonResponse([
@@ -117,18 +115,6 @@ final class ModelFrameGeneratorController extends AbstractController
         }
 
         return array_values($data['finalProducts']);
-    }
-
-    /**
-     * @param array<string, mixed>|null $data
-     */
-    private function extractSubmittedModelCode(?array $data): ?string
-    {
-        if ($data === null || !array_key_exists('code', $data) || !is_scalar($data['code'])) {
-            return null;
-        }
-
-        return (string) $data['code'];
     }
 
     /**
