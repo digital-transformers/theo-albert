@@ -18,6 +18,7 @@ final class PimcoreAdminListener implements EventSubscriberInterface
         $event->addPaths([
             '/app/admin/color-autoname.js',
             '/app/admin/datahub-control.js',
+            '/app/admin/family-launch-portlet.js',
         ]);
     }
 }
