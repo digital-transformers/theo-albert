@@ -113,3 +113,7 @@ services:
       autoconfigure: false
       tags:
         - { name: kernel.event_subscriber }
+
+    App\EventSubscriber\PlanAttachmentSubscriber:
+      tags:
+        - { name: kernel.event_subscriber }

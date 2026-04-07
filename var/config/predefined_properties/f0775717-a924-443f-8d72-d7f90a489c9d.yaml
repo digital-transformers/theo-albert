@@ -1,0 +1,15 @@
+pimcore:
+    properties:
+        predefined:
+            definitions:
+                f0775717-a924-443f-8d72-d7f90a489c9d:
+                    name: 'Plan attachment folder - Plan'
+                    description: 'Default asset folder for plan attachments of type Plan.'
+                    key: plan_attachment_folder_plan
+                    type: text
+                    data: '/Plan'
+                    config: ''
+                    ctype: object
+                    inheritable: false
+                    creationDate: 1775538452
+                    modificationDate: 1775538452

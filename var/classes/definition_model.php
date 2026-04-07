@@ -67,7 +67,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1760067943,
+   'modificationDate' => 1775538452,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => 'Pimcore\\Model\\DataObject\\Family',
@@ -278,9 +278,18 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'height' => NULL,
                  'columns' => 
                 array (
+                  0 => 
+                  array (
+                    'type' => 'select',
+                    'position' => 1,
+                    'key' => 'planType',
+                    'label' => 'Type',
+                    'value' => 'Plan;Technical sheet;Components plan;Colur chart',
+                  ),
                 ),
                  'columnKeys' => 
                 array (
+                  0 => 'planType',
                 ),
                  'phpdocType' => '\\Pimcore\\Model\\DataObject\\Data\\ElementMetadata[]',
                  'optimizedAdminLoading' => false,

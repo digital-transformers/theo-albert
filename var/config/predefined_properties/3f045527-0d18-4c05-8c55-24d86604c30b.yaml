@@ -1,0 +1,15 @@
+pimcore:
+    properties:
+        predefined:
+            definitions:
+                3f045527-0d18-4c05-8c55-24d86604c30b:
+                    name: 'Plan attachment folder - Technical sheet'
+                    description: 'Default asset folder for plan attachments of type Technical sheet.'
+                    key: plan_attachment_folder_technical_sheet
+                    type: text
+                    data: '/Technical sheet'
+                    config: ''
+                    ctype: object
+                    inheritable: false
+                    creationDate: 1775538452
+                    modificationDate: 1775538452
