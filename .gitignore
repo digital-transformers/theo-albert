@@ -48,3 +48,4 @@ nbproject
 # temp
 .temp
 /config/pimcore/google-api-private-key.json
+config/.DS_Store
