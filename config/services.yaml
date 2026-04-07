@@ -128,3 +128,7 @@ services:
     App\EventSubscriber\SAPComponentImportNormalizerSubscriber:
       tags:
         - { name: kernel.event_subscriber }
+
+    App\EventSubscriber\FrameNameFromComposedColorsSubscriber:
+      tags:
+        - { name: kernel.event_subscriber }

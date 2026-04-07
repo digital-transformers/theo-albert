@@ -56,7 +56,8 @@ final class ModelFrameGenerator
                 }
 
                 $code = $this->joinNonEmpty([$baseCode, $this->normalizeString($color->getCode())], ' ');
-                $name = $this->joinNonEmpty([$baseName, $this->normalizeString($color->getName())], '  ');
+                $composedColors = $this->buildComposedColorsMetadata($color);
+                $name = $this->buildFrameName($baseName, $color, $composedColors);
 
                 if ($code === '') {
                     $errors[] = sprintf('Fieldcollection item %d with color %d has no generated frame code', $index + 1, $color->getId());
@@ -85,7 +86,6 @@ final class ModelFrameGenerator
                         $frame->setArtBase($model);
                     }
 
-                    $composedColors = $this->buildComposedColorsMetadata($color);
                     if ($composedColors !== []) {
                         $frame->setComposedColors($composedColors);
                     }
@@ -362,6 +362,34 @@ final class ModelFrameGenerator
         }
 
         return $metadata;
+    }
+
+    /**
+     * @param list<ObjectMetadata> $composedColors
+     */
+    private function buildFrameName(string $baseName, Color $color, array $composedColors): string
+    {
+        $colorCodes = [];
+        foreach ($composedColors as $metadata) {
+            $composedColor = $metadata->getObject();
+            if (!$composedColor instanceof Color) {
+                continue;
+            }
+
+            $code = $this->normalizeString($composedColor->getCode());
+            if ($code !== '') {
+                $colorCodes[] = $code;
+            }
+        }
+
+        if ($colorCodes === []) {
+            $colorCode = $this->normalizeString($color->getCode());
+            if ($colorCode !== '') {
+                $colorCodes[] = $colorCode;
+            }
+        }
+
+        return $this->joinNonEmpty([$baseName, implode(' ', $colorCodes)], '  ');
     }
 
     private function buildUniqueKey(ModelObject $model, string $code, string $name, int $detailIndex, Color $color): string
