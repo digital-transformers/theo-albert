@@ -59,6 +59,9 @@ services:
         resource: '../src/Command/*'
         tags: [ 'console.command' ]
 
+    App\Service\:
+        resource: '../src/Service'
+
     App\Model\DataObject\ClassDefinition\Data\ColorOptionsProvider:
       tags:
         - { name: pimcore.dataobject.class_definition.dynamic_options_provider }
