@@ -46,7 +46,10 @@ console.log('[default-dashboard] loaded');
     var portalKey = 'layout_portal_' + defaultDashboard;
     var panelId = 'pimcore_portal_' + defaultDashboard;
     if (pimcore.globalmanager.exists(portalKey)) {
-      pimcore.globalmanager.get(portalKey).activate();
+      var portal = pimcore.globalmanager.get(portalKey);
+      if (portal.panel) {
+        portal.activate();
+      }
     } else {
       pimcore.globalmanager.add(portalKey, new pimcore.layout.portal(defaultDashboard));
     }
