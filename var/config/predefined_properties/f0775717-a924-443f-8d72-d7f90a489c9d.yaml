@@ -7,9 +7,9 @@ pimcore:
                     description: 'Default asset folder for plan attachments of type Plan.'
                     key: plan_attachment_folder_plan
                     type: text
-                    data: '/Plan'
+                    data: /Plans
                     config: ''
                     ctype: object
                     inheritable: false
                     creationDate: 1775538452
-                    modificationDate: 1775538452
+                    modificationDate: 1775539004

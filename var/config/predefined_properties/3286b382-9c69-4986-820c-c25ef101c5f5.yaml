@@ -7,9 +7,9 @@ pimcore:
                     description: 'Default asset folder for plan attachments of type Colur chart.'
                     key: plan_attachment_folder_colur_chart
                     type: text
-                    data: '/Colur chart'
+                    data: '/Color charts'
                     config: ''
                     ctype: object
                     inheritable: false
                     creationDate: 1775538452
-                    modificationDate: 1775538452
+                    modificationDate: 1775539037
