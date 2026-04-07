@@ -1,6 +1,4 @@
 security:
-    enable_authenticator_manager: true
-
     providers:
         pimcore_admin:
             id: Pimcore\Security\User\UserProvider
@@ -33,3 +31,4 @@ security:
     role_hierarchy:
         # Pimcore admin  // DO NOT CHANGE!
         ROLE_PIMCORE_ADMIN: [ROLE_PIMCORE_USER]
+
