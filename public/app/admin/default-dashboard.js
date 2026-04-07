@@ -2,14 +2,15 @@ console.log('[default-dashboard] loaded');
 
 (function openDefaultDashboardOnLogin() {
   var defaultDashboard = 'Theo';
-  var opened = false;
+  var maxAttempts = 12;
+  var attempts = 0;
 
   function scheduleOpen() {
-    window.setTimeout(openDashboard, 1300);
+    window.setTimeout(openDashboard, 1800);
   }
 
   function openDashboard() {
-    if (opened) {
+    if (attempts >= maxAttempts) {
       return;
     }
 
@@ -40,20 +41,26 @@ console.log('[default-dashboard] loaded');
       return;
     }
 
-    opened = true;
+    attempts++;
 
     var portalKey = 'layout_portal_' + defaultDashboard;
+    var panelId = 'pimcore_portal_' + defaultDashboard;
     if (pimcore.globalmanager.exists(portalKey)) {
       pimcore.globalmanager.get(portalKey).activate();
+    } else {
+      pimcore.globalmanager.add(portalKey, new pimcore.layout.portal(defaultDashboard));
+    }
+
+    if (tabs.getActiveTab && tabs.getActiveTab() && tabs.getActiveTab().getId() === panelId) {
       return;
     }
 
-    pimcore.globalmanager.add(portalKey, new pimcore.layout.portal(defaultDashboard));
+    window.setTimeout(openDashboard, 500);
   }
 
   if (window.pimcore && pimcore.events && pimcore.events.pimcoreReady) {
     document.addEventListener(pimcore.events.pimcoreReady, scheduleOpen, { once: true });
+  } else {
+    scheduleOpen();
   }
-
-  scheduleOpen();
 })();
