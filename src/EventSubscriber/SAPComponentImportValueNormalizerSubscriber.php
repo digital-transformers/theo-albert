@@ -26,7 +26,10 @@ final class SAPComponentImportValueNormalizerSubscriber implements EventSubscrib
     {
         $object = $event->getObject();
 
-        if (!$object instanceof Concrete || $object->getClassName() !== 'SAPComponent') {
+        if (
+            !$object instanceof Concrete
+            || ($object->getClassName() !== 'SAPComponent' && $object->getClassId() !== 'component')
+        ) {
             return;
         }
 
