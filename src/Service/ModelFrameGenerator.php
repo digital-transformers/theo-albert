@@ -389,7 +389,7 @@ final class ModelFrameGenerator
             }
         }
 
-        return $this->joinNonEmpty([$baseName, implode(' ', $colorCodes)], '  ');
+        return $this->joinNonEmpty([$baseName, implode(' + ', $colorCodes)], ' ');
     }
 
     private function buildUniqueKey(ModelObject $model, string $code, string $name, int $detailIndex, Color $color): string

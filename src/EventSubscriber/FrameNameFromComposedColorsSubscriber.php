@@ -46,7 +46,7 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
             return;
         }
 
-        $name = $this->joinNonEmpty([$baseData['name'], implode(' ', $colorCodes)], '  ');
+        $name = $this->joinNonEmpty([$baseData['name'], $this->formatColorCodes($colorCodes)], ' ');
         if ($name !== '' && $this->normalizeString($frame->getName()) !== $name) {
             $frame->setName($name);
         }
@@ -270,11 +270,17 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
 
         for ($i = 0, $maxRemovals = count($colorCodes); $i < $maxRemovals; $i++) {
             foreach ($codesByLength as $code) {
-                if ($code === '' || !str_ends_with($base, ' ' . $code)) {
+                if ($code === '') {
                     continue;
                 }
 
-                $base = rtrim(substr($base, 0, -strlen(' ' . $code)));
+                $nextBase = preg_replace('/(?:\s*\+\s*|\s+)' . preg_quote($code, '/') . '$/u', '', $base, 1, $replacements);
+                if ($replacements < 1 || $nextBase === null) {
+                    continue;
+                }
+
+                $base = rtrim($nextBase);
+
                 continue 2;
             }
 
@@ -282,6 +288,14 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
         }
 
         return $base;
+    }
+
+    /**
+     * @param list<string> $colorCodes
+     */
+    private function formatColorCodes(array $colorCodes): string
+    {
+        return implode(' + ', $colorCodes);
     }
 
     /**
