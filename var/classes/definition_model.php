@@ -67,7 +67,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1775548612,
+   'modificationDate' => 1775565029,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => 'Pimcore\\Model\\DataObject\\Family',
@@ -253,10 +253,14 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 ),
                  'classes' => 
                 array (
+                  0 => 
+                  array (
+                    'classes' => '',
+                  ),
                 ),
                  'displayMode' => NULL,
                  'pathFormatterClass' => '',
-                 'maxItems' => 1,
+                 'maxItems' => NULL,
                  'assetInlineDownloadAllowed' => false,
                  'assetUploadPath' => '',
                  'allowToClearRelation' => true,
@@ -272,6 +276,10 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'documentsAllowed' => false,
                  'documentTypes' => 
                 array (
+                  0 => 
+                  array (
+                    'documentTypes' => '',
+                  ),
                 ),
                  'enableTextSelection' => false,
                  'width' => '',
