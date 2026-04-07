@@ -117,3 +117,7 @@ services:
     App\EventSubscriber\PlanAttachmentSubscriber:
       tags:
         - { name: kernel.event_subscriber }
+
+    App\EventSubscriber\DashboardDefaultsSubscriber:
+      tags:
+        - { name: kernel.event_subscriber }

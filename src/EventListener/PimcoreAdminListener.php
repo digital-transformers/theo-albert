@@ -19,6 +19,7 @@ final class PimcoreAdminListener implements EventSubscriberInterface
             '/app/admin/color-autoname.js',
             '/app/admin/datahub-control.js',
             '/app/admin/family-launch-portlet.js',
+            '/app/admin/default-dashboard.js',
         ]);
     }
 }
