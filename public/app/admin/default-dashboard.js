@@ -5,12 +5,13 @@ console.log('[default-dashboard] loaded');
   var maxAttempts = 12;
   var attempts = 0;
 
-  function scheduleOpen() {
-    window.setTimeout(openDashboard, 1800);
+  function scheduleOpen(delay) {
+    window.setTimeout(openDashboard, delay || 1800);
   }
 
   function openDashboard() {
     if (attempts >= maxAttempts) {
+      console.warn('[default-dashboard] gave up opening dashboard', defaultDashboard);
       return;
     }
 
@@ -34,10 +35,7 @@ console.log('[default-dashboard] loaded');
     }
 
     if (!(user.isAllowed && user.isAllowed('dashboards'))) {
-      return;
-    }
-
-    if (!user.welcomescreen) {
+      console.warn('[default-dashboard] user is not allowed to open dashboards');
       return;
     }
 
@@ -55,6 +53,7 @@ console.log('[default-dashboard] loaded');
     }
 
     if (tabs.getActiveTab && tabs.getActiveTab() && tabs.getActiveTab().getId() === panelId) {
+      console.log('[default-dashboard] opened dashboard', defaultDashboard);
       return;
     }
 
@@ -63,7 +62,7 @@ console.log('[default-dashboard] loaded');
 
   if (window.pimcore && pimcore.events && pimcore.events.pimcoreReady) {
     document.addEventListener(pimcore.events.pimcoreReady, scheduleOpen, { once: true });
-  } else {
-    scheduleOpen();
   }
+
+  scheduleOpen(2500);
 })();
