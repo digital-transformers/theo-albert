@@ -67,7 +67,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1775538452,
+   'modificationDate' => 1775548612,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => 'Pimcore\\Model\\DataObject\\Family',
@@ -581,6 +581,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'defaultValue' => '',
                  'columnLength' => 190,
                  'dynamicOptions' => false,
+                 'enforceValidation' => false,
                  'defaultValueGenerator' => '',
                  'width' => '',
                  'optionsProviderType' => 'configure',
@@ -861,6 +862,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 ),
                  'maxItems' => NULL,
                  'renderType' => 'list',
+                 'enforceValidation' => false,
                  'dynamicOptions' => false,
                  'defaultValue' => 
                 array (
@@ -1331,6 +1333,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                      'defaultValue' => NULL,
                      'columnLength' => 190,
                      'dynamicOptions' => false,
+                     'enforceValidation' => false,
                      'defaultValueGenerator' => '',
                      'width' => '',
                      'optionsProviderType' => 'class',
@@ -1612,13 +1615,13 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 array (
                   0 => 
                   array (
-                    'classes' => 'finalProduct',
+                    'classes' => 'frame',
                   ),
                 ),
                  'displayMode' => 'grid',
                  'pathFormatterClass' => '',
                  'maxItems' => NULL,
-                 'visibleFields' => 'code',
+                 'visibleFields' => 'code,name',
                  'allowToCreateNewObject' => true,
                  'allowToClearRelation' => true,
                  'optimizedAdminLoading' => true,
@@ -1884,6 +1887,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 ),
                  'maxItems' => NULL,
                  'renderType' => 'tags',
+                 'enforceValidation' => false,
                  'dynamicOptions' => false,
                  'defaultValue' => 
                 array (

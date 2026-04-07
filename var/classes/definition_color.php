@@ -22,7 +22,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => 'Color',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1760081700,
+   'modificationDate' => 1775546388,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -105,6 +105,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'defaultValue' => '',
              'columnLength' => 190,
              'dynamicOptions' => false,
+             'enforceValidation' => false,
              'defaultValueGenerator' => '',
              'width' => '',
              'optionsProviderType' => 'configure',
@@ -211,6 +212,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'defaultValue' => '',
              'columnLength' => 190,
              'dynamicOptions' => false,
+             'enforceValidation' => false,
              'defaultValueGenerator' => '',
              'width' => '',
              'optionsProviderType' => 'configure',
@@ -252,7 +254,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'name' => 'name',
              'title' => 'Name',
              'tooltip' => '',
-             'mandatory' => true,
+             'mandatory' => false,
              'noteditable' => false,
              'index' => true,
              'locked' => false,
@@ -266,7 +268,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'blockedVarsForExport' => 
             array (
             ),
-             'defaultValue' => NULL,
+             'defaultValue' => '',
              'columnLength' => 190,
              'regex' => '',
              'regexFlags' => 
