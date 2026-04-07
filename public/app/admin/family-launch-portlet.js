@@ -97,7 +97,7 @@ console.log('[family-launch-portlet] loaded');
       var columns = [{
         text: 'Year',
         dataIndex: 'year',
-        width: 80,
+        width: 58,
         sortable: false
       }];
 
@@ -105,7 +105,7 @@ console.log('[family-launch-portlet] loaded');
         columns.push({
           text: period.label,
           dataIndex: period.value,
-          minWidth: 190,
+          minWidth: 125,
           flex: 1,
           sortable: false,
           renderer: this.renderPeriodCell.bind(this)
@@ -120,12 +120,12 @@ console.log('[family-launch-portlet] loaded');
         return '<span style="color:#999;">-</span>';
       }
 
-      var html = ['<div style="white-space:normal;line-height:1.35;">'];
+      var html = ['<div style="white-space:normal;line-height:1.2;">'];
 
       Ext.Array.each(families, function (family) {
         html.push(
-          '<div style="margin-bottom:10px;">',
-          '<div style="font-weight:bold;margin-bottom:3px;">',
+          '<div style="margin-bottom:6px;">',
+          '<div style="font-weight:bold;margin-bottom:2px;">',
           this.html(family.label),
           '</div>'
         );
@@ -133,7 +133,7 @@ console.log('[family-launch-portlet] loaded');
         if (family.models && family.models.length) {
           Ext.Array.each(family.models, function (model) {
             html.push(
-              '<div style="margin:2px 0 2px 8px;">',
+              '<div style="margin:1px 0 1px 4px;">',
               '<a href="#" class="family-launch-model-link" data-model-id="',
               parseInt(model.id, 10),
               '">',
@@ -143,7 +143,7 @@ console.log('[family-launch-portlet] loaded');
             );
           }.bind(this));
         } else {
-          html.push('<div style="color:#999;font-style:italic;margin-left:8px;">No models</div>');
+          html.push('<div style="color:#999;font-style:italic;margin-left:4px;">No models</div>');
         }
 
         html.push('</div>');
