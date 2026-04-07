@@ -121,3 +121,7 @@ services:
     App\EventSubscriber\DashboardDefaultsSubscriber:
       tags:
         - { name: kernel.event_subscriber }
+
+    App\EventSubscriber\SAPComponentImportValueNormalizerSubscriber:
+      tags:
+        - { name: kernel.event_subscriber }
