@@ -49,13 +49,13 @@ final class ModelFrameGenerator
                 $color = Color::getById((int) $colorId, ['force' => true]);
                 if (!$color instanceof Color) {
                     $skipped[] = [
-                        'code' => $this->joinNonEmpty([$baseCode, (string) $colorId], ' + '),
+                        'code' => $this->joinNonEmpty([$baseCode, (string) $colorId], ' '),
                         'reason' => sprintf('Color object %s was not found', (string) $colorId),
                     ];
                     continue;
                 }
 
-                $code = $this->joinNonEmpty([$baseCode, $this->normalizeString($color->getCode())], ' + ');
+                $code = $this->joinNonEmpty([$baseCode, $this->normalizeString($color->getCode())], ' ');
                 $name = $this->joinNonEmpty([$baseName, $this->normalizeString($color->getName())], '  ');
 
                 if ($code === '') {
