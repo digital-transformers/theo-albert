@@ -203,7 +203,7 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
             array (
               0 => 
               array (
-                'classes' => 'colour',
+                'classes' => 'color',
               ),
             ),
              'displayMode' => 'grid',
@@ -245,7 +245,7 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
             array (
               0 => 
               array (
-                'classes' => 'colour',
+                'classes' => 'color',
               ),
             ),
              'displayMode' => NULL,
@@ -261,7 +261,7 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
             ),
              'width' => '',
              'height' => '',
-             'allowedClassId' => 'colour',
+             'allowedClassId' => 'color',
              'columns' => 
             array (
               0 => 

@@ -325,7 +325,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 array (
                   0 => 
                   array (
-                    'classes' => 'colour',
+                    'classes' => 'color',
                   ),
                 ),
                  'displayMode' => NULL,
