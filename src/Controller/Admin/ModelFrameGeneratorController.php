@@ -34,10 +34,10 @@ final class ModelFrameGeneratorController extends AbstractController
         }
 
         $user = $this->userResolver->getUser();
-        if (!$user || !$model->isAllowed('create', $user)) {
+        if (!$user || !$model->isAllowed('create', $user) || !$model->isAllowed('save', $user)) {
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Missing permission to create frame children for this model',
+                'message' => 'Missing permission to create frame children or update finalProducts for this model',
             ], 403);
         }
 
@@ -49,8 +49,17 @@ final class ModelFrameGeneratorController extends AbstractController
             ], 403);
         }
 
-        $submittedDetails = $this->extractSubmittedDetails($request);
-        $result = $this->frameGenerator->generate($model, $submittedDetails, $user);
+        $submittedData = $this->extractSubmittedData($request);
+        $submittedDetails = $this->extractSubmittedDetails($submittedData);
+        $submittedFinalProducts = $this->extractSubmittedFinalProducts($submittedData);
+        $submittedModelCode = $this->extractSubmittedModelCode($submittedData);
+        $result = $this->frameGenerator->generate(
+            $model,
+            $submittedDetails,
+            $user,
+            $submittedFinalProducts,
+            $submittedModelCode
+        );
 
         return new JsonResponse([
             'success' => $result['errors'] === [],
@@ -60,9 +69,9 @@ final class ModelFrameGeneratorController extends AbstractController
     }
 
     /**
-     * @return list<array<string, mixed>>|null
+     * @return array<string, mixed>|null
      */
-    private function extractSubmittedDetails(Request $request): ?array
+    private function extractSubmittedData(Request $request): ?array
     {
         $rawData = (string) $request->request->get('data', '');
         if ($rawData === '') {
@@ -75,7 +84,21 @@ final class ModelFrameGeneratorController extends AbstractController
             return null;
         }
 
-        if (!is_array($data) || !array_key_exists('finalProductDetails', $data) || !is_array($data['finalProductDetails'])) {
+        if (!is_array($data)) {
+            return null;
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param array<string, mixed>|null $data
+     *
+     * @return list<array<string, mixed>>|null
+     */
+    private function extractSubmittedDetails(?array $data): ?array
+    {
+        if ($data === null || !array_key_exists('finalProductDetails', $data) || !is_array($data['finalProductDetails'])) {
             return null;
         }
 
@@ -83,7 +106,33 @@ final class ModelFrameGeneratorController extends AbstractController
     }
 
     /**
-     * @param array{created: list<array{id: int, code: string, path: string}>, skipped: list<array{code: string, reason: string}>, errors: list<string>} $result
+     * @param array<string, mixed>|null $data
+     *
+     * @return list<array<string, mixed>>|null
+     */
+    private function extractSubmittedFinalProducts(?array $data): ?array
+    {
+        if ($data === null || !array_key_exists('finalProducts', $data) || !is_array($data['finalProducts'])) {
+            return null;
+        }
+
+        return array_values($data['finalProducts']);
+    }
+
+    /**
+     * @param array<string, mixed>|null $data
+     */
+    private function extractSubmittedModelCode(?array $data): ?string
+    {
+        if ($data === null || !array_key_exists('code', $data) || !is_scalar($data['code'])) {
+            return null;
+        }
+
+        return (string) $data['code'];
+    }
+
+    /**
+     * @param array{created: list<array{id: int, code: string, name: string, path: string}>, skipped: list<array{code: string, reason: string}>, errors: list<string>} $result
      */
     private function buildMessage(array $result): string
     {

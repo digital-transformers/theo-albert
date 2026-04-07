@@ -17,23 +17,32 @@ final class ModelFrameGenerator
 {
     /**
      * @param list<array<string, mixed>>|null $submittedDetails
+     * @param list<array<string, mixed>>|null $submittedFinalProducts
      *
-     * @return array{created: list<array{id: int, code: string, path: string}>, skipped: list<array{code: string, reason: string}>, errors: list<string>}
+     * @return array{created: list<array{id: int, code: string, name: string, path: string}>, skipped: list<array{code: string, reason: string}>, errors: list<string>}
      */
-    public function generate(ModelObject $model, ?array $submittedDetails = null, ?User $user = null): array
-    {
+    public function generate(
+        ModelObject $model,
+        ?array $submittedDetails = null,
+        ?User $user = null,
+        ?array $submittedFinalProducts = null,
+        ?string $submittedModelCode = null,
+    ): array {
         $created = [];
+        $createdFrames = [];
         $skipped = [];
         $errors = [];
+        $modelCode = $submittedModelCode !== null
+            ? $this->normalizeString($submittedModelCode)
+            : $this->normalizeString($model->getCode());
 
         foreach ($this->resolveDetails($model, $submittedDetails) as $index => $detail) {
-            $baseCode = $this->normalizeString($detail['code'] ?? null);
             $baseName = $this->normalizeString($detail['name'] ?? null);
             $supplier = $detail['supplier'] ?? null;
 
             if ($detail['colorIds'] === []) {
                 $skipped[] = [
-                    'code' => $baseCode,
+                    'code' => $modelCode,
                     'reason' => sprintf('Fieldcollection item %d has no selected colors', $index + 1),
                 ];
                 continue;
@@ -43,13 +52,13 @@ final class ModelFrameGenerator
                 $color = Color::getById((int) $colorId, ['force' => true]);
                 if (!$color instanceof Color) {
                     $skipped[] = [
-                        'code' => $this->joinNonEmpty([$baseCode, (string) $colorId], ' + '),
+                        'code' => $this->joinNonEmpty([$modelCode, (string) $colorId], ' + '),
                         'reason' => sprintf('Color object %s was not found', (string) $colorId),
                     ];
                     continue;
                 }
 
-                $code = $this->joinNonEmpty([$baseCode, $this->normalizeString($color->getCode())], ' + ');
+                $code = $this->joinNonEmpty([$modelCode, $this->normalizeString($color->getCode())], ' + ');
                 $name = $this->joinNonEmpty([$baseName, $this->normalizeString($color->getName())], '  ');
 
                 if ($code === '') {
@@ -94,11 +103,21 @@ final class ModelFrameGenerator
                     $created[] = [
                         'id' => (int) $frame->getId(),
                         'code' => $code,
+                        'name' => $name,
                         'path' => $frame->getRealFullPath(),
                     ];
+                    $createdFrames[] = $frame;
                 } catch (\Throwable $e) {
                     $errors[] = sprintf('Failed to create frame "%s": %s', $code, $e->getMessage());
                 }
+            }
+        }
+
+        if ($createdFrames !== []) {
+            try {
+                $this->addFramesToFinalProducts($model, $createdFrames, $submittedFinalProducts, $user);
+            } catch (\Throwable $e) {
+                $errors[] = sprintf('Failed to add generated frames to model finalProducts: %s', $e->getMessage());
             }
         }
 
@@ -107,6 +126,114 @@ final class ModelFrameGenerator
             'skipped' => $skipped,
             'errors' => $errors,
         ];
+    }
+
+    /**
+     * @param list<Frame> $frames
+     * @param list<array<string, mixed>>|null $submittedFinalProducts
+     */
+    private function addFramesToFinalProducts(ModelObject $model, array $frames, ?array $submittedFinalProducts, ?User $user): void
+    {
+        $finalProducts = $this->resolveFinalProducts($model, $submittedFinalProducts);
+        $knownIds = [];
+
+        foreach ($finalProducts as $finalProduct) {
+            $knownIds[(int) $finalProduct->getId()] = true;
+        }
+
+        $added = false;
+        foreach ($frames as $frame) {
+            $frameId = (int) $frame->getId();
+            if ($frameId < 1 || isset($knownIds[$frameId])) {
+                continue;
+            }
+
+            $finalProducts[] = $frame;
+            $knownIds[$frameId] = true;
+            $added = true;
+        }
+
+        if (!$added) {
+            return;
+        }
+
+        $model->setFinalProducts($finalProducts);
+
+        if ($user instanceof User) {
+            $model->setUserModification($user->getId());
+        }
+
+        $model->save();
+    }
+
+    /**
+     * @param list<array<string, mixed>>|null $submittedFinalProducts
+     *
+     * @return list<Frame>
+     */
+    private function resolveFinalProducts(ModelObject $model, ?array $submittedFinalProducts): array
+    {
+        if ($submittedFinalProducts !== null) {
+            return $this->resolveSubmittedFinalProducts($submittedFinalProducts);
+        }
+
+        $finalProducts = $model->getFinalProducts();
+        if (!is_array($finalProducts)) {
+            return [];
+        }
+
+        return $this->uniqueFrames($finalProducts);
+    }
+
+    /**
+     * @param list<array<string, mixed>> $submittedFinalProducts
+     *
+     * @return list<Frame>
+     */
+    private function resolveSubmittedFinalProducts(array $submittedFinalProducts): array
+    {
+        $frames = [];
+
+        foreach ($submittedFinalProducts as $item) {
+            $id = is_array($item) ? ($item['id'] ?? null) : null;
+            if (!is_scalar($id) || (int) $id < 1) {
+                continue;
+            }
+
+            $frame = Frame::getById((int) $id, ['force' => true]);
+            if ($frame instanceof Frame) {
+                $frames[] = $frame;
+            }
+        }
+
+        return $this->uniqueFrames($frames);
+    }
+
+    /**
+     * @param array<array-key, mixed> $frames
+     *
+     * @return list<Frame>
+     */
+    private function uniqueFrames(array $frames): array
+    {
+        $unique = [];
+        $seen = [];
+
+        foreach ($frames as $frame) {
+            if (!$frame instanceof Frame) {
+                continue;
+            }
+
+            $frameId = (int) $frame->getId();
+            if ($frameId < 1 || isset($seen[$frameId])) {
+                continue;
+            }
+
+            $unique[] = $frame;
+            $seen[$frameId] = true;
+        }
+
+        return $unique;
     }
 
     /**

@@ -16,6 +16,56 @@ console.log('[model-generate-frames] loaded');
     }
     window.__modelGenerateFramesRegistered = true;
 
+    const mergeCreatedFramesIntoFinalProducts = function (objectEditor, createdFrames) {
+      if (!createdFrames || !createdFrames.length) {
+        return;
+      }
+
+      const finalProducts = objectEditor?.edit?.dataFields?.finalProducts;
+      const store = finalProducts?.store;
+      if (!finalProducts || !store) {
+        return;
+      }
+
+      const wasDirty = finalProducts.dataChanged === true;
+      let added = false;
+
+      createdFrames.forEach(function (frame) {
+        if (!frame?.id) {
+          return;
+        }
+
+        const exists = store.queryBy(function (record) {
+          return String(record.get('id')) === String(frame.id);
+        }).getCount() > 0;
+
+        if (exists) {
+          return;
+        }
+
+        store.add({
+          id: frame.id,
+          path: frame.path,
+          fullpath: frame.path,
+          type: 'object',
+          subtype: 'object',
+          classname: 'frame',
+          published: false,
+          code: frame.code || '',
+          name: frame.name || ''
+        });
+        added = true;
+      });
+
+      if (added && !wasDirty) {
+        finalProducts.dataChanged = false;
+      }
+
+      if (added && finalProducts.component?.getView) {
+        finalProducts.component.getView().refresh();
+      }
+    };
+
     document.addEventListener(pimcore.events.postOpenObject, function (event) {
       try {
         const objectEditor = event?.detail?.object;
@@ -36,7 +86,7 @@ console.log('[model-generate-frames] loaded');
           tooltip: 'Generate frame children from final product details and selected colors',
           iconCls: 'pimcore_icon_apply',
           scale: 'medium',
-          disabled: objectEditor.isAllowed && !objectEditor.isAllowed('create'),
+          disabled: objectEditor.isAllowed && (!objectEditor.isAllowed('create') || !objectEditor.isAllowed('save')),
           handler: function () {
             const run = function () {
               const saveData = objectEditor.getSaveData ? objectEditor.getSaveData(null, true) : {};
@@ -65,6 +115,7 @@ console.log('[model-generate-frames] loaded');
                     pimcore.helpers.showNotification('Generate Frames', message, 'success');
                   }
 
+                  mergeCreatedFramesIntoFinalProducts(objectEditor, result.created || []);
                   pimcore.elementservice.refreshNodeAllTrees('object', data.id);
                 },
                 failure: function (response) {
