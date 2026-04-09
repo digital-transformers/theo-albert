@@ -69,27 +69,41 @@ final class ModelFrameGenerator
             }
 
             try {
+                $step = 'instantiate frame';
                 $frame = new Frame();
+                $step = 'set parent';
                 $frame->setParent($model);
+                $step = 'set key';
                 $frame->setKey($this->buildUniqueKey($model, $code, $name, $index, $mainColorCode));
+                $step = 'set published';
                 $frame->setPublished(false);
+                $step = 'set code';
                 $this->setFieldValue($frame, 'code', $code);
+                $step = 'set name';
                 $this->setFieldValue($frame, 'name', $name);
+                $step = 'set supplier';
                 $this->setFieldValue($frame, 'supplier', $supplier instanceof Supplier ? $supplier : null);
+                $step = 'set composedColors';
                 $this->setFieldValue($frame, 'composedColors', $composedColors);
+                $step = 'set components';
                 $this->setFieldValue($frame, 'components', $components);
 
+                $step = 'set artBase';
                 $this->setFieldValue($frame, 'artBase', $model);
 
+                $step = 'set mainColorCode';
                 $this->setFieldValue($frame, 'mainColorCode', $mainColorCode);
 
                 if ($user instanceof User) {
+                    $step = 'set ownership';
                     $frame->setUserOwner($user->getId());
                     $frame->setUserModification($user->getId());
                 }
 
+                $step = 'save frame';
                 $frame->save();
 
+                $step = 'build result payload';
                 $created[] = [
                     'id' => (int) $frame->getId(),
                     'code' => $code,
@@ -98,7 +112,14 @@ final class ModelFrameGenerator
                 ];
                 $createdFrames[] = $frame;
             } catch (\Throwable $e) {
-                $errors[] = sprintf('Failed to create frame "%s": %s', $code, $e->getMessage());
+                $errors[] = sprintf(
+                    'Failed to create frame "%s" at step "%s": %s [%s:%d]',
+                    $code,
+                    $step ?? 'unknown',
+                    $e->getMessage(),
+                    $e->getFile(),
+                    $e->getLine()
+                );
             }
         }
 

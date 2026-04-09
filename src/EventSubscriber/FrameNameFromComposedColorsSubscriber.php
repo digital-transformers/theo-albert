@@ -34,18 +34,18 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
         $baseFrameCode = $this->resolveBaseFrameCode($frame, $mainColorCode);
         $baseName = $this->resolveBaseName($frame, $colorCodes);
 
-        $currentCode = $this->normalizeString($frame->getCode());
+        $currentCode = $this->getFieldString($frame, 'code');
         $rebuiltCode = $this->joinNonEmpty([$baseFrameCode, $mainColorCode], ' ');
         $code = $rebuiltCode !== '' ? $rebuiltCode : $currentCode;
         if ($rebuiltCode !== '' && $currentCode !== $rebuiltCode) {
-            $frame->setCode($rebuiltCode);
+            $this->setFieldValue($frame, 'code', $rebuiltCode);
         }
 
-        $currentName = $this->normalizeString($frame->getName());
+        $currentName = $this->getFieldString($frame, 'name');
         $rebuiltName = $this->joinNonEmpty([$baseName, $this->formatColorCodes($colorCodes)], ' ');
         $name = $rebuiltName !== '' ? $rebuiltName : $currentName;
         if ($rebuiltName !== '' && $currentName !== $rebuiltName) {
-            $frame->setName($rebuiltName);
+            $this->setFieldValue($frame, 'name', $rebuiltName);
         }
 
         $key = $this->buildUniqueKey($frame, $code, $name);
@@ -105,7 +105,7 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
             }
         }
 
-        $currentCode = $this->normalizeString($frame->getCode());
+        $currentCode = $this->getFieldString($frame, 'code');
         if ($currentCode === '') {
             return '';
         }
@@ -130,7 +130,7 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
             }
         }
 
-        return $this->stripTrailingColorCodes($this->normalizeString($frame->getName()), $colorCodes);
+        return $this->stripTrailingColorCodes($this->getFieldString($frame, 'name'), $colorCodes);
     }
 
     private function resolveModel(Frame $frame): ?ModelObject
