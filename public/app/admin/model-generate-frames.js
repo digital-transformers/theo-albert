@@ -16,6 +16,90 @@ console.log('[model-generate-frames] loaded');
     }
     window.__modelGenerateFramesRegistered = true;
 
+    const normalizeColorIds = function (value) {
+      let items = value;
+      if (typeof items === 'string') {
+        items = items === '' ? [] : items.split(',');
+      }
+
+      if (!Array.isArray(items)) {
+        return [];
+      }
+
+      const ids = [];
+      items.forEach(function (item) {
+        const rawId = item && typeof item === 'object' ? (item.id || item.value || null) : item;
+        const id = rawId == null ? '' : String(rawId).trim();
+        if (!id || ids.indexOf(id) >= 0) {
+          return;
+        }
+
+        ids.push(id);
+      });
+
+      return ids;
+    };
+
+    const buildComposingColorsPayload = function (colorIds) {
+      return colorIds.map(function (colorId) {
+        return {
+          id: colorId,
+          type: 'object',
+          subtype: 'object',
+          classname: 'color',
+          name: '',
+          relevant: true
+        };
+      });
+    };
+
+    const syncFinalProductDetailsPayload = function (payload) {
+      if (!payload || !Array.isArray(payload.finalProductDetails)) {
+        return;
+      }
+
+      payload.finalProductDetails.forEach(function (item) {
+        if (!item || item.type !== 'finalProductProcess' || !item.data || typeof item.data !== 'object') {
+          return;
+        }
+
+        item.data.composingColors = buildComposingColorsPayload(normalizeColorIds(item.data.colors));
+      });
+    };
+
+    const wrapModelSaveData = function (objectEditor) {
+      if (!objectEditor || objectEditor.__modelGenerateFramesSaveDataWrapped) {
+        return;
+      }
+
+      const originalGetSaveData = typeof objectEditor.getSaveData === 'function'
+        ? objectEditor.getSaveData.bind(objectEditor)
+        : null;
+
+      if (!originalGetSaveData) {
+        return;
+      }
+
+      objectEditor.getSaveData = function (only, omitMandatoryCheck) {
+        const saveData = originalGetSaveData(only, omitMandatoryCheck);
+        if (!saveData || typeof saveData.data !== 'string' || saveData.data === '') {
+          return saveData;
+        }
+
+        try {
+          const payload = Ext.decode(saveData.data);
+          syncFinalProductDetailsPayload(payload);
+          saveData.data = Ext.encode(payload);
+        } catch (e) {
+          console.warn('[model-generate-frames] failed to sync composingColors in save payload', e);
+        }
+
+        return saveData;
+      };
+
+      objectEditor.__modelGenerateFramesSaveDataWrapped = true;
+    };
+
     const mergeCreatedFramesIntoFinalProducts = function (objectEditor, createdFrames) {
       if (!createdFrames || !createdFrames.length) {
         return;
@@ -73,6 +157,8 @@ console.log('[model-generate-frames] loaded');
         if ((data.className || '').toLowerCase() !== 'model') {
           return;
         }
+
+        wrapModelSaveData(objectEditor);
 
         const toolbar = objectEditor?.toolbar;
         if (!toolbar || Ext.getCmp('model-generate-frames-' + data.id)) {

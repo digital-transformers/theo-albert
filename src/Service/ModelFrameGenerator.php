@@ -406,17 +406,7 @@ final class ModelFrameGenerator
      */
     private function buildColorMetadataFromIds(array $colorIds): array
     {
-        $colors = [];
-        foreach ($colorIds as $colorId) {
-            $color = Color::getById((int) $colorId, ['force' => true]);
-            if (!$color instanceof Color) {
-                continue;
-            }
-
-            $colors[] = $color;
-        }
-
-        return $this->buildColorMetadataFromObjects($colors);
+        return $this->buildColorMetadataFromObjects($this->resolveExpandedColorsFromIds($colorIds));
     }
 
     /**
@@ -430,6 +420,53 @@ final class ModelFrameGenerator
                 static fn (Concrete $object): bool => $object instanceof Color
             )
         );
+    }
+
+    /**
+     * @param list<int|string> $colorIds
+     *
+     * @return list<Color>
+     */
+    private function resolveExpandedColorsFromIds(array $colorIds): array
+    {
+        $colors = [];
+        $seen = [];
+
+        foreach ($colorIds as $colorId) {
+            $color = Color::getById((int) $colorId, ['force' => true]);
+            if (!$color instanceof Color) {
+                continue;
+            }
+
+            foreach ($this->expandColor($color) as $expandedColor) {
+                $expandedColorId = (int) $expandedColor->getId();
+                if ($expandedColorId < 1 || isset($seen[$expandedColorId])) {
+                    continue;
+                }
+
+                $colors[] = $expandedColor;
+                $seen[$expandedColorId] = true;
+            }
+        }
+
+        return $colors;
+    }
+
+    /**
+     * @return list<Color>
+     */
+    private function expandColor(Color $color): array
+    {
+        $multiColors = $color->getMultiColor(['unpublished' => true]) ?: [];
+        $expandedColors = [];
+
+        foreach ($multiColors as $multiColor) {
+            if ($multiColor instanceof Color) {
+                $expandedColors[] = $multiColor;
+            }
+        }
+
+        return $expandedColors !== [] ? $expandedColors : [$color];
     }
 
     /**

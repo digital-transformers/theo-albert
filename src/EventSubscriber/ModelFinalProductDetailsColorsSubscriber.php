@@ -82,6 +82,7 @@ final class ModelFinalProductDetailsColorsSubscriber implements EventSubscriberI
     private function buildColorMetadataFromIds(array $colorIds): array
     {
         $metadata = [];
+        $seen = [];
 
         foreach ($colorIds as $colorId) {
             $color = Color::getById((int) $colorId, ['force' => true]);
@@ -89,13 +90,38 @@ final class ModelFinalProductDetailsColorsSubscriber implements EventSubscriberI
                 continue;
             }
 
-            $item = new ObjectMetadata('composingColors', ['name', 'relevant'], $color);
-            $item->setName($this->normalizeString($color->getName()));
-            $item->setRelevant(true);
-            $metadata[] = $item;
+            foreach ($this->expandColor($color) as $expandedColor) {
+                $expandedColorId = (int) $expandedColor->getId();
+                if ($expandedColorId < 1 || isset($seen[$expandedColorId])) {
+                    continue;
+                }
+
+                $item = new ObjectMetadata('composingColors', ['name', 'relevant'], $expandedColor);
+                $item->setName($this->normalizeString($expandedColor->getName()));
+                $item->setRelevant(true);
+                $metadata[] = $item;
+                $seen[$expandedColorId] = true;
+            }
         }
 
         return $metadata;
+    }
+
+    /**
+     * @return list<Color>
+     */
+    private function expandColor(Color $color): array
+    {
+        $multiColors = $color->getMultiColor(['unpublished' => true]) ?: [];
+        $expandedColors = [];
+
+        foreach ($multiColors as $multiColor) {
+            if ($multiColor instanceof Color) {
+                $expandedColors[] = $multiColor;
+            }
+        }
+
+        return $expandedColors !== [] ? $expandedColors : [$color];
     }
 
     private function getFieldValue(object|null $object, string $fieldName): mixed
