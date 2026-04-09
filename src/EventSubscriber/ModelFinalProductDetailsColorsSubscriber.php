@@ -5,9 +5,12 @@ namespace App\EventSubscriber;
 
 use Pimcore\Event\DataObjectEvents;
 use Pimcore\Event\Model\DataObjectEvent;
+use Pimcore\Model\DataObject;
 use Pimcore\Model\DataObject\Color;
+use Pimcore\Model\DataObject\Concrete;
 use Pimcore\Model\DataObject\Data\ObjectMetadata;
 use Pimcore\Model\DataObject\Fieldcollection;
+use Pimcore\Model\DataObject\Frame;
 use Pimcore\Model\DataObject\Model as ModelObject;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -18,6 +21,7 @@ final class ModelFinalProductDetailsColorsSubscriber implements EventSubscriberI
         return [
             DataObjectEvents::PRE_ADD => 'onPreSave',
             DataObjectEvents::PRE_UPDATE => 'onPreSave',
+            DataObjectEvents::PRE_UPDATE_VALIDATION_EXCEPTION => 'onPreUpdateValidationException',
         ];
     }
 
@@ -28,18 +32,66 @@ final class ModelFinalProductDetailsColorsSubscriber implements EventSubscriberI
             return;
         }
 
-        $collection = $model->getFinalProductDetails();
-        if (!$collection instanceof Fieldcollection) {
+        $this->syncModelRelations($model);
+    }
+
+    public function onPreUpdateValidationException(DataObjectEvent $event): void
+    {
+        $model = $event->getObject();
+        if (!$model instanceof ModelObject) {
             return;
         }
 
-        foreach ($collection as $item) {
-            if (!$item || $item->getType() !== 'finalProductProcess') {
+        $this->syncModelRelations($model);
+
+        $validationExceptions = $event->getArgument('validationExceptions');
+        if (!is_array($validationExceptions) || $validationExceptions === []) {
+            return;
+        }
+
+        $remainingExceptions = [];
+
+        foreach ($validationExceptions as $validationException) {
+            $message = $validationException instanceof \Throwable
+                ? $validationException->getMessage()
+                : '';
+
+            if (str_contains($message, 'Passing relations without ID or type not allowed anymore!')) {
                 continue;
             }
 
-            $colorIds = $this->normalizeColorIds($this->getFieldValue($item, 'colors'));
-            $this->setFieldValue($item, 'composingColors', $this->buildColorMetadataFromIds($colorIds));
+            $remainingExceptions[] = $validationException;
+        }
+
+        $event->setArgument('validationExceptions', $remainingExceptions);
+    }
+
+    private function syncModelRelations(ModelObject $model): void
+    {
+        $collection = $model->getFinalProductDetails();
+        if ($collection instanceof Fieldcollection) {
+            foreach ($collection as $item) {
+                if (!$item || $item->getType() !== 'finalProductProcess') {
+                    continue;
+                }
+
+                $colorIds = $this->normalizeColorIds($this->getFieldValue($item, 'colors'));
+                $this->setFieldValue($item, 'composingColors', $this->buildColorMetadataFromIds($colorIds));
+                $this->setFieldValue(
+                    $item,
+                    'components',
+                    $this->buildRelationMetadataFromSource(
+                        $this->getFieldValue($item, 'components'),
+                        'components',
+                        []
+                    )
+                );
+            }
+        }
+
+        $finalProducts = $model->getFinalProducts();
+        if (is_array($finalProducts)) {
+            $model->setFinalProducts($this->resolveFramesFromSource($finalProducts));
         }
     }
 
@@ -105,6 +157,121 @@ final class ModelFinalProductDetailsColorsSubscriber implements EventSubscriberI
         }
 
         return $metadata;
+    }
+
+    /**
+     * @param list<ObjectMetadata>|mixed $value
+     * @param list<string> $columns
+     *
+     * @return list<ObjectMetadata>
+     */
+    private function buildRelationMetadataFromSource(mixed $value, string $fieldName, array $columns): array
+    {
+        return $this->buildRelationMetadataFromObjects(
+            $this->resolveObjectsFromSource($value),
+            $fieldName,
+            $columns
+        );
+    }
+
+    /**
+     * @param list<Concrete> $objects
+     * @param list<string> $columns
+     *
+     * @return list<ObjectMetadata>
+     */
+    private function buildRelationMetadataFromObjects(array $objects, string $fieldName, array $columns): array
+    {
+        $metadata = [];
+        $seen = [];
+
+        foreach ($objects as $object) {
+            $objectId = (int) $object->getId();
+            if ($objectId < 1 || isset($seen[$objectId])) {
+                continue;
+            }
+
+            $metadata[] = new ObjectMetadata($fieldName, $columns, $object);
+            $seen[$objectId] = true;
+        }
+
+        return $metadata;
+    }
+
+    /**
+     * @return list<Concrete>
+     */
+    private function resolveObjectsFromSource(mixed $value, ?callable $supports = null): array
+    {
+        if (!is_array($value)) {
+            return [];
+        }
+
+        $objects = [];
+        $seen = [];
+        foreach ($value as $item) {
+            $object = null;
+            if ($item instanceof ObjectMetadata) {
+                $object = $item->getObject();
+            } elseif ($item instanceof Concrete) {
+                $object = $item;
+            } elseif (is_array($item) && is_scalar($item['id'] ?? null) && (int) $item['id'] > 0) {
+                $object = DataObject::getById((int) $item['id'], ['force' => true]);
+            }
+
+            if (!$object instanceof Concrete) {
+                continue;
+            }
+
+            if ($supports !== null && !$supports($object)) {
+                continue;
+            }
+
+            $objectId = (int) $object->getId();
+            if ($objectId < 1 || isset($seen[$objectId])) {
+                continue;
+            }
+
+            $objects[] = $object;
+            $seen[$objectId] = true;
+        }
+
+        return $objects;
+    }
+
+    /**
+     * @param array<array-key, mixed> $value
+     *
+     * @return list<Frame>
+     */
+    private function resolveFramesFromSource(array $value): array
+    {
+        $frames = [];
+        $seen = [];
+
+        foreach ($value as $item) {
+            $frame = null;
+            if ($item instanceof Frame) {
+                $frame = $item;
+            } elseif (is_array($item) && is_scalar($item['id'] ?? null) && (int) $item['id'] > 0) {
+                $candidate = Frame::getById((int) $item['id'], ['force' => true]);
+                $frame = $candidate instanceof Frame ? $candidate : null;
+            }
+
+            if (!$frame instanceof Frame) {
+                continue;
+            }
+
+            $frameId = (int) $frame->getId();
+            if ($frameId < 1 || isset($seen[$frameId])) {
+                continue;
+            }
+
+            $frames[] = $frame;
+            $seen[$frameId] = true;
+        }
+
+        return $frames;
     }
 
     /**
