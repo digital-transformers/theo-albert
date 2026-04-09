@@ -29,8 +29,8 @@ console.log('[model-generate-frames] loaded');
       const ids = [];
       items.forEach(function (item) {
         const rawId = item && typeof item === 'object' ? (item.id || item.value || null) : item;
-        const id = rawId == null ? '' : String(rawId).trim();
-        if (!id || ids.indexOf(id) >= 0) {
+        const id = Number.parseInt(rawId, 10);
+        if (!Number.isInteger(id) || id < 1 || ids.indexOf(id) >= 0) {
           return;
         }
 
