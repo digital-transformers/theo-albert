@@ -62,7 +62,7 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
         $codes = [];
         $seen = [];
 
-        foreach (($frame->getComposedColors(['unpublished' => true]) ?: []) as $metadata) {
+        foreach (($this->getFieldValue($frame, 'composedColors') ?: []) as $metadata) {
             $color = $this->resolveMetadataColor($metadata);
             if (!$color instanceof Color) {
                 continue;
@@ -140,7 +140,7 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
             return $parent;
         }
 
-        $artBase = $frame->getArtBase();
+        $artBase = $this->getFieldValue($frame, 'artBase');
 
         return $artBase instanceof ModelObject ? $artBase : null;
     }
@@ -211,7 +211,10 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
 
         $getter = 'get' . ucfirst($fieldName);
         if (method_exists($object, $getter)) {
-            return $object->$getter();
+            try {
+                return $object->$getter();
+            } catch (\Throwable) {
+            }
         }
 
         if (method_exists($object, 'getObjectVar')) {
@@ -234,9 +237,12 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
     {
         $setter = 'set' . ucfirst($fieldName);
         if (method_exists($object, $setter)) {
-            $object->$setter($value);
+            try {
+                $object->$setter($value);
 
-            return;
+                return;
+            } catch (\Throwable) {
+            }
         }
 
         if (method_exists($object, 'setObjectVar')) {

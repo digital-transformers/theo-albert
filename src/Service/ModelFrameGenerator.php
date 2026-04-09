@@ -73,15 +73,13 @@ final class ModelFrameGenerator
                 $frame->setParent($model);
                 $frame->setKey($this->buildUniqueKey($model, $code, $name, $index, $mainColorCode));
                 $frame->setPublished(false);
-                $frame->setCode($code);
-                $frame->setName($name);
-                $frame->setSupplier($supplier instanceof Supplier ? $supplier : null);
-                $frame->setComposedColors($composedColors);
-                $frame->setComponents($components);
+                $this->setFieldValue($frame, 'code', $code);
+                $this->setFieldValue($frame, 'name', $name);
+                $this->setFieldValue($frame, 'supplier', $supplier instanceof Supplier ? $supplier : null);
+                $this->setFieldValue($frame, 'composedColors', $composedColors);
+                $this->setFieldValue($frame, 'components', $components);
 
-                if (method_exists($frame, 'setArtBase')) {
-                    $frame->setArtBase($model);
-                }
+                $this->setFieldValue($frame, 'artBase', $model);
 
                 $this->setFieldValue($frame, 'mainColorCode', $mainColorCode);
 
@@ -634,7 +632,10 @@ final class ModelFrameGenerator
 
         $getter = 'get' . ucfirst($fieldName);
         if (method_exists($object, $getter)) {
-            return $object->$getter();
+            try {
+                return $object->$getter();
+            } catch (\Throwable) {
+            }
         }
 
         if (method_exists($object, 'getObjectVar')) {
@@ -657,9 +658,12 @@ final class ModelFrameGenerator
     {
         $setter = 'set' . ucfirst($fieldName);
         if (method_exists($object, $setter)) {
-            $object->$setter($value);
+            try {
+                $object->$setter($value);
 
-            return;
+                return;
+            } catch (\Throwable) {
+            }
         }
 
         if (method_exists($object, 'setObjectVar')) {
