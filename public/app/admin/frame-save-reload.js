@@ -11,13 +11,16 @@ console.log('[frame-save-reload] loaded');
     }
     window.__frameSaveReloadRegistered = true;
 
+    const reloadableClasses = ['frame', 'model'];
+
     document.addEventListener(pimcore.events.postSaveObject, function (event) {
       try {
         const objectEditor = event?.detail?.object;
         const task = event?.detail?.task;
         const data = objectEditor?.data?.general || {};
+        const className = String(data.className || '').toLowerCase();
 
-        if ((data.className || '').toLowerCase() !== 'frame') {
+        if (reloadableClasses.indexOf(className) < 0) {
           return;
         }
 
