@@ -8,7 +8,6 @@ use Pimcore\Event\Model\DataObjectEvent;
 use Pimcore\Model\DataObject\Color;
 use Pimcore\Model\DataObject\Data\ObjectMetadata;
 use Pimcore\Model\DataObject\Frame;
-use Pimcore\Model\DataObject\Model as ModelObject;
 use Pimcore\Model\Element\Service as ElementService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -97,14 +96,6 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
 
     private function resolveBaseFrameCode(Frame $frame, string $mainColorCode): string
     {
-        $model = $this->resolveModel($frame);
-        if ($model instanceof ModelObject) {
-            $modelBaseFrameCode = $this->getFieldString($model, 'frameBaseCode');
-            if ($modelBaseFrameCode !== '') {
-                return $modelBaseFrameCode;
-            }
-        }
-
         $currentCode = $this->getFieldString($frame, 'code');
         if ($currentCode === '') {
             return '';
@@ -122,27 +113,7 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
      */
     private function resolveBaseName(Frame $frame, array $colorCodes): string
     {
-        $model = $this->resolveModel($frame);
-        if ($model instanceof ModelObject) {
-            $modelName = $this->getFieldString($model, 'name');
-            if ($modelName !== '') {
-                return $modelName;
-            }
-        }
-
         return $this->stripTrailingColorCodes($this->getFieldString($frame, 'name'), $colorCodes);
-    }
-
-    private function resolveModel(Frame $frame): ?ModelObject
-    {
-        $parent = $frame->getParent();
-        if ($parent instanceof ModelObject) {
-            return $parent;
-        }
-
-        $artBase = $this->getFieldValue($frame, 'artBase');
-
-        return $artBase instanceof ModelObject ? $artBase : null;
     }
 
     private function buildUniqueKey(Frame $frame, string $code, string $name): string
