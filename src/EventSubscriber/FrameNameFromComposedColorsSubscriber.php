@@ -34,10 +34,6 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
         $baseFrameCode = $this->resolveBaseFrameCode($frame, $mainColorCode);
         $baseName = $this->resolveBaseName($frame, $colorCodes);
 
-        if ($baseFrameCode !== '') {
-            $this->setFieldValue($frame, 'baseFrameCode', $baseFrameCode);
-        }
-
         $currentCode = $this->normalizeString($frame->getCode());
         $rebuiltCode = $this->joinNonEmpty([$baseFrameCode, $mainColorCode], ' ');
         $code = $rebuiltCode !== '' ? $rebuiltCode : $currentCode;
@@ -107,11 +103,6 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
             if ($modelBaseFrameCode !== '') {
                 return $modelBaseFrameCode;
             }
-        }
-
-        $storedBaseFrameCode = $this->getFieldString($frame, 'baseFrameCode');
-        if ($storedBaseFrameCode !== '') {
-            return $storedBaseFrameCode;
         }
 
         $currentCode = $this->normalizeString($frame->getCode());
@@ -224,7 +215,11 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
         }
 
         if (method_exists($object, 'getObjectVar')) {
-            return $object->getObjectVar($fieldName);
+            try {
+                return $object->getObjectVar($fieldName);
+            } catch (\Throwable) {
+                return null;
+            }
         }
 
         return null;
@@ -245,7 +240,10 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
         }
 
         if (method_exists($object, 'setObjectVar')) {
-            $object->setObjectVar($fieldName, $value);
+            try {
+                $object->setObjectVar($fieldName, $value);
+            } catch (\Throwable) {
+            }
         }
     }
 

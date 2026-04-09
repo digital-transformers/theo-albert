@@ -83,7 +83,6 @@ final class ModelFrameGenerator
                     $frame->setArtBase($model);
                 }
 
-                $this->setFieldValue($frame, 'baseFrameCode', $baseFrameCode);
                 $this->setFieldValue($frame, 'mainColorCode', $mainColorCode);
 
                 if ($user instanceof User) {
@@ -639,7 +638,11 @@ final class ModelFrameGenerator
         }
 
         if (method_exists($object, 'getObjectVar')) {
-            return $object->getObjectVar($fieldName);
+            try {
+                return $object->getObjectVar($fieldName);
+            } catch (\Throwable) {
+                return null;
+            }
         }
 
         return null;
@@ -660,7 +663,10 @@ final class ModelFrameGenerator
         }
 
         if (method_exists($object, 'setObjectVar')) {
-            $object->setObjectVar($fieldName, $value);
+            try {
+                $object->setObjectVar($fieldName, $value);
+            } catch (\Throwable) {
+            }
         }
     }
 
