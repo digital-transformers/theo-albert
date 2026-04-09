@@ -268,7 +268,7 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
              'displayMode' => NULL,
              'pathFormatterClass' => '',
              'maxItems' => NULL,
-             'visibleFields' => 'code,name',
+             'visibleFields' => 'itemCode,itemName',
              'allowToCreateNewObject' => false,
              'allowToClearRelation' => true,
              'optimizedAdminLoading' => false,
@@ -278,7 +278,7 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
             ),
              'width' => '',
              'height' => '',
-             'allowedClassId' => 'component',
+             'allowedClassId' => 'SAPComponent',
              'columns' => 
             array (
             ),
