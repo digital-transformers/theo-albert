@@ -83,7 +83,14 @@ final class ModelFinalProductDetailsColorsSubscriber implements EventSubscriberI
                 }
 
                 $colorIds = $this->normalizeColorIds($this->getFieldValue($item, 'colors'));
-                $this->setFieldValue($item, 'composingColors', $this->buildColorMetadataFromIds($colorIds));
+                $this->setFieldValue(
+                    $item,
+                    'composingColors',
+                    $this->resolveSyncedComposingColors(
+                        $colorIds,
+                        $this->getFieldValue($item, 'composingColors')
+                    )
+                );
                 $this->setFieldValue(
                     $item,
                     'components',
@@ -100,6 +107,19 @@ final class ModelFinalProductDetailsColorsSubscriber implements EventSubscriberI
         if (is_array($finalProducts)) {
             $model->setFinalProducts($this->resolveFramesFromSource($finalProducts));
         }
+    }
+
+    /**
+     * @param list<int|string> $colorIds
+     *
+     * @return list<ObjectMetadata>
+     */
+    private function resolveSyncedComposingColors(array $colorIds, mixed $currentValue): array
+    {
+        $expandedColors = $this->buildColorMetadataFromIds($colorIds);
+        $currentColors = $this->buildColorMetadataFromSource($currentValue);
+
+        return $this->preserveCurrentOrderIfSameSet($expandedColors, $currentColors);
     }
 
     /**
@@ -161,6 +181,56 @@ final class ModelFinalProductDetailsColorsSubscriber implements EventSubscriberI
                 $metadata[] = $item;
                 $seen[$expandedColorId] = true;
             }
+        }
+
+        return $metadata;
+    }
+
+    /**
+     * @return list<ObjectMetadata>
+     */
+    private function buildColorMetadataFromSource(mixed $value): array
+    {
+        if (!is_array($value)) {
+            return [];
+        }
+
+        $metadata = [];
+        $seen = [];
+
+        foreach ($value as $item) {
+            $color = null;
+            $name = null;
+            $relevant = null;
+
+            if ($item instanceof ObjectMetadata) {
+                $object = $item->getObject();
+                $color = $object instanceof Color ? $object : null;
+                $name = $item->getName();
+                $relevant = $item->getRelevant();
+            } elseif (is_array($item) && is_scalar($item['id'] ?? null) && (int) $item['id'] > 0) {
+                $object = Color::getById((int) $item['id'], ['force' => true]);
+                $color = $object instanceof Color ? $object : null;
+                $name = $item['name'] ?? null;
+                $relevant = $item['relevant'] ?? null;
+            } elseif ($item instanceof Color) {
+                $color = $item;
+            }
+
+            if (!$color instanceof Color) {
+                continue;
+            }
+
+            $colorId = (int) $color->getId();
+            if ($colorId < 1 || isset($seen[$colorId])) {
+                continue;
+            }
+
+            $metadataItem = new ObjectMetadata('composingColors', ['name', 'relevant'], $color);
+            $metadataItem->setName($this->normalizeString($name) !== '' ? $this->normalizeString($name) : $this->normalizeString($color->getName()));
+            $metadataItem->setRelevant($relevant === null ? true : (bool) $relevant);
+            $metadata[] = $metadataItem;
+            $seen[$colorId] = true;
         }
 
         return $metadata;
@@ -279,6 +349,66 @@ final class ModelFinalProductDetailsColorsSubscriber implements EventSubscriberI
         }
 
         return $frames;
+    }
+
+    /**
+     * @param list<ObjectMetadata> $left
+     * @param list<ObjectMetadata> $right
+     */
+    private function hasSameRelatedObjectIds(array $left, array $right): bool
+    {
+        return $this->extractRelatedObjectIds($left) === $this->extractRelatedObjectIds($right);
+    }
+
+    /**
+     * @param list<ObjectMetadata> $expandedColors
+     * @param list<ObjectMetadata> $currentColors
+     *
+     * @return list<ObjectMetadata>
+     */
+    private function preserveCurrentOrderIfSameSet(array $expandedColors, array $currentColors): array
+    {
+        if ($expandedColors === []) {
+            return [];
+        }
+
+        if ($currentColors === []) {
+            return $expandedColors;
+        }
+
+        return $this->hasSameRelatedObjectIds($expandedColors, $currentColors)
+            ? $currentColors
+            : $expandedColors;
+    }
+
+    /**
+     * @param list<ObjectMetadata> $metadata
+     *
+     * @return list<int>
+     */
+    private function extractRelatedObjectIds(array $metadata): array
+    {
+        $ids = [];
+
+        foreach ($metadata as $item) {
+            $objectId = (int) $item->getObjectId();
+            if ($objectId < 1) {
+                $object = $item->getObject();
+                if (!$object instanceof Concrete) {
+                    continue;
+                }
+
+                $objectId = (int) $object->getId();
+            }
+
+            if ($objectId > 0) {
+                $ids[] = $objectId;
+            }
+        }
+
+        sort($ids);
+
+        return $ids;
     }
 
     /**

@@ -40,17 +40,34 @@ console.log('[model-generate-frames] loaded');
       return ids;
     };
 
-    const buildComposingColorsPayload = function (colorIds) {
-      return colorIds.map(function (colorId) {
-        return {
-          id: colorId,
+    const normalizeRelationRows = function (rows, defaultClassname) {
+      if (!Array.isArray(rows)) {
+        return [];
+      }
+
+      const normalized = [];
+      const seenIds = [];
+
+      rows.forEach(function (row) {
+        if (!row || typeof row !== 'object') {
+          return;
+        }
+
+        const id = Number.parseInt(row.id, 10);
+        if (!Number.isInteger(id) || id < 1 || seenIds.indexOf(id) >= 0) {
+          return;
+        }
+
+        seenIds.push(id);
+        normalized.push(Object.assign({}, row, {
+          id: id,
           type: 'object',
-          subtype: 'object',
-          classname: 'color',
-          name: '',
-          relevant: true
-        };
+          subtype: row.subtype || 'object',
+          classname: row.classname || defaultClassname
+        }));
       });
+
+      return normalized;
     };
 
     const syncFinalProductDetailsPayload = function (payload) {
@@ -63,7 +80,8 @@ console.log('[model-generate-frames] loaded');
           return;
         }
 
-        item.data.composingColors = buildComposingColorsPayload(normalizeColorIds(item.data.colors));
+        item.data.composingColors = normalizeRelationRows(item.data.composingColors, 'color');
+        item.data.components = normalizeRelationRows(item.data.components, 'SAPComponent');
       });
     };
 

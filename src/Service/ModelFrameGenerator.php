@@ -274,8 +274,7 @@ final class ModelFrameGenerator
                 'supplier' => $supplier instanceof Supplier ? $supplier : null,
                 'composedColors' => $this->resolveComposedColorsMetadata(
                     $this->getFieldValue($item, 'colors'),
-                    $this->getFieldValue($item, 'composingColors'),
-                    false
+                    $this->getFieldValue($item, 'composingColors')
                 ),
                 'components' => $this->buildRelationMetadataFromSource(
                     $this->getFieldValue($item, 'components'),
@@ -309,8 +308,7 @@ final class ModelFrameGenerator
                 'supplier' => $this->resolveSupplier($data['supplier'] ?? null),
                 'composedColors' => $this->resolveComposedColorsMetadata(
                     $data['colors'] ?? [],
-                    $data['composingColors'] ?? null,
-                    true
+                    $data['composingColors'] ?? null
                 ),
                 'components' => $this->buildRelationMetadataFromSource(
                     $data['components'] ?? null,
@@ -396,25 +394,13 @@ final class ModelFrameGenerator
      */
     private function resolveComposedColorsMetadata(
         mixed $colorsValue,
-        mixed $composingColorsValue,
-        bool $preferColors
+        mixed $composingColorsValue
     ): array
     {
-        if ($preferColors) {
-            $colorIds = $this->normalizeColorIds($colorsValue);
-            if ($colorIds !== []) {
-                return $this->buildColorMetadataFromIds($colorIds);
-            }
+        $expandedColors = $this->buildColorMetadataFromIds($this->normalizeColorIds($colorsValue));
+        $currentColors = $this->buildColorMetadataFromSource($composingColorsValue);
 
-            return $this->buildColorMetadataFromSource($composingColorsValue);
-        }
-
-        $metadata = $this->buildColorMetadataFromSource($composingColorsValue);
-        if ($metadata !== []) {
-            return $metadata;
-        }
-
-        return $this->buildColorMetadataFromIds($this->normalizeColorIds($colorsValue));
+        return $this->preserveCurrentOrderIfSameSet($expandedColors, $currentColors);
     }
 
     /**
@@ -432,12 +418,49 @@ final class ModelFrameGenerator
      */
     private function buildColorMetadataFromSource(mixed $value): array
     {
-        return $this->buildColorMetadataFromObjects(
-            $this->resolveObjectsFromSource(
-                $value,
-                static fn (Concrete $object): bool => $object instanceof Color
-            )
-        );
+        if (!is_array($value)) {
+            return [];
+        }
+
+        $metadata = [];
+        $seen = [];
+
+        foreach ($value as $item) {
+            $color = null;
+            $name = null;
+            $relevant = null;
+
+            if ($item instanceof ObjectMetadata) {
+                $object = $item->getObject();
+                $color = $object instanceof Color ? $object : null;
+                $name = $item->getName();
+                $relevant = $item->getRelevant();
+            } elseif (is_array($item) && is_scalar($item['id'] ?? null) && (int) $item['id'] > 0) {
+                $object = Color::getById((int) $item['id'], ['force' => true]);
+                $color = $object instanceof Color ? $object : null;
+                $name = $item['name'] ?? null;
+                $relevant = $item['relevant'] ?? null;
+            } elseif ($item instanceof Color) {
+                $color = $item;
+            }
+
+            if (!$color instanceof Color) {
+                continue;
+            }
+
+            $colorId = (int) $color->getId();
+            if ($colorId < 1 || isset($seen[$colorId])) {
+                continue;
+            }
+
+            $metadataItem = new ObjectMetadata('composedColors', ['name', 'relevant'], $color);
+            $metadataItem->setName($this->normalizeString($name) !== '' ? $this->normalizeString($name) : $this->normalizeString($color->getName()));
+            $metadataItem->setRelevant($relevant === null ? true : (bool) $relevant);
+            $metadata[] = $metadataItem;
+            $seen[$colorId] = true;
+        }
+
+        return $metadata;
     }
 
     /**
@@ -708,5 +731,65 @@ final class ModelFrameGenerator
     private function normalizeString(mixed $value): string
     {
         return is_scalar($value) ? trim((string) $value) : '';
+    }
+
+    /**
+     * @param list<ObjectMetadata> $left
+     * @param list<ObjectMetadata> $right
+     */
+    private function hasSameRelatedObjectIds(array $left, array $right): bool
+    {
+        return $this->extractRelatedObjectIds($left) === $this->extractRelatedObjectIds($right);
+    }
+
+    /**
+     * @param list<ObjectMetadata> $expandedColors
+     * @param list<ObjectMetadata> $currentColors
+     *
+     * @return list<ObjectMetadata>
+     */
+    private function preserveCurrentOrderIfSameSet(array $expandedColors, array $currentColors): array
+    {
+        if ($expandedColors === []) {
+            return [];
+        }
+
+        if ($currentColors === []) {
+            return $expandedColors;
+        }
+
+        return $this->hasSameRelatedObjectIds($expandedColors, $currentColors)
+            ? $currentColors
+            : $expandedColors;
+    }
+
+    /**
+     * @param list<ObjectMetadata> $metadata
+     *
+     * @return list<int>
+     */
+    private function extractRelatedObjectIds(array $metadata): array
+    {
+        $ids = [];
+
+        foreach ($metadata as $item) {
+            $objectId = (int) $item->getObjectId();
+            if ($objectId < 1) {
+                $object = $item->getObject();
+                if (!$object instanceof Concrete) {
+                    continue;
+                }
+
+                $objectId = (int) $object->getId();
+            }
+
+            if ($objectId > 0) {
+                $ids[] = $objectId;
+            }
+        }
+
+        sort($ids);
+
+        return $ids;
     }
 }
