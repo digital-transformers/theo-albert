@@ -28,7 +28,7 @@ final class ModelFinalProductDetailsColorsSubscriber implements EventSubscriberI
     public function onPreSave(DataObjectEvent $event): void
     {
         $model = $event->getObject();
-        if (!$model instanceof ModelObject) {
+        if (!$this->isModelObject($model)) {
             return;
         }
 
@@ -38,7 +38,7 @@ final class ModelFinalProductDetailsColorsSubscriber implements EventSubscriberI
     public function onPreUpdateValidationException(DataObjectEvent $event): void
     {
         $model = $event->getObject();
-        if (!$model instanceof ModelObject) {
+        if (!$this->isModelObject($model)) {
             return;
         }
 
@@ -64,6 +64,13 @@ final class ModelFinalProductDetailsColorsSubscriber implements EventSubscriberI
         }
 
         $event->setArgument('validationExceptions', $remainingExceptions);
+    }
+
+    private function isModelObject(mixed $object): bool
+    {
+        return $object instanceof ModelObject
+            && method_exists($object, 'getClassName')
+            && strtolower((string) $object->getClassName()) === 'model';
     }
 
     private function syncModelRelations(ModelObject $model): void
