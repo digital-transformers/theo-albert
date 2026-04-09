@@ -132,3 +132,7 @@ services:
     App\EventSubscriber\FrameNameFromComposedColorsSubscriber:
       tags:
         - { name: kernel.event_subscriber }
+
+    App\EventSubscriber\ModelFinalProductDetailsColorsSubscriber:
+      tags:
+        - { name: kernel.event_subscriber }

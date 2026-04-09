@@ -83,7 +83,7 @@ console.log('[model-generate-frames] loaded');
         toolbar.add({
           id: 'model-generate-frames-' + data.id,
           text: 'Generate Frames',
-          tooltip: 'Generate frame children from final product details and selected colors',
+          tooltip: 'Generate one frame child per final product detail row',
           iconCls: 'pimcore_icon_apply',
           scale: 'medium',
           disabled: objectEditor.isAllowed && (!objectEditor.isAllowed('create') || !objectEditor.isAllowed('save')),

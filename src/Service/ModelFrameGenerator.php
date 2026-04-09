@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use Pimcore\Model\DataObject;
 use Pimcore\Model\DataObject\Color;
+use Pimcore\Model\DataObject\Concrete;
 use Pimcore\Model\DataObject\Data\ObjectMetadata;
 use Pimcore\Model\DataObject\Fieldcollection;
 use Pimcore\Model\DataObject\Frame;
@@ -18,6 +20,7 @@ final class ModelFrameGenerator
     /**
      * @param list<array<string, mixed>>|null $submittedDetails
      * @param list<array<string, mixed>>|null $submittedFinalProducts
+     * @param array{frameBaseCode?: mixed, name?: mixed}|null $submittedModelBaseData
      *
      * @return array{created: list<array{id: int, code: string, name: string, path: string}>, skipped: list<array{code: string, reason: string}>, errors: list<string>}
      */
@@ -26,87 +29,79 @@ final class ModelFrameGenerator
         ?array $submittedDetails = null,
         ?User $user = null,
         ?array $submittedFinalProducts = null,
+        ?array $submittedModelBaseData = null,
     ): array {
         $created = [];
         $createdFrames = [];
         $skipped = [];
         $errors = [];
+        $baseFrameCode = $this->resolveModelBaseFrameCode($model, $submittedModelBaseData);
+        $baseName = $this->resolveModelBaseName($model, $submittedModelBaseData);
 
         foreach ($this->resolveDetails($model, $submittedDetails) as $index => $detail) {
-            $baseCode = $this->normalizeString($detail['code'] ?? null);
-            $baseName = $this->normalizeString($detail['name'] ?? null);
+            $mainColorCode = $this->normalizeString($detail['mainColorCode'] ?? null);
             $supplier = $detail['supplier'] ?? null;
+            $composedColors = $detail['composedColors'] ?? [];
+            $components = $detail['components'] ?? [];
 
-            if ($detail['colorIds'] === []) {
+            if ($mainColorCode === '') {
                 $skipped[] = [
-                    'code' => $baseCode,
-                    'reason' => sprintf('Fieldcollection item %d has no selected colors', $index + 1),
+                    'code' => $baseFrameCode,
+                    'reason' => sprintf('Fieldcollection item %d has no main color code', $index + 1),
                 ];
                 continue;
             }
 
-            foreach ($detail['colorIds'] as $colorId) {
-                $color = Color::getById((int) $colorId, ['force' => true]);
-                if (!$color instanceof Color) {
-                    $skipped[] = [
-                        'code' => $this->joinNonEmpty([$baseCode, (string) $colorId], ' '),
-                        'reason' => sprintf('Color object %s was not found', (string) $colorId),
-                    ];
-                    continue;
+            $code = $this->joinNonEmpty([$baseFrameCode, $mainColorCode], ' ');
+            $name = $this->buildFrameName($baseName, $composedColors, $mainColorCode);
+
+            if ($code === '') {
+                $errors[] = sprintf('Fieldcollection item %d has no generated frame code', $index + 1);
+                continue;
+            }
+
+            if ($this->findExistingChildFrame($model, $code) instanceof Frame) {
+                $skipped[] = [
+                    'code' => $code,
+                    'reason' => 'A child frame with this code already exists',
+                ];
+                continue;
+            }
+
+            try {
+                $frame = new Frame();
+                $frame->setParent($model);
+                $frame->setKey($this->buildUniqueKey($model, $code, $name, $index, $mainColorCode));
+                $frame->setPublished(false);
+                $frame->setCode($code);
+                $frame->setName($name);
+                $frame->setSupplier($supplier instanceof Supplier ? $supplier : null);
+                $frame->setComposedColors($composedColors);
+                $frame->setComponents($components);
+
+                if (method_exists($frame, 'setArtBase')) {
+                    $frame->setArtBase($model);
                 }
 
-                $code = $this->joinNonEmpty([$baseCode, $this->normalizeString($color->getCode())], ' ');
-                $composedColors = $this->buildComposedColorsMetadata($color);
-                $name = $this->buildFrameName($baseName, $color, $composedColors);
+                $this->setFieldValue($frame, 'baseFrameCode', $baseFrameCode);
+                $this->setFieldValue($frame, 'mainColorCode', $mainColorCode);
 
-                if ($code === '') {
-                    $errors[] = sprintf('Fieldcollection item %d with color %d has no generated frame code', $index + 1, $color->getId());
-                    continue;
+                if ($user instanceof User) {
+                    $frame->setUserOwner($user->getId());
+                    $frame->setUserModification($user->getId());
                 }
 
-                if ($this->findExistingChildFrame($model, $code) instanceof Frame) {
-                    $skipped[] = [
-                        'code' => $code,
-                        'reason' => 'A child frame with this code already exists',
-                    ];
-                    continue;
-                }
+                $frame->save();
 
-                try {
-                    $frame = new Frame();
-                    $frame->setParent($model);
-                    $frame->setKey($this->buildUniqueKey($model, $code, $name, $index, $color));
-                    $frame->setPublished(false);
-                    $frame->setCode($code);
-                    $frame->setName($name);
-                    $frame->setSupplier($supplier instanceof Supplier ? $supplier : null);
-                    $frame->setColor($color);
-
-                    if (method_exists($frame, 'setArtBase')) {
-                        $frame->setArtBase($model);
-                    }
-
-                    if ($composedColors !== []) {
-                        $frame->setComposedColors($composedColors);
-                    }
-
-                    if ($user instanceof User) {
-                        $frame->setUserOwner($user->getId());
-                        $frame->setUserModification($user->getId());
-                    }
-
-                    $frame->save();
-
-                    $created[] = [
-                        'id' => (int) $frame->getId(),
-                        'code' => $code,
-                        'name' => $name,
-                        'path' => $frame->getRealFullPath(),
-                    ];
-                    $createdFrames[] = $frame;
-                } catch (\Throwable $e) {
-                    $errors[] = sprintf('Failed to create frame "%s": %s', $code, $e->getMessage());
-                }
+                $created[] = [
+                    'id' => (int) $frame->getId(),
+                    'code' => $code,
+                    'name' => $name,
+                    'path' => $frame->getRealFullPath(),
+                ];
+                $createdFrames[] = $frame;
+            } catch (\Throwable $e) {
+                $errors[] = sprintf('Failed to create frame "%s": %s', $code, $e->getMessage());
             }
         }
 
@@ -236,7 +231,7 @@ final class ModelFrameGenerator
     /**
      * @param list<array<string, mixed>>|null $submittedDetails
      *
-     * @return list<array{code: string, name: string, supplier: Supplier|null, colorIds: list<int|string>}>
+     * @return list<array{mainColorCode: string, supplier: Supplier|null, composedColors: list<ObjectMetadata>, components: list<ObjectMetadata>}>
      */
     private function resolveDetails(ModelObject $model, ?array $submittedDetails): array
     {
@@ -257,10 +252,18 @@ final class ModelFrameGenerator
 
             $supplier = $item->getSupplier();
             $details[] = [
-                'code' => $this->normalizeString($item->getCode()),
-                'name' => $this->normalizeString($item->getName()),
+                'mainColorCode' => $this->getFieldString($item, 'mainColorCode'),
                 'supplier' => $supplier instanceof Supplier ? $supplier : null,
-                'colorIds' => $this->normalizeColorIds($item->getColors() ?: []),
+                'composedColors' => $this->resolveComposedColorsMetadata(
+                    $this->getFieldValue($item, 'colors'),
+                    $this->getFieldValue($item, 'composingColors'),
+                    false
+                ),
+                'components' => $this->buildRelationMetadataFromSource(
+                    $this->getFieldValue($item, 'components'),
+                    'components',
+                    []
+                ),
             ];
         }
 
@@ -270,7 +273,7 @@ final class ModelFrameGenerator
     /**
      * @param list<array<string, mixed>> $submittedDetails
      *
-     * @return list<array{code: string, name: string, supplier: Supplier|null, colorIds: list<int|string>}>
+     * @return list<array{mainColorCode: string, supplier: Supplier|null, composedColors: list<ObjectMetadata>, components: list<ObjectMetadata>}>
      */
     private function resolveSubmittedDetails(array $submittedDetails): array
     {
@@ -284,10 +287,18 @@ final class ModelFrameGenerator
             $data = is_array($item['data'] ?? null) ? $item['data'] : [];
 
             $details[] = [
-                'code' => $this->normalizeString($data['code'] ?? null),
-                'name' => $this->normalizeString($data['name'] ?? null),
+                'mainColorCode' => $this->normalizeString($data['mainColorCode'] ?? null),
                 'supplier' => $this->resolveSupplier($data['supplier'] ?? null),
-                'colorIds' => $this->normalizeColorIds($data['colors'] ?? []),
+                'composedColors' => $this->resolveComposedColorsMetadata(
+                    $data['colors'] ?? [],
+                    $data['composingColors'] ?? null,
+                    true
+                ),
+                'components' => $this->buildRelationMetadataFromSource(
+                    $data['components'] ?? null,
+                    'components',
+                    []
+                ),
             ];
         }
 
@@ -343,31 +354,198 @@ final class ModelFrameGenerator
     }
 
     /**
+     * @param array{frameBaseCode?: mixed, name?: mixed}|null $submittedModelBaseData
+     */
+    private function resolveModelBaseFrameCode(ModelObject $model, ?array $submittedModelBaseData): string
+    {
+        $submittedValue = $this->normalizeString($submittedModelBaseData['frameBaseCode'] ?? null);
+
+        return $submittedValue !== '' ? $submittedValue : $this->getFieldString($model, 'frameBaseCode');
+    }
+
+    /**
+     * @param array{frameBaseCode?: mixed, name?: mixed}|null $submittedModelBaseData
+     */
+    private function resolveModelBaseName(ModelObject $model, ?array $submittedModelBaseData): string
+    {
+        $submittedValue = $this->normalizeString($submittedModelBaseData['name'] ?? null);
+
+        return $submittedValue !== '' ? $submittedValue : $this->getFieldString($model, 'name');
+    }
+
+    /**
      * @return list<ObjectMetadata>
      */
-    private function buildComposedColorsMetadata(Color $color): array
+    private function resolveComposedColorsMetadata(
+        mixed $colorsValue,
+        mixed $composingColorsValue,
+        bool $preferColors
+    ): array
     {
-        $multiColor = $color->getMultiColor(['unpublished' => true]) ?: [];
-        $metadata = [];
+        if ($preferColors) {
+            $colorIds = $this->normalizeColorIds($colorsValue);
+            if ($colorIds !== []) {
+                return $this->buildColorMetadataFromIds($colorIds);
+            }
 
-        foreach ($multiColor as $composedColor) {
-            if (!$composedColor instanceof Color) {
+            return $this->buildColorMetadataFromSource($composingColorsValue);
+        }
+
+        $metadata = $this->buildColorMetadataFromSource($composingColorsValue);
+        if ($metadata !== []) {
+            return $metadata;
+        }
+
+        return $this->buildColorMetadataFromIds($this->normalizeColorIds($colorsValue));
+    }
+
+    /**
+     * @param list<int|string> $colorIds
+     *
+     * @return list<ObjectMetadata>
+     */
+    private function buildColorMetadataFromIds(array $colorIds): array
+    {
+        $colors = [];
+        foreach ($colorIds as $colorId) {
+            $color = Color::getById((int) $colorId, ['force' => true]);
+            if (!$color instanceof Color) {
                 continue;
             }
 
-            $item = new ObjectMetadata('composedColors', ['name', 'relevant'], $composedColor);
-            $item->setName($this->normalizeString($composedColor->getName()));
+            $colors[] = $color;
+        }
+
+        return $this->buildColorMetadataFromObjects($colors);
+    }
+
+    /**
+     * @return list<ObjectMetadata>
+     */
+    private function buildColorMetadataFromSource(mixed $value): array
+    {
+        return $this->buildColorMetadataFromObjects(
+            $this->resolveObjectsFromSource(
+                $value,
+                static fn (Concrete $object): bool => $object instanceof Color
+            )
+        );
+    }
+
+    /**
+     * @param list<Concrete> $colors
+     *
+     * @return list<ObjectMetadata>
+     */
+    private function buildColorMetadataFromObjects(array $colors): array
+    {
+        $metadata = [];
+        $seen = [];
+
+        foreach ($colors as $color) {
+            if (!$color instanceof Color) {
+                continue;
+            }
+
+            $colorId = (int) $color->getId();
+            if ($colorId < 1 || isset($seen[$colorId])) {
+                continue;
+            }
+
+            $item = new ObjectMetadata('composedColors', ['name', 'relevant'], $color);
+            $item->setName($this->normalizeString($color->getName()));
             $item->setRelevant(true);
             $metadata[] = $item;
+            $seen[$colorId] = true;
         }
 
         return $metadata;
     }
 
     /**
+     * @param list<ObjectMetadata>|mixed $value
+     * @param list<string> $columns
+     *
+     * @return list<ObjectMetadata>
+     */
+    private function buildRelationMetadataFromSource(mixed $value, string $fieldName, array $columns): array
+    {
+        return $this->buildRelationMetadataFromObjects(
+            $this->resolveObjectsFromSource($value),
+            $fieldName,
+            $columns
+        );
+    }
+
+    /**
+     * @param list<Concrete> $objects
+     * @param list<string> $columns
+     *
+     * @return list<ObjectMetadata>
+     */
+    private function buildRelationMetadataFromObjects(array $objects, string $fieldName, array $columns): array
+    {
+        $metadata = [];
+        $seen = [];
+
+        foreach ($objects as $object) {
+            $objectId = (int) $object->getId();
+            if ($objectId < 1 || isset($seen[$objectId])) {
+                continue;
+            }
+
+            $metadata[] = new ObjectMetadata($fieldName, $columns, $object);
+            $seen[$objectId] = true;
+        }
+
+        return $metadata;
+    }
+
+    /**
+     * @return list<Concrete>
+     */
+    private function resolveObjectsFromSource(mixed $value, ?callable $supports = null): array
+    {
+        if (!is_array($value)) {
+            return [];
+        }
+
+        $objects = [];
+        $seen = [];
+        foreach ($value as $item) {
+            $object = null;
+            if ($item instanceof ObjectMetadata) {
+                $object = $item->getObject();
+            } elseif ($item instanceof Concrete) {
+                $object = $item;
+            } elseif (is_array($item) && is_scalar($item['id'] ?? null) && (int) $item['id'] > 0) {
+                $object = DataObject::getById((int) $item['id'], ['force' => true]);
+            }
+
+            if (!$object instanceof Concrete) {
+                continue;
+            }
+
+            if ($supports !== null && !$supports($object)) {
+                continue;
+            }
+
+            $objectId = (int) $object->getId();
+            if ($objectId < 1 || isset($seen[$objectId])) {
+                continue;
+            }
+
+            $objects[] = $object;
+            $seen[$objectId] = true;
+        }
+
+        return $objects;
+    }
+
+    /**
      * @param list<ObjectMetadata> $composedColors
      */
-    private function buildFrameName(string $baseName, Color $color, array $composedColors): string
+    private function buildFrameName(string $baseName, array $composedColors, string $mainColorCode): string
     {
         $colorCodes = [];
         foreach ($composedColors as $metadata) {
@@ -382,24 +560,27 @@ final class ModelFrameGenerator
             }
         }
 
-        if ($colorCodes === []) {
-            $colorCode = $this->normalizeString($color->getCode());
-            if ($colorCode !== '') {
-                $colorCodes[] = $colorCode;
-            }
+        if ($colorCodes === [] && $mainColorCode !== '') {
+            $colorCodes[] = $mainColorCode;
         }
 
         return $this->joinNonEmpty([$baseName, implode(' + ', $colorCodes)], ' ');
     }
 
-    private function buildUniqueKey(ModelObject $model, string $code, string $name, int $detailIndex, Color $color): string
+    private function buildUniqueKey(ModelObject $model, string $code, string $name, int $detailIndex, string $mainColorCode): string
     {
         $key = ElementService::getValidKey($code, 'object');
         if ($key === '') {
             $key = ElementService::getValidKey($name, 'object');
         }
         if ($key === '') {
-            $key = sprintf('frame-%d-%d', $detailIndex + 1, $color->getId());
+            $key = ElementService::getValidKey(
+                sprintf('frame-%d-%s', $detailIndex + 1, $mainColorCode !== '' ? $mainColorCode : 'main'),
+                'object'
+            );
+        }
+        if ($key === '') {
+            $key = sprintf('frame-%d', $detailIndex + 1);
         }
 
         $frame = new Frame();
@@ -407,6 +588,43 @@ final class ModelFrameGenerator
         $frame->setKey($key);
 
         return ElementService::getUniqueKey($frame) ?? $key;
+    }
+
+    private function getFieldValue(object|null $object, string $fieldName): mixed
+    {
+        if ($object === null) {
+            return null;
+        }
+
+        $getter = 'get' . ucfirst($fieldName);
+        if (method_exists($object, $getter)) {
+            return $object->$getter();
+        }
+
+        if (method_exists($object, 'getObjectVar')) {
+            return $object->getObjectVar($fieldName);
+        }
+
+        return null;
+    }
+
+    private function getFieldString(object|null $object, string $fieldName): string
+    {
+        return $this->normalizeString($this->getFieldValue($object, $fieldName));
+    }
+
+    private function setFieldValue(object $object, string $fieldName, mixed $value): void
+    {
+        $setter = 'set' . ucfirst($fieldName);
+        if (method_exists($object, $setter)) {
+            $object->$setter($value);
+
+            return;
+        }
+
+        if (method_exists($object, 'setObjectVar')) {
+            $object->setObjectVar($fieldName, $value);
+        }
     }
 
     /**

@@ -7,7 +7,6 @@ use Pimcore\Event\DataObjectEvents;
 use Pimcore\Event\Model\DataObjectEvent;
 use Pimcore\Model\DataObject\Color;
 use Pimcore\Model\DataObject\Data\ObjectMetadata;
-use Pimcore\Model\DataObject\Fieldcollection;
 use Pimcore\Model\DataObject\Frame;
 use Pimcore\Model\DataObject\Model as ModelObject;
 use Pimcore\Model\Element\Service as ElementService;
@@ -30,38 +29,43 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
             return;
         }
 
-        $colorChanged = (int) $frame->getId() < 1 || $frame->isFieldDirty('color');
-        if ($colorChanged) {
-            $this->refreshComposedColorsFromLinkedColor($frame);
+        $mainColorCode = $this->getFieldString($frame, 'mainColorCode');
+        $colorCodes = $this->resolveColorCodes($frame, $mainColorCode);
+        $baseFrameCode = $this->resolveBaseFrameCode($frame, $mainColorCode);
+        $baseName = $this->resolveBaseName($frame, $colorCodes);
+
+        if ($baseFrameCode !== '') {
+            $this->setFieldValue($frame, 'baseFrameCode', $baseFrameCode);
         }
 
-        $colorCodes = $this->resolveColorCodes($frame);
-        if ($colorCodes === []) {
-            return;
+        $currentCode = $this->normalizeString($frame->getCode());
+        $rebuiltCode = $this->joinNonEmpty([$baseFrameCode, $mainColorCode], ' ');
+        $code = $rebuiltCode !== '' ? $rebuiltCode : $currentCode;
+        if ($rebuiltCode !== '' && $currentCode !== $rebuiltCode) {
+            $frame->setCode($rebuiltCode);
         }
 
-        $primaryColorCode = $this->resolvePrimaryColorCode($frame);
-        $baseData = $this->resolveBaseData($frame, $colorCodes, $primaryColorCode);
-        if ($baseData['name'] === '') {
-            return;
+        $currentName = $this->normalizeString($frame->getName());
+        $rebuiltName = $this->joinNonEmpty([$baseName, $this->formatColorCodes($colorCodes)], ' ');
+        $name = $rebuiltName !== '' ? $rebuiltName : $currentName;
+        if ($rebuiltName !== '' && $currentName !== $rebuiltName) {
+            $frame->setName($rebuiltName);
         }
 
-        $name = $this->joinNonEmpty([$baseData['name'], $this->formatColorCodes($colorCodes)], ' ');
-        if ($name !== '' && $this->normalizeString($frame->getName()) !== $name) {
-            $frame->setName($name);
-        }
-
-        if ($colorChanged && $baseData['code'] !== '' && $primaryColorCode !== '') {
-            $this->updateCodeAndKey($frame, $baseData['code'], $primaryColorCode, $name);
+        $key = $this->buildUniqueKey($frame, $code, $name);
+        if ($key !== '' && $this->normalizeString($frame->getKey()) !== $key) {
+            $frame->setKey($key);
         }
     }
 
     /**
      * @return list<string>
      */
-    private function resolveColorCodes(Frame $frame): array
+    private function resolveColorCodes(Frame $frame, string $mainColorCode): array
     {
         $codes = [];
+        $seen = [];
+
         foreach (($frame->getComposedColors(['unpublished' => true]) ?: []) as $metadata) {
             $color = $this->resolveMetadataColor($metadata);
             if (!$color instanceof Color) {
@@ -69,23 +73,19 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
             }
 
             $code = $this->normalizeString($color->getCode());
-            if ($code !== '') {
-                $codes[] = $code;
+            if ($code === '' || isset($seen[$code])) {
+                continue;
             }
+
+            $codes[] = $code;
+            $seen[$code] = true;
         }
 
         if ($codes !== []) {
             return $codes;
         }
 
-        $color = $frame->getColor(['unpublished' => true]);
-        if (!$color instanceof Color) {
-            return [];
-        }
-
-        $code = $this->normalizeString($color->getCode());
-
-        return $code === '' ? [] : [$code];
+        return $mainColorCode !== '' ? [$mainColorCode] : [];
     }
 
     private function resolveMetadataColor(mixed $metadata): ?Color
@@ -99,71 +99,47 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
         return $metadata instanceof Color ? $metadata : null;
     }
 
-    /**
-     * @param list<string> $colorCodes
-     *
-     * @return array{code: string, name: string}
-     */
-    private function resolveBaseData(Frame $frame, array $colorCodes, string $primaryColorCode): array
+    private function resolveBaseFrameCode(Frame $frame, string $mainColorCode): string
     {
-        $currentBaseData = [
-            'code' => $this->stripTrailingColorCodes($this->normalizeString($frame->getCode()), [$primaryColorCode]),
-            'name' => $this->stripTrailingColorCodes($this->normalizeString($frame->getName()), $colorCodes),
-        ];
-
-        if ((int) $frame->getId() < 1 && $currentBaseData['code'] !== '' && $currentBaseData['name'] !== '') {
-            return $currentBaseData;
+        $model = $this->resolveModel($frame);
+        if ($model instanceof ModelObject) {
+            $modelBaseFrameCode = $this->getFieldString($model, 'frameBaseCode');
+            if ($modelBaseFrameCode !== '') {
+                return $modelBaseFrameCode;
+            }
         }
 
-        $baseData = $this->resolveBaseDataFromFinalProductDetails($frame);
-        if ($baseData !== null) {
-            return $baseData;
+        $storedBaseFrameCode = $this->getFieldString($frame, 'baseFrameCode');
+        if ($storedBaseFrameCode !== '') {
+            return $storedBaseFrameCode;
         }
 
-        return $currentBaseData;
+        $currentCode = $this->normalizeString($frame->getCode());
+        if ($currentCode === '') {
+            return '';
+        }
+
+        if ($mainColorCode === '') {
+            return $currentCode;
+        }
+
+        return $this->stripTrailingColorCodes($currentCode, [$mainColorCode]);
     }
 
     /**
-     * @return array{code: string, name: string}|null
+     * @param list<string> $colorCodes
      */
-    private function resolveBaseDataFromFinalProductDetails(Frame $frame): ?array
+    private function resolveBaseName(Frame $frame, array $colorCodes): string
     {
         $model = $this->resolveModel($frame);
-        if (!$model instanceof ModelObject) {
-            return null;
-        }
-
-        $collection = $model->getFinalProductDetails();
-        if (!$collection instanceof Fieldcollection) {
-            return null;
-        }
-
-        $frameCode = $this->normalizeString($frame->getCode());
-        $matchedData = null;
-        $matchedCodeLength = -1;
-
-        foreach ($collection as $item) {
-            if (!$item || $item->getType() !== 'finalProductProcess') {
-                continue;
+        if ($model instanceof ModelObject) {
+            $modelName = $this->getFieldString($model, 'name');
+            if ($modelName !== '') {
+                return $modelName;
             }
-
-            $detailCode = $this->normalizeString($item->getCode());
-            if (
-                $detailCode === ''
-                || $this->isFrameCodeForDetailCode($frameCode, $detailCode) === false
-                || strlen($detailCode) <= $matchedCodeLength
-            ) {
-                continue;
-            }
-
-            $matchedData = [
-                'code' => $detailCode,
-                'name' => $this->normalizeString($item->getName()),
-            ];
-            $matchedCodeLength = strlen($detailCode);
         }
 
-        return $matchedData;
+        return $this->stripTrailingColorCodes($this->normalizeString($frame->getName()), $colorCodes);
     }
 
     private function resolveModel(Frame $frame): ?ModelObject
@@ -176,68 +152,6 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
         $artBase = $frame->getArtBase();
 
         return $artBase instanceof ModelObject ? $artBase : null;
-    }
-
-    private function isFrameCodeForDetailCode(string $frameCode, string $detailCode): bool
-    {
-        return $frameCode === $detailCode || str_starts_with($frameCode, $detailCode . ' ');
-    }
-
-    private function refreshComposedColorsFromLinkedColor(Frame $frame): void
-    {
-        $color = $frame->getColor(['unpublished' => true]);
-        if (!$color instanceof Color) {
-            $frame->setComposedColors([]);
-
-            return;
-        }
-
-        $frame->setComposedColors($this->buildComposedColorsMetadata($color));
-    }
-
-    /**
-     * @return list<ObjectMetadata>
-     */
-    private function buildComposedColorsMetadata(Color $color): array
-    {
-        $metadata = [];
-
-        foreach (($color->getMultiColor(['unpublished' => true]) ?: []) as $composedColor) {
-            if (!$composedColor instanceof Color) {
-                continue;
-            }
-
-            $item = new ObjectMetadata('composedColors', ['name', 'relevant'], $composedColor);
-            $item->setName($this->normalizeString($composedColor->getName()));
-            $item->setRelevant(true);
-            $metadata[] = $item;
-        }
-
-        return $metadata;
-    }
-
-    private function resolvePrimaryColorCode(Frame $frame): string
-    {
-        $color = $frame->getColor(['unpublished' => true]);
-
-        return $color instanceof Color ? $this->normalizeString($color->getCode()) : '';
-    }
-
-    private function updateCodeAndKey(Frame $frame, string $baseCode, string $primaryColorCode, string $name): void
-    {
-        $code = $this->joinNonEmpty([$baseCode, $primaryColorCode], ' ');
-        if ($code === '') {
-            return;
-        }
-
-        if ($this->normalizeString($frame->getCode()) !== $code) {
-            $frame->setCode($code);
-        }
-
-        $key = $this->buildUniqueKey($frame, $code, $name);
-        if ($key !== '' && $this->normalizeString($frame->getKey()) !== $key) {
-            $frame->setKey($key);
-        }
     }
 
     private function buildUniqueKey(Frame $frame, string $code, string $name): string
@@ -296,6 +210,43 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
     private function formatColorCodes(array $colorCodes): string
     {
         return implode(' + ', $colorCodes);
+    }
+
+    private function getFieldValue(object|null $object, string $fieldName): mixed
+    {
+        if ($object === null) {
+            return null;
+        }
+
+        $getter = 'get' . ucfirst($fieldName);
+        if (method_exists($object, $getter)) {
+            return $object->$getter();
+        }
+
+        if (method_exists($object, 'getObjectVar')) {
+            return $object->getObjectVar($fieldName);
+        }
+
+        return null;
+    }
+
+    private function getFieldString(object|null $object, string $fieldName): string
+    {
+        return $this->normalizeString($this->getFieldValue($object, $fieldName));
+    }
+
+    private function setFieldValue(object $object, string $fieldName, mixed $value): void
+    {
+        $setter = 'set' . ucfirst($fieldName);
+        if (method_exists($object, $setter)) {
+            $object->$setter($value);
+
+            return;
+        }
+
+        if (method_exists($object, 'setObjectVar')) {
+            $object->setObjectVar($fieldName, $value);
+        }
     }
 
     /**
