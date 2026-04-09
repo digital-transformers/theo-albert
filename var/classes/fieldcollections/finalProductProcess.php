@@ -2,12 +2,11 @@
 
 /**
  * Fields Summary:
- * - code [input]
- * - name [input]
+ * - mainColorCode [input]
  * - supplier [manyToOneRelation]
+ * - cost [numeric]
  * - colors [multiselect]
  * - composingColors [advancedManyToManyObjectRelation]
- * - cost [numeric]
  * - components [advancedManyToManyObjectRelation]
  */
 
@@ -48,8 +47,8 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
         array (
           0 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
-             'name' => 'code',
-             'title' => 'Code',
+             'name' => 'mainColorCode',
+             'title' => 'Main Color Code',
              'tooltip' => '',
              'mandatory' => false,
              'noteditable' => false,
@@ -65,7 +64,7 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
              'blockedVarsForExport' => 
             array (
             ),
-             'defaultValue' => NULL,
+             'defaultValue' => '',
              'columnLength' => 190,
              'regex' => '',
              'regexFlags' => 
@@ -77,36 +76,6 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
              'defaultValueGenerator' => '',
           )),
           1 => 
-          \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
-             'name' => 'name',
-             'title' => 'Name',
-             'tooltip' => '',
-             'mandatory' => false,
-             'noteditable' => false,
-             'index' => false,
-             'locked' => false,
-             'style' => '',
-             'permissions' => NULL,
-             'fieldtype' => '',
-             'relationType' => false,
-             'invisible' => false,
-             'visibleGridView' => false,
-             'visibleSearch' => false,
-             'blockedVarsForExport' => 
-            array (
-            ),
-             'defaultValue' => NULL,
-             'columnLength' => 190,
-             'regex' => '',
-             'regexFlags' => 
-            array (
-            ),
-             'unique' => false,
-             'showCharCount' => false,
-             'width' => '',
-             'defaultValueGenerator' => '',
-          )),
-          2 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
              'name' => 'supplier',
              'title' => 'Supplier',
@@ -148,6 +117,36 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
             ),
              'width' => '',
           )),
+          2 => 
+          \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
+             'name' => 'cost',
+             'title' => 'Cost',
+             'tooltip' => '',
+             'mandatory' => false,
+             'noteditable' => false,
+             'index' => false,
+             'locked' => false,
+             'style' => '',
+             'permissions' => NULL,
+             'fieldtype' => '',
+             'relationType' => false,
+             'invisible' => false,
+             'visibleGridView' => false,
+             'visibleSearch' => false,
+             'blockedVarsForExport' => 
+            array (
+            ),
+             'defaultValue' => NULL,
+             'integer' => false,
+             'unsigned' => false,
+             'minValue' => NULL,
+             'maxValue' => NULL,
+             'unique' => false,
+             'decimalSize' => NULL,
+             'decimalPrecision' => NULL,
+             'width' => '',
+             'defaultValueGenerator' => '',
+          )),
           3 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect::__set_state(array(
              'name' => 'colors',
@@ -169,6 +168,7 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
             ),
              'maxItems' => NULL,
              'renderType' => 'tags',
+             'enforceValidation' => false,
              'dynamicOptions' => false,
              'defaultValue' => NULL,
              'height' => '',
@@ -184,14 +184,14 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
              'title' => 'Color details',
              'tooltip' => '',
              'mandatory' => false,
-             'noteditable' => true,
+             'noteditable' => false,
              'index' => false,
              'locked' => false,
              'style' => '',
              'permissions' => NULL,
              'fieldtype' => '',
              'relationType' => true,
-             'invisible' => true,
+             'invisible' => false,
              'visibleGridView' => false,
              'visibleSearch' => false,
              'blockedVarsForExport' => 
@@ -209,7 +209,7 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
              'maxItems' => NULL,
              'visibleFields' => 'image,code,name',
              'allowToCreateNewObject' => false,
-             'allowToClearRelation' => true,
+             'allowToClearRelation' => false,
              'optimizedAdminLoading' => false,
              'enableTextSelection' => false,
              'visibleFieldDefinitions' => 
@@ -244,36 +244,6 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
              'allowMultipleAssignments' => false,
           )),
           5 => 
-          \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
-             'name' => 'cost',
-             'title' => 'Cost',
-             'tooltip' => '',
-             'mandatory' => false,
-             'noteditable' => false,
-             'index' => false,
-             'locked' => false,
-             'style' => '',
-             'permissions' => NULL,
-             'fieldtype' => '',
-             'relationType' => false,
-             'invisible' => false,
-             'visibleGridView' => false,
-             'visibleSearch' => false,
-             'blockedVarsForExport' => 
-            array (
-            ),
-             'defaultValue' => NULL,
-             'integer' => false,
-             'unsigned' => false,
-             'minValue' => NULL,
-             'maxValue' => NULL,
-             'unique' => false,
-             'decimalSize' => NULL,
-             'decimalPrecision' => NULL,
-             'width' => '',
-             'defaultValueGenerator' => '',
-          )),
-          6 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
              'name' => 'components',
              'title' => 'Components',
