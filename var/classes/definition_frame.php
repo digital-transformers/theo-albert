@@ -7,7 +7,7 @@
  * Fields Summary:
  * - code [input]
  * - name [input]
- * - mainColorCode [input]
+ * - baseFrameCode [input]
  * - itemGroup [manyToManyObjectRelation]
  * - supplier [manyToOneRelation]
  * - composedColors [advancedManyToManyObjectRelation]
@@ -61,7 +61,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1775707377,
+   'modificationDate' => 1775707655,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => 'Pimcore\\Model\\DataObject\\Model',
@@ -180,8 +180,8 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
               )),
               2 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
-                 'name' => 'mainColorCode',
-                 'title' => 'Main Color Code',
+                 'name' => 'baseFrameCode',
+                 'title' => 'Base frame code',
                  'tooltip' => '',
                  'mandatory' => false,
                  'noteditable' => false,
@@ -1911,9 +1911,9 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'deletedDataComponents' => 
   array (
     0 => 
-    \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
-       'name' => 'color',
-       'title' => 'Primary color',
+    \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
+       'name' => 'mainColorCode',
+       'title' => 'Main Color Code',
        'tooltip' => '',
        'mandatory' => false,
        'noteditable' => false,
@@ -1922,35 +1922,23 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
        'style' => '',
        'permissions' => NULL,
        'fieldtype' => '',
-       'relationType' => true,
+       'relationType' => false,
        'invisible' => false,
        'visibleGridView' => false,
        'visibleSearch' => false,
        'blockedVarsForExport' => 
       array (
       ),
-       'classes' => 
-      array (
-        0 => 
-        array (
-          'classes' => 'color',
-        ),
-      ),
-       'displayMode' => 'grid',
-       'pathFormatterClass' => '',
-       'assetInlineDownloadAllowed' => false,
-       'assetUploadPath' => '',
-       'allowToClearRelation' => true,
-       'objectsAllowed' => true,
-       'assetsAllowed' => false,
-       'assetTypes' => 
+       'defaultValue' => '',
+       'columnLength' => 190,
+       'regex' => '',
+       'regexFlags' => 
       array (
       ),
-       'documentsAllowed' => false,
-       'documentTypes' => 
-      array (
-      ),
+       'unique' => false,
+       'showCharCount' => false,
        'width' => '',
+       'defaultValueGenerator' => '',
     )),
   ),
    'blockedVarsForExport' => 
