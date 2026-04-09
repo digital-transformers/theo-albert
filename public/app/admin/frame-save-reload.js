@@ -31,6 +31,12 @@ console.log('[frame-save-reload] loaded');
         window.setTimeout(function () {
           objectEditor.dirty = false;
           objectEditor._dirtyCloseConfirmed = true;
+
+          if (className === 'model') {
+            objectEditor.reload();
+            return;
+          }
+
           objectEditor.reload({ignoreUiState: true});
         }, 250);
       } catch (e) {
