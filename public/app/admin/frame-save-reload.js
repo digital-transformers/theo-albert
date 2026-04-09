@@ -29,6 +29,8 @@ console.log('[frame-save-reload] loaded');
         }
 
         window.setTimeout(function () {
+          objectEditor.dirty = false;
+          objectEditor._dirtyCloseConfirmed = true;
           objectEditor.reload({ignoreUiState: true});
         }, 250);
       } catch (e) {
