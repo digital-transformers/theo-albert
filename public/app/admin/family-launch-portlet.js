@@ -22,6 +22,7 @@ console.log('[family-launch-portlet] loaded');
       { value: 'sum', label: 'Summer' },
       { value: 'silmo', label: 'Silmo' }
     ],
+    expandedFrameModels: null,
 
     getType: function () {
       return 'pimcore.layout.portlets.familyLaunchModels';
@@ -36,6 +37,8 @@ console.log('[family-launch-portlet] loaded');
     },
 
     getLayout: function (portletId) {
+      this.expandedFrameModels = this.expandedFrameModels || {};
+
       var fields = ['year'];
       Ext.Array.each(this.periods, function (period) {
         fields.push(period.value);
@@ -68,6 +71,7 @@ console.log('[family-launch-portlet] loaded');
           cellclick: this.onCellClick.bind(this)
         }
       });
+      this.grid = grid;
 
       var config = this.getDefaultConfig();
       config.tools = [
@@ -126,21 +130,43 @@ console.log('[family-launch-portlet] loaded');
         html.push(
           '<div style="margin-bottom:6px;">',
           '<div style="font-weight:bold;margin-bottom:2px;">',
-          this.html(family.label),
+          this.renderObjectLink(family, 'family-launch-object-link'),
           '</div>'
         );
 
         if (family.models && family.models.length) {
           Ext.Array.each(family.models, function (model) {
+            var frames = Ext.isArray(model.frames) ? model.frames : [];
+            var isExpanded = this.isModelFramesExpanded(model.id);
+
             html.push(
               '<div style="margin:1px 0 1px 4px;">',
-              '<a href="#" class="family-launch-model-link" data-model-id="',
-              parseInt(model.id, 10),
-              '">',
-              this.html(model.label),
-              '</a>',
+              this.renderObjectLink(model, 'family-launch-object-link'),
+              frames.length
+                ? [
+                  '<a href="#" class="family-launch-frames-toggle" data-model-id="',
+                  parseInt(model.id, 10),
+                  '" style="margin-left:8px;color:#666;font-size:11px;">',
+                  this.html(this.getFramesToggleLabel(frames.length, isExpanded)),
+                  '</a>'
+                ].join('')
+                : '<span style="margin-left:8px;color:#999;font-size:11px;">0 frames</span>',
               '</div>'
             );
+
+            if (frames.length && isExpanded) {
+              html.push('<div style="margin:2px 0 4px 16px;">');
+
+              Ext.Array.each(frames, function (frame) {
+                html.push(
+                  '<div style="margin:1px 0;">',
+                  this.renderObjectLink(frame, 'family-launch-object-link'),
+                  '</div>'
+                );
+              }.bind(this));
+
+              html.push('</div>');
+            }
           }.bind(this));
         } else {
           html.push('<div style="color:#999;font-style:italic;margin-left:4px;">No models</div>');
@@ -155,18 +181,64 @@ console.log('[family-launch-portlet] loaded');
     },
 
     onCellClick: function (grid, td, cellIndex, record, tr, rowIndex, e) {
-      var target = e.getTarget('.family-launch-model-link');
+      var toggleTarget = e.getTarget('.family-launch-frames-toggle');
+      if (toggleTarget) {
+        e.stopEvent();
+        this.toggleModelFrames(parseInt(toggleTarget.getAttribute('data-model-id'), 10));
+        return;
+      }
+
+      var target = e.getTarget('.family-launch-object-link');
       if (!target) {
         return;
       }
 
       e.stopEvent();
 
-      var id = parseInt(target.getAttribute('data-model-id'), 10);
+      var id = parseInt(target.getAttribute('data-object-id'), 10);
       if (!id) {
         return;
       }
 
+      this.openObject(id);
+    },
+
+    renderObjectLink: function (item, className) {
+      return [
+        '<a href="#" class="',
+        this.html(className),
+        '" data-object-id="',
+        parseInt(item.id, 10),
+        '">',
+        this.html(item.label),
+        '</a>'
+      ].join('');
+    },
+
+    isModelFramesExpanded: function (modelId) {
+      return this.expandedFrameModels && this.expandedFrameModels[String(modelId)] === true;
+    },
+
+    toggleModelFrames: function (modelId) {
+      if (!modelId) {
+        return;
+      }
+
+      var key = String(modelId);
+      this.expandedFrameModels[key] = !this.isModelFramesExpanded(modelId);
+
+      if (this.grid && this.grid.getView) {
+        this.grid.getView().refresh();
+      }
+    },
+
+    getFramesToggleLabel: function (count, isExpanded) {
+      var noun = count === 1 ? 'frame' : 'frames';
+
+      return (isExpanded ? 'Hide ' : 'Show ') + count + ' ' + noun;
+    },
+
+    openObject: function (id) {
       pimcore.helpers.openObject(id, 'object');
 
       Ext.defer(function () {
