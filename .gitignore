@@ -49,3 +49,5 @@ nbproject
 .temp
 /config/pimcore/google-api-private-key.json
 config/.DS_Store
+src/.DS_Store
+.DS_Store
