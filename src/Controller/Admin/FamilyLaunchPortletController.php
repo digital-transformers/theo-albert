@@ -15,7 +15,6 @@ final class FamilyLaunchPortletController extends AdminAbstractController
 {
     private const FAMILY_LISTING_CLASS = '\\Pimcore\\Model\\DataObject\\Family\\Listing';
     private const MODEL_CLASS_NAME = 'model';
-    private const FRAME_CLASS_NAME = 'frame';
 
     private const FALLBACK_PERIODS = [
         'jan' => 'January',
@@ -177,39 +176,12 @@ final class FamilyLaunchPortletController extends AdminAbstractController
                 continue;
             }
 
-            $payload = $this->objectPayload($child);
-            $payload['frames'] = $this->getModelFrames($child);
-            $models[] = $payload;
+            $models[] = $this->objectPayload($child);
         }
 
         usort($models, $this->compareByLabel(...));
 
         return $models;
-    }
-
-    /**
-     * @return array<int, array<string, mixed>>
-     */
-    private function getModelFrames(Concrete $model): array
-    {
-        $frames = [];
-        $children = $model->getChildren([DataObject::OBJECT_TYPE_OBJECT], true);
-
-        foreach ($children as $child) {
-            if (!$child instanceof Concrete || strtolower((string) $child->getClassName()) !== self::FRAME_CLASS_NAME) {
-                continue;
-            }
-
-            if (!$child->isAllowed('view')) {
-                continue;
-            }
-
-            $frames[] = $this->objectPayload($child);
-        }
-
-        usort($frames, $this->compareByLabel(...));
-
-        return $frames;
     }
 
     /**
