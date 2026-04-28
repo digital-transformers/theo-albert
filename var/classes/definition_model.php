@@ -16,6 +16,9 @@
  * - downloadableAssets [manyToManyObjectRelation]
  * - seriesCode [input]
  * - createDate [date]
+ * - shape [select]
+ * - lookAndFeel [select]
+ * - typeOfMetal [select]
  * - material [input]
  * - materialType [select]
  * - metalFacepartTickness [numeric]
@@ -24,10 +27,12 @@
  * - acetateTempleTickness [numeric]
  * - facepartReference [input]
  * - templeReference [input]
+ * - templeLenght [numeric]
  * - facepartReferenceSupplier [input]
  * - templeReferenceSupplier [input]
  * - lensType [multiselect]
  * - lensMounting [input]
+ * - lensHeight [numeric]
  * - boxingSize [input]
  * - widthVisibleLens [numeric]
  * - distanceBetweenLens [numeric]
@@ -68,9 +73,9 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1775707109,
+   'modificationDate' => 1776345591,
    'userOwner' => 2,
-   'userModification' => 2,
+   'userModification' => 5,
    'parentClass' => 'Pimcore\\Model\\DataObject\\Family',
    'implementsInterfaces' => '',
    'listingParentClass' => '',
@@ -528,6 +533,202 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'defaultValueGenerator' => '',
               )),
               2 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
+                 'name' => 'shape',
+                 'title' => 'Shape',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'options' => 
+                array (
+                  0 => 
+                  array (
+                    'key' => 'Round',
+                    'value' => 'Round',
+                  ),
+                  1 => 
+                  array (
+                    'key' => 'Pilot',
+                    'value' => 'Pilot',
+                  ),
+                  2 => 
+                  array (
+                    'key' => 'Square',
+                    'value' => 'Square',
+                  ),
+                  3 => 
+                  array (
+                    'key' => 'Panto',
+                    'value' => 'Panto',
+                  ),
+                  4 => 
+                  array (
+                    'key' => 'Cat-eye / Butterfly',
+                    'value' => 'Cat-eye / Butterfly',
+                  ),
+                  5 => 
+                  array (
+                    'key' => 'Angular',
+                    'value' => 'Angular',
+                  ),
+                  6 => 
+                  array (
+                    'key' => 'Oval',
+                    'value' => 'Oval',
+                  ),
+                  7 => 
+                  array (
+                    'key' => 'Rectangular',
+                    'value' => 'Rectangular',
+                  ),
+                  8 => 
+                  array (
+                    'key' => 'Half eye',
+                    'value' => 'Half eye',
+                  ),
+                ),
+                 'defaultValue' => '',
+                 'columnLength' => 190,
+                 'dynamicOptions' => false,
+                 'enforceValidation' => false,
+                 'defaultValueGenerator' => '',
+                 'width' => '',
+                 'optionsProviderType' => 'configure',
+                 'optionsProviderClass' => '',
+                 'optionsProviderData' => '',
+              )),
+              3 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
+                 'name' => 'lookAndFeel',
+                 'title' => 'Look And Feel',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'options' => 
+                array (
+                  0 => 
+                  array (
+                    'key' => 'Extra light',
+                    'value' => 'Extra light',
+                  ),
+                  1 => 
+                  array (
+                    'key' => 'Light',
+                    'value' => 'Light',
+                  ),
+                  2 => 
+                  array (
+                    'key' => 'Normal',
+                    'value' => 'Normal',
+                  ),
+                  3 => 
+                  array (
+                    'key' => 'Heavy',
+                    'value' => 'Heavy',
+                  ),
+                  4 => 
+                  array (
+                    'key' => 'Extra Heavy',
+                    'value' => 'Extra Heavy',
+                  ),
+                ),
+                 'defaultValue' => '',
+                 'columnLength' => 190,
+                 'dynamicOptions' => false,
+                 'enforceValidation' => false,
+                 'defaultValueGenerator' => '',
+                 'width' => '',
+                 'optionsProviderType' => 'configure',
+                 'optionsProviderClass' => '',
+                 'optionsProviderData' => '',
+              )),
+              4 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
+                 'name' => 'typeOfMetal',
+                 'title' => 'Type Of Metal',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'options' => 
+                array (
+                  0 => 
+                  array (
+                    'key' => 'Titanium',
+                    'value' => 'Titanium',
+                  ),
+                  1 => 
+                  array (
+                    'key' => 'Stainless steel',
+                    'value' => 'RVS',
+                  ),
+                  2 => 
+                  array (
+                    'key' => 'Maill-Ha',
+                    'value' => 'Maill-Ha',
+                  ),
+                  3 => 
+                  array (
+                    'key' => 'Aluminum',
+                    'value' => 'Aluminum',
+                  ),
+                  4 => 
+                  array (
+                    'key' => '""',
+                    'value' => '*',
+                  ),
+                  5 => 
+                  array (
+                    'key' => 'Magnesium',
+                    'value' => 'Magnesium',
+                  ),
+                ),
+                 'defaultValue' => '',
+                 'columnLength' => 190,
+                 'dynamicOptions' => false,
+                 'enforceValidation' => false,
+                 'defaultValueGenerator' => '',
+                 'width' => '',
+                 'optionsProviderType' => 'configure',
+                 'optionsProviderClass' => '',
+                 'optionsProviderData' => '',
+              )),
+              5 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'material',
                  'title' => 'Material',
@@ -546,7 +747,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'blockedVarsForExport' => 
                 array (
                 ),
-                 'defaultValue' => NULL,
+                 'defaultValue' => '',
                  'columnLength' => 190,
                  'regex' => '',
                  'regexFlags' => 
@@ -557,7 +758,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              3 => 
+              6 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
                  'name' => 'materialType',
                  'title' => 'Material Type',
@@ -619,7 +820,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderClass' => '',
                  'optionsProviderData' => '',
               )),
-              4 => 
+              7 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'metalFacepartTickness',
                  'title' => 'Metal Facepart Tickness',
@@ -649,7 +850,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              5 => 
+              8 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'metalTempleTickness',
                  'title' => 'Metal Temple Tickness',
@@ -679,7 +880,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              6 => 
+              9 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'acetateFacepartTickness',
                  'title' => 'Acetate Facepart Tickness',
@@ -709,7 +910,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              7 => 
+              10 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'acetateTempleTickness',
                  'title' => 'Acetate Temple Tickness',
@@ -739,7 +940,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              8 => 
+              11 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'facepartReference',
                  'title' => 'Facepart Reference (Theo)',
@@ -769,7 +970,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              9 => 
+              12 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'templeReference',
                  'title' => 'Temple Reference (Theo)',
@@ -799,7 +1000,37 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              10 => 
+              13 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
+                 'name' => 'templeLenght',
+                 'title' => 'Temple Lenght',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'defaultValue' => NULL,
+                 'integer' => false,
+                 'unsigned' => false,
+                 'minValue' => NULL,
+                 'maxValue' => NULL,
+                 'unique' => false,
+                 'decimalSize' => NULL,
+                 'decimalPrecision' => NULL,
+                 'width' => '',
+                 'defaultValueGenerator' => '',
+              )),
+              14 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'facepartReferenceSupplier',
                  'title' => 'Facepart Reference (Supplier)',
@@ -829,7 +1060,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              11 => 
+              15 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'templeReferenceSupplier',
                  'title' => 'Temple Reference (Supplier)',
@@ -859,7 +1090,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              12 => 
+              16 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect::__set_state(array(
                  'name' => 'lensType',
                  'title' => 'Lens Type',
@@ -905,7 +1136,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderClass' => '',
                  'optionsProviderData' => '',
               )),
-              13 => 
+              17 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'lensMounting',
                  'title' => 'Lens Mounting',
@@ -935,7 +1166,37 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              14 => 
+              18 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
+                 'name' => 'lensHeight',
+                 'title' => 'Lens Height',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'defaultValue' => NULL,
+                 'integer' => false,
+                 'unsigned' => false,
+                 'minValue' => NULL,
+                 'maxValue' => NULL,
+                 'unique' => false,
+                 'decimalSize' => NULL,
+                 'decimalPrecision' => NULL,
+                 'width' => '',
+                 'defaultValueGenerator' => '',
+              )),
+              19 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'boxingSize',
                  'title' => 'Boxing Size',
@@ -965,7 +1226,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              15 => 
+              20 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'widthVisibleLens',
                  'title' => 'Width Visible Lens',
@@ -995,7 +1256,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              16 => 
+              21 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'distanceBetweenLens',
                  'title' => 'Distance Between Lens',
@@ -1025,7 +1286,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              17 => 
+              22 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'heightVisibleLens',
                  'title' => 'Height Visible Lens',
@@ -1055,7 +1316,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              18 => 
+              23 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'totalWidth',
                  'title' => 'Total Width',
@@ -1085,7 +1346,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              19 => 
+              24 => 
               \Pimcore\Model\DataObject\ClassDefinition\Layout\Fieldset::__set_state(array(
                  'name' => 'References',
                  'type' => NULL,
@@ -1228,7 +1489,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'labelWidth' => 100,
                  'labelAlign' => 'left',
               )),
-              20 => 
+              25 => 
               \Pimcore\Model\DataObject\ClassDefinition\Layout\Fieldset::__set_state(array(
                  'name' => 'Temples',
                  'type' => NULL,
@@ -1480,7 +1741,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'labelWidth' => 100,
                  'labelAlign' => 'left',
               )),
-              21 => 
+              26 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\ImageGallery::__set_state(array(
                  'name' => 'toolingSamplesGallery',
                  'title' => 'Tooling Samples',
@@ -1506,7 +1767,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'height' => '',
                  'width' => '',
               )),
-              22 => 
+              27 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'basicUDI',
                  'title' => 'Basic UDI',
@@ -1536,7 +1797,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              23 => 
+              28 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'masterUDI',
                  'title' => 'Master UDI',
@@ -1555,7 +1816,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'blockedVarsForExport' => 
                 array (
                 ),
-                 'defaultValue' => NULL,
+                 'defaultValue' => '',
                  'columnLength' => 190,
                  'regex' => '',
                  'regexFlags' => 

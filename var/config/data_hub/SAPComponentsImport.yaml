@@ -8,16 +8,20 @@ pimcore_data_hub:
                 description: ''
                 group: ''
                 path: null
-                modificationDate: 1775543412
+                modificationDate: 1775711991
                 createDate: 1753352126
             loaderConfig:
                 type: asset
                 settings:
-                    assetPath: '/Datasource Files/sap-component.json'
+                    assetPath: '/Datasource Files/sap-components.csv'
             interpreterConfig:
-                type: json
+                type: csv
                 settings:
-                    path: ''
+                    skipFirstRow: true
+                    saveHeaderName: true
+                    delimiter: ','
+                    enclosure: '"'
+                    escape: \
             resolverConfig:
                 elementType: dataObject
                 dataObjectClassId: component
@@ -121,19 +125,19 @@ pimcore_data_hub:
                                 attributeLanguage: ''
                             type: loadDataObject
                 -
-                    label: Process
+                    label: Pricelist
                     dataSourceIndex:
-                        - Process
+                        - PriceList
                     settings:
                         loadStrategy: attribute
-                        attributeDataObjectClassId: process
+                        attributeDataObjectClassId: pricelist
                         attributeName: code
                         attributeLanguage: ''
                     transformationResultType: dataObject
                     dataTarget:
                         type: direct
                         settings:
-                            fieldName: process
+                            fieldName: pricelist
                             language: ''
                             writeIfTargetIsNotEmpty: true
                             writeIfSourceIsEmpty: true
@@ -141,7 +145,7 @@ pimcore_data_hub:
                         -
                             settings:
                                 loadStrategy: attribute
-                                attributeDataObjectClassId: process
+                                attributeDataObjectClassId: pricelist
                                 attributeName: code
                                 attributeLanguage: ''
                             type: loadDataObject
@@ -175,6 +179,11 @@ pimcore_data_hub:
                     label: Supplier
                     dataSourceIndex:
                         - Supplier
+                    settings:
+                        loadStrategy: attribute
+                        attributeDataObjectClassId: supplier
+                        attributeName: code
+                        attributeLanguage: ''
                     transformationResultType: dataObject
                     dataTarget:
                         type: direct
@@ -183,11 +192,6 @@ pimcore_data_hub:
                             language: ''
                             writeIfTargetIsNotEmpty: true
                             writeIfSourceIsEmpty: true
-                    settings:
-                        loadStrategy: attribute
-                        attributeDataObjectClassId: supplier
-                        attributeName: code
-                        attributeLanguage: ''
                     transformationPipeline:
                         -
                             settings:
@@ -205,6 +209,19 @@ pimcore_data_hub:
                         type: direct
                         settings:
                             fieldName: supCatNum
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: Warehouse
+                    dataSourceIndex:
+                        - WareHouse
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: warehouse
                             language: ''
                             writeIfTargetIsNotEmpty: true
                             writeIfSourceIsEmpty: true

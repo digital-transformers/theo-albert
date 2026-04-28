@@ -1,0 +1,175 @@
+pimcore_data_hub:
+    configurations:
+        Colors:
+            general:
+                active: true
+                type: dataImporterDataObject
+                name: Colors
+                description: ''
+                group: ''
+                path: null
+                modificationDate: 1776082262
+                createDate: 1759495565
+            loaderConfig:
+                type: asset
+                settings:
+                    assetPath: '/Datasource Files/Colors.csv'
+            interpreterConfig:
+                type: csv
+                settings:
+                    skipFirstRow: true
+                    delimiter: ','
+                    enclosure: '"'
+                    escape: \
+            resolverConfig:
+                elementType: dataObject
+                dataObjectClassId: color
+                loadingStrategy:
+                    type: attribute
+                    settings:
+                        dataSourceIndex: '0'
+                        attributeName: code
+                        language: ''
+                        includeUnpublished: true
+                createLocationStrategy:
+                    type: staticPath
+                    settings:
+                        path: '/SetupData/Colours/metal bicolor'
+                locationUpdateStrategy:
+                    type: noChange
+                publishingStrategy:
+                    type: noChangePublishNew
+            processingConfig:
+                executionType: sequential
+                idDataIndex: '0'
+                cleanup:
+                    strategy: delete
+            mappingConfig:
+                -
+                    label: Code
+                    dataSourceIndex:
+                        - '0'
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: code
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: Name
+                    dataSourceIndex:
+                        - '2'
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: name
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: Type
+                    dataSourceIndex:
+                        - '5'
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: colorType
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: Generic
+                    dataSourceIndex:
+                        - '8'
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: genericColor
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: KEY
+                    dataSourceIndex:
+                        - '0'
+                        - '2'
+                    settings:
+                        search: /
+                        replace: '-'
+                        glue: '|'
+                        mode: both
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: key
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline:
+                        -
+                            settings:
+                                search: /
+                                replace: '-'
+                            type: stringReplace
+                        -
+                            settings:
+                                glue: '|'
+                            type: combine
+                        -
+                            settings:
+                                mode: both
+                            type: trim
+                -
+                    label: ComposingColors
+                    dataSourceIndex:
+                        - '9'
+                    settings:
+                        delimiter: '|'
+                        loadStrategy: attribute
+                        attributeDataObjectClassId: color
+                        attributeName: code
+                        attributeLanguage: ''
+                    transformationResultType: dataObjectArray
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: multiColor
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline:
+                        -
+                            settings:
+                                delimiter: '|'
+                            type: explode
+                        -
+                            settings:
+                                loadStrategy: attribute
+                                attributeDataObjectClassId: color
+                                attributeName: code
+                                attributeLanguage: ''
+                            type: loadDataObject
+            executionConfig:
+                scheduleType: job
+                cronDefinition: ''
+                scheduledAt: ''
+            permissions:
+                user:
+                    -
+                        id: 5
+                        name: theo_admin
+                        read: true
+                        update: true
+                        delete: true
+                role: {  }
+            workspaces: {  }

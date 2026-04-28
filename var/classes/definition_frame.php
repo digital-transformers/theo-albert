@@ -17,14 +17,9 @@
  * - downloadableAssets [manyToManyObjectRelation]
  * - artBase [manyToOneRelation]
  * - seriesCode [input]
- * - shape [select]
- * - lookAndFeel [select]
- * - typeOfMetal [select]
  * - ecomFileName [input]
  * - netMass [numeric]
  * - productSegment [select]
- * - lensHeight [numeric]
- * - templeLenght [numeric]
  * - parentItem [manyToOneRelation]
  * - lifeCycle [select]
  * - collectionCycle [select]
@@ -61,7 +56,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1775707937,
+   'modificationDate' => 1777361511,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => 'Pimcore\\Model\\DataObject\\Model',
@@ -319,7 +314,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'displayMode' => NULL,
                  'pathFormatterClass' => '',
                  'maxItems' => NULL,
-                 'visibleFields' => 'code,name',
+                 'visibleFields' => 'code,name,image',
                  'allowToCreateNewObject' => false,
                  'allowToClearRelation' => true,
                  'optimizedAdminLoading' => false,
@@ -619,102 +614,6 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'defaultValueGenerator' => '',
               )),
               2 => 
-              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
-                 'name' => 'shape',
-                 'title' => 'Shape',
-                 'tooltip' => '',
-                 'mandatory' => false,
-                 'noteditable' => false,
-                 'index' => false,
-                 'locked' => false,
-                 'style' => '',
-                 'permissions' => NULL,
-                 'fieldtype' => '',
-                 'relationType' => false,
-                 'invisible' => false,
-                 'visibleGridView' => false,
-                 'visibleSearch' => false,
-                 'blockedVarsForExport' => 
-                array (
-                ),
-                 'options' => 
-                array (
-                ),
-                 'defaultValue' => '',
-                 'columnLength' => 190,
-                 'dynamicOptions' => false,
-                 'enforceValidation' => false,
-                 'defaultValueGenerator' => '',
-                 'width' => '',
-                 'optionsProviderType' => 'configure',
-                 'optionsProviderClass' => '',
-                 'optionsProviderData' => '',
-              )),
-              3 => 
-              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
-                 'name' => 'lookAndFeel',
-                 'title' => 'Look And Feel',
-                 'tooltip' => '',
-                 'mandatory' => false,
-                 'noteditable' => false,
-                 'index' => false,
-                 'locked' => false,
-                 'style' => '',
-                 'permissions' => NULL,
-                 'fieldtype' => '',
-                 'relationType' => false,
-                 'invisible' => false,
-                 'visibleGridView' => false,
-                 'visibleSearch' => false,
-                 'blockedVarsForExport' => 
-                array (
-                ),
-                 'options' => 
-                array (
-                ),
-                 'defaultValue' => '',
-                 'columnLength' => 190,
-                 'dynamicOptions' => false,
-                 'enforceValidation' => false,
-                 'defaultValueGenerator' => '',
-                 'width' => '',
-                 'optionsProviderType' => 'configure',
-                 'optionsProviderClass' => '',
-                 'optionsProviderData' => '',
-              )),
-              4 => 
-              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
-                 'name' => 'typeOfMetal',
-                 'title' => 'Type Of Metal',
-                 'tooltip' => '',
-                 'mandatory' => false,
-                 'noteditable' => false,
-                 'index' => false,
-                 'locked' => false,
-                 'style' => '',
-                 'permissions' => NULL,
-                 'fieldtype' => '',
-                 'relationType' => false,
-                 'invisible' => false,
-                 'visibleGridView' => false,
-                 'visibleSearch' => false,
-                 'blockedVarsForExport' => 
-                array (
-                ),
-                 'options' => 
-                array (
-                ),
-                 'defaultValue' => '',
-                 'columnLength' => 190,
-                 'dynamicOptions' => false,
-                 'enforceValidation' => false,
-                 'defaultValueGenerator' => '',
-                 'width' => '',
-                 'optionsProviderType' => 'configure',
-                 'optionsProviderClass' => '',
-                 'optionsProviderData' => '',
-              )),
-              5 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'ecomFileName',
                  'title' => 'Ecom File Name',
@@ -744,7 +643,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              6 => 
+              3 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'netMass',
                  'title' => 'Net Mass',
@@ -774,7 +673,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              7 => 
+              4 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
                  'name' => 'productSegment',
                  'title' => 'Product Segment',
@@ -795,6 +694,46 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 ),
                  'options' => 
                 array (
+                  0 => 
+                  array (
+                    'key' => 'SUN',
+                    'value' => 'SUN',
+                  ),
+                  1 => 
+                  array (
+                    'key' => 'PETITE',
+                    'value' => 'PETITE',
+                  ),
+                  2 => 
+                  array (
+                    'key' => 'KIDS',
+                    'value' => 'KIDS',
+                  ),
+                  3 => 
+                  array (
+                    'key' => 'IMAGE',
+                    'value' => 'AVANT-GARDE',
+                  ),
+                  4 => 
+                  array (
+                    'key' => 'FUNDAMENTAL',
+                    'value' => 'BASIC',
+                  ),
+                  5 => 
+                  array (
+                    'key' => 'EXPRESSIVE',
+                    'value' => 'FUN',
+                  ),
+                  6 => 
+                  array (
+                    'key' => 'EXCLUSIVE',
+                    'value' => 'EXCLUSIVE',
+                  ),
+                  7 => 
+                  array (
+                    'key' => 'DISCOVERY',
+                    'value' => 'DISCOVERY',
+                  ),
                 ),
                  'defaultValue' => '',
                  'columnLength' => 190,
@@ -806,67 +745,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderClass' => '',
                  'optionsProviderData' => '',
               )),
-              8 => 
-              \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
-                 'name' => 'lensHeight',
-                 'title' => 'Lens Height',
-                 'tooltip' => '',
-                 'mandatory' => false,
-                 'noteditable' => false,
-                 'index' => false,
-                 'locked' => false,
-                 'style' => '',
-                 'permissions' => NULL,
-                 'fieldtype' => '',
-                 'relationType' => false,
-                 'invisible' => false,
-                 'visibleGridView' => false,
-                 'visibleSearch' => false,
-                 'blockedVarsForExport' => 
-                array (
-                ),
-                 'defaultValue' => NULL,
-                 'integer' => false,
-                 'unsigned' => false,
-                 'minValue' => NULL,
-                 'maxValue' => NULL,
-                 'unique' => false,
-                 'decimalSize' => NULL,
-                 'decimalPrecision' => NULL,
-                 'width' => '',
-                 'defaultValueGenerator' => '',
-              )),
-              9 => 
-              \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
-                 'name' => 'templeLenght',
-                 'title' => 'Temple Lenght',
-                 'tooltip' => '',
-                 'mandatory' => false,
-                 'noteditable' => false,
-                 'index' => false,
-                 'locked' => false,
-                 'style' => '',
-                 'permissions' => NULL,
-                 'fieldtype' => '',
-                 'relationType' => false,
-                 'invisible' => false,
-                 'visibleGridView' => false,
-                 'visibleSearch' => false,
-                 'blockedVarsForExport' => 
-                array (
-                ),
-                 'defaultValue' => NULL,
-                 'integer' => false,
-                 'unsigned' => false,
-                 'minValue' => NULL,
-                 'maxValue' => NULL,
-                 'unique' => false,
-                 'decimalSize' => NULL,
-                 'decimalPrecision' => NULL,
-                 'width' => '',
-                 'defaultValueGenerator' => '',
-              )),
-              10 => 
+              5 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
                  'name' => 'parentItem',
                  'title' => 'Parent Item',
@@ -908,7 +787,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 ),
                  'width' => '',
               )),
-              11 => 
+              6 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
                  'name' => 'lifeCycle',
                  'title' => 'Life Cycle',
@@ -929,6 +808,16 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 ),
                  'options' => 
                 array (
+                  0 => 
+                  array (
+                    'key' => 'In collectie',
+                    'value' => 'In collectie',
+                  ),
+                  1 => 
+                  array (
+                    'key' => 'Uit collectie',
+                    'value' => 'Out collectie',
+                  ),
                 ),
                  'defaultValue' => '',
                  'columnLength' => 190,
@@ -940,7 +829,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderClass' => '',
                  'optionsProviderData' => '',
               )),
-              12 => 
+              7 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
                  'name' => 'collectionCycle',
                  'title' => 'Collection Cycle',
@@ -1012,7 +901,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderClass' => '',
                  'optionsProviderData' => '',
               )),
-              13 => 
+              8 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'exchangeCode',
                  'title' => 'Exchange Code',
@@ -1042,7 +931,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              14 => 
+              9 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Date::__set_state(array(
                  'name' => 'activeFrom',
                  'title' => 'Active From',
@@ -1066,7 +955,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'columnType' => 'date',
                  'defaultValueGenerator' => '',
               )),
-              15 => 
+              10 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'leadTime',
                  'title' => 'Lead Time',
@@ -1096,7 +985,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              16 => 
+              11 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
                  'name' => 'lensColor',
                  'title' => 'Lens Color',
@@ -1128,7 +1017,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderClass' => '',
                  'optionsProviderData' => '',
               )),
-              17 => 
+              12 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'basicUDI',
                  'title' => 'Basic UDI',
@@ -1158,7 +1047,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              18 => 
+              13 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'masterUDI',
                  'title' => 'Master UDI',
@@ -1188,7 +1077,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              19 => 
+              14 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Country::__set_state(array(
                  'name' => 'countryOfOrigin',
                  'title' => 'Country Of Origin',
@@ -1218,7 +1107,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderData' => NULL,
                  'restrictTo' => '',
               )),
-              20 => 
+              15 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'dsArtCat',
                  'title' => 'DS_ArtCat',
@@ -1248,7 +1137,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              21 => 
+              16 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'dsType',
                  'title' => 'DS_Type',
@@ -1278,7 +1167,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              22 => 
+              17 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'dsSize',
                  'title' => 'DS_Size',
@@ -1308,7 +1197,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              23 => 
+              18 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect::__set_state(array(
                  'name' => 'dsTarif',
                  'title' => 'Ds Tarif',
@@ -1339,7 +1228,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\TarifCodeOptionsProvider',
                  'optionsProviderData' => '',
               )),
-              24 => 
+              19 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'intrastatCode',
                  'title' => 'Intrastat Code',
@@ -1910,36 +1799,6 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'enableGridLocking' => false,
    'deletedDataComponents' => 
   array (
-    0 => 
-    \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
-       'name' => 'baseFrameCode',
-       'title' => 'Base frame code',
-       'tooltip' => '',
-       'mandatory' => false,
-       'noteditable' => false,
-       'index' => false,
-       'locked' => false,
-       'style' => '',
-       'permissions' => NULL,
-       'fieldtype' => '',
-       'relationType' => false,
-       'invisible' => false,
-       'visibleGridView' => false,
-       'visibleSearch' => false,
-       'blockedVarsForExport' => 
-      array (
-      ),
-       'defaultValue' => '',
-       'columnLength' => 190,
-       'regex' => '',
-       'regexFlags' => 
-      array (
-      ),
-       'unique' => false,
-       'showCharCount' => false,
-       'width' => '',
-       'defaultValueGenerator' => '',
-    )),
   ),
    'blockedVarsForExport' => 
   array (

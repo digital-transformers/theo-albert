@@ -8,8 +8,9 @@
  * Fields Summary:
  * - itemCode [input]
  * - itemName [input]
+ * - warehouse [input]
  * - itemGroup [manyToOneRelation]
- * - process [manyToOneRelation]
+ * - pricelist [manyToOneRelation]
  * - importType [input]
  * - itemType [multiselect]
  * - linkedColor [select]
@@ -25,7 +26,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => 'SAPComponent',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1775545229,
+   'modificationDate' => 1775711792,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -129,6 +130,36 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'defaultValueGenerator' => '',
           )),
           2 => 
+          \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
+             'name' => 'warehouse',
+             'title' => 'Warehouse',
+             'tooltip' => '',
+             'mandatory' => true,
+             'noteditable' => false,
+             'index' => true,
+             'locked' => false,
+             'style' => '',
+             'permissions' => NULL,
+             'fieldtype' => '',
+             'relationType' => false,
+             'invisible' => false,
+             'visibleGridView' => false,
+             'visibleSearch' => false,
+             'blockedVarsForExport' => 
+            array (
+            ),
+             'defaultValue' => '',
+             'columnLength' => 190,
+             'regex' => '',
+             'regexFlags' => 
+            array (
+            ),
+             'unique' => false,
+             'showCharCount' => false,
+             'width' => '',
+             'defaultValueGenerator' => '',
+          )),
+          3 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
              'name' => 'itemGroup',
              'title' => 'Item Group',
@@ -170,10 +201,10 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
             ),
              'width' => '',
           )),
-          3 => 
+          4 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
-             'name' => 'process',
-             'title' => 'Process',
+             'name' => 'pricelist',
+             'title' => 'Pricelist',
              'tooltip' => '',
              'mandatory' => false,
              'noteditable' => false,
@@ -193,7 +224,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
             array (
               0 => 
               array (
-                'classes' => 'process',
+                'classes' => 'SAPPricelist',
               ),
             ),
              'displayMode' => 'grid',
@@ -212,7 +243,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
             ),
              'width' => '',
           )),
-          4 => 
+          5 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
              'name' => 'importType',
              'title' => 'Import Type',
@@ -242,7 +273,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
-          5 => 
+          6 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect::__set_state(array(
              'name' => 'itemType',
              'title' => 'Type',
@@ -298,7 +329,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'optionsProviderClass' => '',
              'optionsProviderData' => '',
           )),
-          6 => 
+          7 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
              'name' => 'linkedColor',
              'title' => 'Linked Color',
@@ -327,7 +358,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\ColorOptionsProvider',
              'optionsProviderData' => '',
           )),
-          7 => 
+          8 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
              'name' => 'cost',
              'title' => 'Cost',
@@ -357,7 +388,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
-          8 => 
+          9 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
              'name' => 'supplier',
              'title' => 'Supplier',
@@ -399,7 +430,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
             ),
              'width' => '',
           )),
-          9 => 
+          10 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
              'name' => 'supCatNum',
              'title' => 'Supplier ItemCode',
@@ -486,6 +517,48 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'enableGridLocking' => false,
    'deletedDataComponents' => 
   array (
+    0 => 
+    \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
+       'name' => 'process',
+       'title' => 'Process',
+       'tooltip' => '',
+       'mandatory' => false,
+       'noteditable' => false,
+       'index' => false,
+       'locked' => false,
+       'style' => '',
+       'permissions' => NULL,
+       'fieldtype' => '',
+       'relationType' => true,
+       'invisible' => false,
+       'visibleGridView' => false,
+       'visibleSearch' => false,
+       'blockedVarsForExport' => 
+      array (
+      ),
+       'classes' => 
+      array (
+        0 => 
+        array (
+          'classes' => 'process',
+        ),
+      ),
+       'displayMode' => 'grid',
+       'pathFormatterClass' => '',
+       'assetInlineDownloadAllowed' => false,
+       'assetUploadPath' => '',
+       'allowToClearRelation' => true,
+       'objectsAllowed' => true,
+       'assetsAllowed' => false,
+       'assetTypes' => 
+      array (
+      ),
+       'documentsAllowed' => false,
+       'documentTypes' => 
+      array (
+      ),
+       'width' => '',
+    )),
   ),
    'blockedVarsForExport' => 
   array (
