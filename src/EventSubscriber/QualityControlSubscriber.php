@@ -23,9 +23,10 @@ final class QualityControlSubscriber implements EventSubscriberInterface
     public const PERMISSION_KEY = 'quality_control';
 
     private const BASE_FOLDER_PROPERTY_KEY = 'quality_control_asset_folder';
+    private const TARGET_FOLDER_PROPERTY_KEY = 'quality_control_target_folder';
     private const SUPPORTED_CLASS_NAMES = ['family', 'model', 'frame'];
     private const LAYOUT_PANEL_NAME = 'qualityControl';
-    private const TARGET_FOLDER_FIELD = 'qualityControlTargetFolder';
+    private const LEGACY_TARGET_FOLDER_FIELD = 'qualityControlTargetFolder';
     private const DOCUMENTS_FIELD = 'qualityControlDocuments';
     private const IMAGES_FIELD = 'qualityControlImages';
     private const REMARKS_FIELD = 'qualityControlRemarks';
@@ -33,8 +34,13 @@ final class QualityControlSubscriber implements EventSubscriberInterface
         self::DOCUMENTS_FIELD,
         self::IMAGES_FIELD,
     ];
-    private const ALL_FIELDS = [
-        self::TARGET_FOLDER_FIELD,
+    private const HIDDEN_FIELDS = [
+        self::LEGACY_TARGET_FOLDER_FIELD,
+        self::DOCUMENTS_FIELD,
+        self::IMAGES_FIELD,
+        self::REMARKS_FIELD,
+    ];
+    private const EDITABLE_FIELDS = [
         self::DOCUMENTS_FIELD,
         self::IMAGES_FIELD,
         self::REMARKS_FIELD,
@@ -77,7 +83,7 @@ final class QualityControlSubscriber implements EventSubscriberInterface
 
         $this->restoreUnauthorizedFields($object);
         $this->stampRemarksRows($object);
-        $this->refreshTargetFolderPreview($object);
+        $this->syncTargetFolderProperty($object);
         $this->moveQualityControlAssets($object);
     }
 
@@ -99,25 +105,17 @@ final class QualityControlSubscriber implements EventSubscriberInterface
             }
 
             if (isset($data['data']) && is_array($data['data'])) {
-                foreach (self::ALL_FIELDS as $fieldName) {
+                foreach (self::HIDDEN_FIELDS as $fieldName) {
                     unset($data['data'][$fieldName]);
                 }
             }
 
             if (isset($data['metaData']) && is_array($data['metaData'])) {
-                foreach (self::ALL_FIELDS as $fieldName) {
+                foreach (self::HIDDEN_FIELDS as $fieldName) {
                     unset($data['metaData'][$fieldName]);
                 }
             }
 
-            $event->setArgument('data', $data);
-
-            return;
-        }
-
-        $targetFolderPath = $this->resolveTargetFolderPath($object, false);
-        if ($targetFolderPath !== null && isset($data['data']) && is_array($data['data'])) {
-            $data['data'][self::TARGET_FOLDER_FIELD] = $targetFolderPath;
             $event->setArgument('data', $data);
         }
     }
@@ -146,7 +144,7 @@ final class QualityControlSubscriber implements EventSubscriberInterface
         }
 
         $persisted = $object->getId() > 0 ? Concrete::getById($object->getId(), ['force' => true]) : null;
-        foreach (self::ALL_FIELDS as $fieldName) {
+        foreach (self::EDITABLE_FIELDS as $fieldName) {
             $this->writeFieldValue(
                 $object,
                 $fieldName,
@@ -155,9 +153,30 @@ final class QualityControlSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function refreshTargetFolderPreview(Concrete $object): void
+    /**
+     * @throws ValidationException
+     */
+    private function syncTargetFolderProperty(Concrete $object): void
     {
-        $this->writeFieldValue($object, self::TARGET_FOLDER_FIELD, $this->resolveTargetFolderPath($object, false));
+        $targetFolderPath = $this->resolveTargetFolderPath($object, false);
+        if ($targetFolderPath === null) {
+            $object->removeProperty(self::TARGET_FOLDER_PROPERTY_KEY);
+
+            return;
+        }
+
+        $propertyDefinition = Predefined::getByKey(self::TARGET_FOLDER_PROPERTY_KEY);
+        $propertyType = $propertyDefinition instanceof Predefined ? trim((string) $propertyDefinition->getType()) : '';
+
+        $object->setProperty(
+            self::TARGET_FOLDER_PROPERTY_KEY,
+            $propertyType !== '' ? $propertyType : 'text',
+            $targetFolderPath,
+            false,
+            $propertyDefinition instanceof Predefined && $propertyDefinition->getInheritable()
+        );
+
+        $this->getOrCreateFolder($targetFolderPath);
     }
 
     private function stampRemarksRows(Concrete $object): void

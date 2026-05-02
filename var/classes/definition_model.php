@@ -59,7 +59,6 @@
  * - instagramImageGallery [imageGallery]
  * - video [video]
  * - attachments [advancedManyToManyRelation]
- * - qualityControlTargetFolder [input]
  * - qualityControlDocuments [advancedManyToManyRelation]
  * - qualityControlImages [advancedManyToManyRelation]
  * - qualityControlRemarks [table]
@@ -2342,36 +2341,6 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'children' => 
             array (
               0 => 
-              \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
-                 'name' => 'qualityControlTargetFolder',
-                 'title' => 'Target Folder',
-                 'tooltip' => '',
-                 'mandatory' => false,
-                 'noteditable' => true,
-                 'index' => false,
-                 'locked' => false,
-                 'style' => '',
-                 'permissions' => NULL,
-                 'fieldtype' => '',
-                 'relationType' => false,
-                 'invisible' => false,
-                 'visibleGridView' => false,
-                 'visibleSearch' => false,
-                 'blockedVarsForExport' => 
-                array (
-                ),
-                 'defaultValue' => '',
-                 'columnLength' => 255,
-                 'regex' => '',
-                 'regexFlags' => 
-                array (
-                ),
-                 'unique' => false,
-                 'showCharCount' => false,
-                 'width' => '',
-                 'defaultValueGenerator' => '',
-              )),
-              1 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyRelation::__set_state(array(
                  'name' => 'qualityControlDocuments',
                  'title' => 'Quality Control Documents',
@@ -2434,7 +2403,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'enableBatchEdit' => false,
                  'allowMultipleAssignments' => false,
               )),
-              2 => 
+              1 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyRelation::__set_state(array(
                  'name' => 'qualityControlImages',
                  'title' => 'Quality Control Images',
@@ -2489,7 +2458,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'enableBatchEdit' => false,
                  'allowMultipleAssignments' => false,
               )),
-              3 => 
+              2 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Table::__set_state(array(
                  'name' => 'qualityControlRemarks',
                  'title' => 'Quality Remarks',

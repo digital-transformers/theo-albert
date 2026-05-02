@@ -91,6 +91,56 @@ final class QualityControlSubscriberTest extends Unit
         ));
     }
 
+    public function testOnPreSendDataDoesNotInjectLegacyTargetFolderFieldForAuthorizedUsers(): void
+    {
+        $resolver = $this->createMock(TokenStorageUserResolver::class);
+        $resolver->method('getUser')->willReturn(
+            (new User())
+                ->setUsername('quality-admin')
+                ->setAdmin(true)
+        );
+
+        $subscriber = new QualityControlSubscriber($resolver);
+        $object = (new QualityControlTestObject())
+            ->setClassName('family')
+            ->setCode('FAM-001');
+
+        $event = new GenericEvent(null, [
+            'object' => $object,
+            'data' => [
+                'data' => [
+                    'name' => 'Visible',
+                ],
+                'metaData' => [
+                    'name' => ['visible'],
+                ],
+            ],
+        ]);
+
+        $subscriber->onPreSendData($event);
+
+        $data = $event->getArgument('data');
+        self::assertSame(['name' => 'Visible'], $data['data']);
+        self::assertSame(['name' => ['visible']], $data['metaData']);
+        self::assertArrayNotHasKey('qualityControlTargetFolder', $data['data']);
+    }
+
+    public function testBuildObjectFolderSegmentReturnsNullWithoutCodeOrKeyWhenNotRequired(): void
+    {
+        $resolver = $this->createMock(TokenStorageUserResolver::class);
+        $resolver->method('getUser')->willReturn(null);
+
+        $subscriber = new QualityControlSubscriber($resolver);
+        $object = (new QualityControlTestObject())
+            ->setClassName('family')
+            ->setCode(null);
+
+        $method = new \ReflectionMethod($subscriber, 'buildObjectFolderSegment');
+        $method->setAccessible(true);
+
+        self::assertNull($method->invoke($subscriber, $object, false));
+    }
+
     public function testResolveCurrentUserLabelPrefersNameThenFallsBackToUsername(): void
     {
         $namedResolver = $this->createMock(TokenStorageUserResolver::class);
@@ -121,6 +171,7 @@ final class QualityControlTestObject extends Concrete
 {
     private ?string $code = null;
     private ?self $testParent = null;
+    private array $testProperties = [];
 
     public function getCode(): ?string
     {
@@ -144,6 +195,49 @@ final class QualityControlTestObject extends Concrete
         $this->testParent = $testParent;
 
         return $this;
+    }
+
+    public function getProperties(): array
+    {
+        return $this->testProperties;
+    }
+
+    public function setProperties(?array $properties): static
+    {
+        $this->testProperties = $properties ?? [];
+
+        return $this;
+    }
+
+    public function getProperty(string $name, bool $asContainer = false): mixed
+    {
+        if (!array_key_exists($name, $this->testProperties)) {
+            return null;
+        }
+
+        return $asContainer ? $this->testProperties[$name] : $this->testProperties[$name]->getData();
+    }
+
+    public function setProperty(
+        string $name,
+        string $type,
+        mixed $data,
+        bool $inherited = false,
+        bool $inheritable = false
+    ): static {
+        $this->testProperties[$name] = new QualityControlTestProperty($data);
+
+        return $this;
+    }
+
+    public function hasProperty(string $name): bool
+    {
+        return array_key_exists($name, $this->testProperties);
+    }
+
+    public function removeProperty(string $name): void
+    {
+        unset($this->testProperties[$name]);
     }
 }
 
@@ -177,5 +271,18 @@ final class QualityControlTestLayout
     public function setChildren(array $children): void
     {
         $this->children = $children;
+    }
+}
+
+final class QualityControlTestProperty
+{
+    public function __construct(
+        private mixed $data,
+    ) {
+    }
+
+    public function getData(): mixed
+    {
+        return $this->data;
     }
 }

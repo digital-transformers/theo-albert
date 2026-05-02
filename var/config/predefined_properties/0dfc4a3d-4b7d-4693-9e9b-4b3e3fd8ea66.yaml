@@ -1,0 +1,15 @@
+pimcore:
+    properties:
+        predefined:
+            definitions:
+                0dfc4a3d-4b7d-4693-9e9b-4b3e3fd8ea66:
+                    name: 'Quality control target folder'
+                    description: 'Resolved quality control asset folder for family, model, and frame objects.'
+                    key: quality_control_target_folder
+                    type: text
+                    data: ''
+                    config: ''
+                    ctype: object
+                    inheritable: false
+                    creationDate: 1777670400
+                    modificationDate: 1777670400
