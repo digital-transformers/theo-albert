@@ -1,0 +1,151 @@
+[
+  {
+    "frame_code": "ALP-OPT-01-101",
+    "frame_name": "Alpha Optical Black Gold",
+    "parent_model_code": "ALP-OPT-01",
+    "art_base_code": "ALP-OPT-01",
+    "main_color_code": "101",
+    "series_code": "ALPHA-2026",
+    "ecom_file_name": "alp-opt-01-101.jpg",
+    "exchange_code": "EX-ALP-101",
+    "item_group_numbers": [
+      "OPTICAL"
+    ],
+    "supplier_code": "SUP-ALPHA-01",
+    "composed_color_codes": [
+      "BLK",
+      "GLD"
+    ],
+    "component_item_codes": [
+      "CMP-HINGE-01",
+      "CMP-ENDTIP-01"
+    ],
+    "pos_material_item_codes": [
+      "POS-ALPHA-COUNTER-01"
+    ],
+    "service_part_codes": [
+      "SP-ALPHA-NOSEPAD-01"
+    ],
+    "downloadable_asset_keys": [
+      "alpha-lookbook"
+    ],
+    "image_gallery_asset_paths": [
+      "/Datasource Files/Import Examples/assets/frames/alp-opt-01-101-01.jpg",
+      "/Datasource Files/Import Examples/assets/frames/alp-opt-01-101-02.jpg"
+    ],
+    "attachment_asset_paths": [
+      "/Datasource Files/Import Examples/assets/frames/alp-opt-01-101-techsheet.pdf"
+    ]
+  },
+  {
+    "frame_code": "ALP-OPT-01-205",
+    "frame_name": "Alpha Optical Crystal Smoke",
+    "parent_model_code": "ALP-OPT-01",
+    "art_base_code": "ALP-OPT-01",
+    "main_color_code": "205",
+    "series_code": "ALPHA-2026",
+    "ecom_file_name": "alp-opt-01-205.jpg",
+    "exchange_code": "EX-ALP-205",
+    "item_group_numbers": [
+      "OPTICAL"
+    ],
+    "supplier_code": "SUP-ALPHA-01",
+    "composed_color_codes": [
+      "CRY",
+      "SMK"
+    ],
+    "component_item_codes": [
+      "CMP-HINGE-01",
+      "CMP-ENDTIP-01"
+    ],
+    "pos_material_item_codes": [
+      "POS-ALPHA-COUNTER-01"
+    ],
+    "service_part_codes": [
+      "SP-ALPHA-NOSEPAD-01"
+    ],
+    "downloadable_asset_keys": [
+      "alpha-lookbook"
+    ],
+    "image_gallery_asset_paths": [
+      "/Datasource Files/Import Examples/assets/frames/alp-opt-01-205-01.jpg",
+      "/Datasource Files/Import Examples/assets/frames/alp-opt-01-205-02.jpg"
+    ],
+    "attachment_asset_paths": [
+      "/Datasource Files/Import Examples/assets/frames/alp-opt-01-205-techsheet.pdf"
+    ]
+  },
+  {
+    "frame_code": "ALP-SUN-01-310",
+    "frame_name": "Alpha Sun Matte Olive",
+    "parent_model_code": "ALP-SUN-01",
+    "art_base_code": "ALP-SUN-01",
+    "main_color_code": "310",
+    "series_code": "ALPHA-SUN-2026",
+    "ecom_file_name": "alp-sun-01-310.jpg",
+    "exchange_code": "EX-ALP-310",
+    "item_group_numbers": [
+      "SUN"
+    ],
+    "supplier_code": "SUP-ALPHA-01",
+    "composed_color_codes": [
+      "OLV"
+    ],
+    "component_item_codes": [
+      "CMP-HINGE-02",
+      "CMP-ENDTIP-02"
+    ],
+    "pos_material_item_codes": [
+      "POS-ALPHA-SUN-COUNTER-01"
+    ],
+    "service_part_codes": [
+      "SP-ALPHA-SUN-CASE-01"
+    ],
+    "downloadable_asset_keys": [
+      "alpha-sun-lookbook"
+    ],
+    "image_gallery_asset_paths": [
+      "/Datasource Files/Import Examples/assets/frames/alp-sun-01-310-01.jpg",
+      "/Datasource Files/Import Examples/assets/frames/alp-sun-01-310-02.jpg"
+    ],
+    "attachment_asset_paths": [
+      "/Datasource Files/Import Examples/assets/frames/alp-sun-01-310-techsheet.pdf"
+    ]
+  },
+  {
+    "frame_code": "BET-CMB-01-150",
+    "frame_name": "Beta Combo Brushed Silver",
+    "parent_model_code": "BET-CMB-01",
+    "art_base_code": "BET-CMB-01",
+    "main_color_code": "150",
+    "series_code": "BETA-2026",
+    "ecom_file_name": "bet-cmb-01-150.jpg",
+    "exchange_code": "EX-BET-150",
+    "item_group_numbers": [
+      "COMBO"
+    ],
+    "supplier_code": "SUP-BETA-01",
+    "composed_color_codes": [
+      "SLV"
+    ],
+    "component_item_codes": [
+      "CMP-HINGE-03"
+    ],
+    "pos_material_item_codes": [
+      "POS-BETA-COUNTER-01"
+    ],
+    "service_part_codes": [
+      "SP-BETA-CASE-01"
+    ],
+    "downloadable_asset_keys": [
+      "beta-launch-pack"
+    ],
+    "image_gallery_asset_paths": [
+      "/Datasource Files/Import Examples/assets/frames/bet-cmb-01-150-01.jpg",
+      "/Datasource Files/Import Examples/assets/frames/bet-cmb-01-150-02.jpg"
+    ],
+    "attachment_asset_paths": [
+      "/Datasource Files/Import Examples/assets/frames/bet-cmb-01-150-techsheet.pdf"
+    ]
+  }
+]

@@ -1,0 +1,299 @@
+pimcore_data_hub:
+    configurations:
+        ExampleModelJsonImport:
+            general:
+                active: false
+                type: dataImporterDataObject
+                name: ExampleModelJsonImport
+                description: 'Example model importer using docs/datahub-import-examples/sources/json/models.json'
+                group: Examples
+                path: null
+                modificationDate: 1777334400
+                createDate: 1777334400
+            loaderConfig:
+                type: asset
+                settings:
+                    assetPath: '/Datasource Files/Import Examples/models.json'
+            interpreterConfig:
+                type: json
+                settings:
+                    path: ''
+            resolverConfig:
+                elementType: dataObject
+                dataObjectClassId: baseProduct
+                loadingStrategy:
+                    type: attribute
+                    settings:
+                        dataSourceIndex: model_code
+                        attributeName: code
+                        language: ''
+                        includeUnpublished: true
+                createLocationStrategy:
+                    type: findParent
+                    settings:
+                        dataSourceIndex: parent_family_code
+                        findStrategy: attribute
+                        attributeDataObjectClassId: family
+                        attributeName: code
+                        attributeLanguage: ''
+                        fallbackPath: '/Imports/ProductHierarchy/Families'
+                locationUpdateStrategy:
+                    type: findParent
+                    settings:
+                        dataSourceIndex: parent_family_code
+                        findStrategy: attribute
+                        attributeDataObjectClassId: family
+                        attributeName: code
+                        attributeLanguage: ''
+                        fallbackPath: '/Imports/ProductHierarchy/Families'
+                publishingStrategy:
+                    type: noChangePublishNew
+            processingConfig:
+                executionType: sequential
+                idDataIndex: model_code
+            mappingConfig:
+                -
+                    label: KEY
+                    dataSourceIndex:
+                        - model_code
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: key
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline:
+                        -
+                            settings:
+                                search: /
+                                replace: '-'
+                            type: stringReplace
+                        -
+                            settings:
+                                mode: both
+                            type: trim
+                -
+                    label: Code
+                    dataSourceIndex:
+                        - model_code
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: code
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: Name
+                    dataSourceIndex:
+                        - model_name
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: name
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: Frame Base Code
+                    dataSourceIndex:
+                        - frame_base_code
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: frameBaseCode
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: Series Code
+                    dataSourceIndex:
+                        - series_code
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: seriesCode
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: Material
+                    dataSourceIndex:
+                        - material
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: material
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: Description
+                    dataSourceIndex:
+                        - description
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: description
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline: {  }
+                -
+                    label: Outline Image
+                    dataSourceIndex:
+                        - outline_image_asset_path
+                    transformationResultType: asset
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: outlineImage
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline:
+                        -
+                            settings:
+                                loadStrategy: path
+                            type: loadAsset
+                -
+                    label: Plan Attachment
+                    dataSourceIndex:
+                        - plan_attachment_asset_paths
+                    transformationResultType: advancedAssetArray
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: planAttachment
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline:
+                        -
+                            settings:
+                                loadStrategy: path
+                            type: loadAsset
+                -
+                    label: POS Material Products
+                    dataSourceIndex:
+                        - pos_material_item_codes
+                    transformationResultType: dataObjectArray
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: posMaterialProducts
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline:
+                        -
+                            settings:
+                                loadStrategy: attribute
+                                attributeDataObjectClassId: posMaterialProduct
+                                attributeName: itemCode
+                                attributeLanguage: ''
+                                partialMatch: false
+                                loadUnpublished: true
+                            type: loadDataObject
+                -
+                    label: Service Part Products
+                    dataSourceIndex:
+                        - service_part_codes
+                    transformationResultType: dataObjectArray
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: servicePartProducts
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline:
+                        -
+                            settings:
+                                loadStrategy: attribute
+                                attributeDataObjectClassId: servicePartsProduct
+                                attributeName: code
+                                attributeLanguage: ''
+                                partialMatch: false
+                                loadUnpublished: true
+                            type: loadDataObject
+                -
+                    label: Downloadable Assets
+                    dataSourceIndex:
+                        - downloadable_asset_keys
+                    transformationResultType: dataObjectArray
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: downloadableAssets
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline:
+                        -
+                            settings:
+                                loadStrategy: attribute
+                                attributeDataObjectClassId: downloadableAsset
+                                attributeName: key
+                                attributeLanguage: ''
+                                partialMatch: false
+                                loadUnpublished: true
+                            type: loadDataObject
+                -
+                    label: Image Gallery
+                    dataSourceIndex:
+                        - image_gallery_asset_paths
+                    transformationResultType: gallery
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: imageGallery
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline:
+                        -
+                            settings:
+                                loadStrategy: path
+                            type: loadAsset
+                        -
+                            settings: {  }
+                            type: gallery
+                -
+                    label: Attachments
+                    dataSourceIndex:
+                        - attachment_asset_paths
+                    transformationResultType: advancedAssetArray
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: attachments
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline:
+                        -
+                            settings:
+                                loadStrategy: path
+                            type: loadAsset
+            executionConfig:
+                scheduleType: job
+                cronDefinition: ''
+                scheduledAt: ''
+            permissions:
+                user: {  }
+                role: {  }
+            workspaces: {  }

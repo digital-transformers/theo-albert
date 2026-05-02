@@ -1,0 +1,90 @@
+[
+  {
+    "model_code": "ALP-OPT-01",
+    "model_name": "Alpha Optical",
+    "parent_family_code": "TA-ALPHA",
+    "frame_base_code": "ALP-OPT",
+    "series_code": "ALPHA-2026",
+    "material": "Japan titanium",
+    "description": "Optical base model for the Alpha family",
+    "outline_image_asset_path": "/Datasource Files/Import Examples/assets/models/alp-opt-01-outline.png",
+    "plan_attachment_asset_paths": [
+      "/Datasource Files/Import Examples/assets/models/alp-opt-01-plan.pdf"
+    ],
+    "pos_material_item_codes": [
+      "POS-ALPHA-COUNTER-01"
+    ],
+    "service_part_codes": [
+      "SP-ALPHA-NOSEPAD-01"
+    ],
+    "downloadable_asset_keys": [
+      "alpha-lookbook",
+      "alpha-cad-pack"
+    ],
+    "image_gallery_asset_paths": [
+      "/Datasource Files/Import Examples/assets/models/alp-opt-01-hero-01.jpg",
+      "/Datasource Files/Import Examples/assets/models/alp-opt-01-hero-02.jpg"
+    ],
+    "attachment_asset_paths": [
+      "/Datasource Files/Import Examples/assets/models/alp-opt-01-specsheet.pdf"
+    ]
+  },
+  {
+    "model_code": "ALP-SUN-01",
+    "model_name": "Alpha Sun",
+    "parent_family_code": "TA-ALPHA",
+    "frame_base_code": "ALP-SUN",
+    "series_code": "ALPHA-SUN-2026",
+    "material": "Acetate",
+    "description": "Sun extension of the Alpha family",
+    "outline_image_asset_path": "/Datasource Files/Import Examples/assets/models/alp-sun-01-outline.png",
+    "plan_attachment_asset_paths": [
+      "/Datasource Files/Import Examples/assets/models/alp-sun-01-plan.pdf"
+    ],
+    "pos_material_item_codes": [
+      "POS-ALPHA-SUN-COUNTER-01"
+    ],
+    "service_part_codes": [
+      "SP-ALPHA-SUN-CASE-01"
+    ],
+    "downloadable_asset_keys": [
+      "alpha-sun-lookbook"
+    ],
+    "image_gallery_asset_paths": [
+      "/Datasource Files/Import Examples/assets/models/alp-sun-01-hero-01.jpg",
+      "/Datasource Files/Import Examples/assets/models/alp-sun-01-hero-02.jpg"
+    ],
+    "attachment_asset_paths": [
+      "/Datasource Files/Import Examples/assets/models/alp-sun-01-specsheet.pdf"
+    ]
+  },
+  {
+    "model_code": "BET-CMB-01",
+    "model_name": "Beta Combo",
+    "parent_family_code": "TA-BETA",
+    "frame_base_code": "BET-CMB",
+    "series_code": "BETA-2026",
+    "material": "Stainless steel",
+    "description": "Combo concept for the Beta family",
+    "outline_image_asset_path": "/Datasource Files/Import Examples/assets/models/bet-cmb-01-outline.png",
+    "plan_attachment_asset_paths": [
+      "/Datasource Files/Import Examples/assets/models/bet-cmb-01-plan.pdf"
+    ],
+    "pos_material_item_codes": [
+      "POS-BETA-COUNTER-01"
+    ],
+    "service_part_codes": [
+      "SP-BETA-CASE-01"
+    ],
+    "downloadable_asset_keys": [
+      "beta-launch-pack"
+    ],
+    "image_gallery_asset_paths": [
+      "/Datasource Files/Import Examples/assets/models/bet-cmb-01-hero-01.jpg",
+      "/Datasource Files/Import Examples/assets/models/bet-cmb-01-hero-02.jpg"
+    ],
+    "attachment_asset_paths": [
+      "/Datasource Files/Import Examples/assets/models/bet-cmb-01-specsheet.pdf"
+    ]
+  }
+]

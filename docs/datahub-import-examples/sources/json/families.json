@@ -1,0 +1,64 @@
+[
+  {
+    "family_code": "TA-ALPHA",
+    "family_name": "Alpha",
+    "import_parent_path": "/Imports/ProductHierarchy/Families",
+    "launch_year": 2026,
+    "launch_period": "jan",
+    "working_title": "Alpha Working Title",
+    "description": "Core optical launch for January 2026",
+    "designer_keys": [
+      "marco-rossi"
+    ],
+    "supplier_codes": [
+      "SUP-ALPHA-01"
+    ],
+    "pos_material_item_codes": [
+      "POS-ALPHA-COUNTER-01"
+    ],
+    "service_part_codes": [
+      "SP-ALPHA-NOSEPAD-01"
+    ],
+    "downloadable_asset_keys": [
+      "alpha-lookbook"
+    ],
+    "image_gallery_asset_paths": [
+      "/Datasource Files/Import Examples/assets/families/alpha-hero-01.jpg",
+      "/Datasource Files/Import Examples/assets/families/alpha-hero-02.jpg"
+    ],
+    "attachment_asset_paths": [
+      "/Datasource Files/Import Examples/assets/families/alpha-launch-brief.pdf"
+    ]
+  },
+  {
+    "family_code": "TA-BETA",
+    "family_name": "Beta",
+    "import_parent_path": "/Imports/ProductHierarchy/Families",
+    "launch_year": 2026,
+    "launch_period": "apr",
+    "working_title": "Beta Working Title",
+    "description": "Sun capsule launch for April 2026",
+    "designer_keys": [
+      "sofia-bianchi"
+    ],
+    "supplier_codes": [
+      "SUP-BETA-01"
+    ],
+    "pos_material_item_codes": [
+      "POS-BETA-COUNTER-01"
+    ],
+    "service_part_codes": [
+      "SP-BETA-CASE-01"
+    ],
+    "downloadable_asset_keys": [
+      "beta-launch-pack"
+    ],
+    "image_gallery_asset_paths": [
+      "/Datasource Files/Import Examples/assets/families/beta-hero-01.jpg",
+      "/Datasource Files/Import Examples/assets/families/beta-hero-02.jpg"
+    ],
+    "attachment_asset_paths": [
+      "/Datasource Files/Import Examples/assets/families/beta-launch-brief.pdf"
+    ]
+  }
+]

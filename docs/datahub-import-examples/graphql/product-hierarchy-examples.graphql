@@ -1,0 +1,164 @@
+# Query a family by full path.
+query GetAlphaFamily {
+  getFamily(fullpath: "/Imports/ProductHierarchy/Families/TA-ALPHA") {
+    id
+    key
+    fullpath
+    published
+    code
+    name
+    launchYear
+    launchPeriod
+    workingTitle
+    description
+  }
+}
+
+# Query a model by full path.
+query GetAlphaModel {
+  getModel(fullpath: "/Imports/ProductHierarchy/Families/TA-ALPHA/ALP-OPT-01") {
+    id
+    key
+    fullpath
+    code
+    name
+    frameBaseCode
+    seriesCode
+    material
+    description
+  }
+}
+
+# Query a frame and traverse the artBase relation back to the model.
+query GetAlphaFrame {
+  getFrame(fullpath: "/Imports/ProductHierarchy/Families/TA-ALPHA/ALP-OPT-01/ALP-OPT-01-101") {
+    id
+    key
+    fullpath
+    code
+    name
+    mainColorCode
+    seriesCode
+    ecomFileName
+    exchangeCode
+    artBase {
+      id
+      code
+      name
+      fullpath
+    }
+  }
+}
+
+# Create a family under the same sample root folder.
+mutation CreateFamily {
+  createFamily(
+    path: "/Imports/ProductHierarchy/Families"
+    key: "TA-GAMMA"
+    published: true
+    input: {
+      code: "TA-GAMMA"
+      name: "Gamma"
+      launchYear: 2027
+      launchPeriod: "sep"
+      workingTitle: "Gamma Working Title"
+      description: "Example family created through GraphQL"
+    }
+  ) {
+    success
+    message
+    output {
+      id
+      fullpath
+      code
+      name
+    }
+  }
+}
+
+# Create a model inside a family.
+mutation CreateModel {
+  createModel(
+    path: "/Imports/ProductHierarchy/Families/TA-ALPHA"
+    key: "ALP-OPT-02"
+    published: true
+    input: {
+      code: "ALP-OPT-02"
+      name: "Alpha Optical 02"
+      frameBaseCode: "ALP-OPT"
+      seriesCode: "ALPHA-2027"
+      material: "Beta titanium"
+      description: "Second optical model created through GraphQL"
+    }
+  ) {
+    success
+    message
+    output {
+      id
+      fullpath
+      code
+      name
+    }
+  }
+}
+
+# Create a frame and set the artBase relation with an element descriptor.
+mutation CreateFrame {
+  createFrame(
+    path: "/Imports/ProductHierarchy/Families/TA-ALPHA/ALP-OPT-01"
+    key: "ALP-OPT-01-450"
+    published: true
+    input: {
+      code: "ALP-OPT-01-450"
+      name: "Alpha Optical Forest"
+      mainColorCode: "450"
+      seriesCode: "ALPHA-2026"
+      ecomFileName: "alp-opt-01-450.jpg"
+      exchangeCode: "EX-ALP-450"
+      artBase: {
+        fullpath: "/Imports/ProductHierarchy/Families/TA-ALPHA/ALP-OPT-01"
+      }
+    }
+  ) {
+    success
+    message
+    output {
+      id
+      fullpath
+      code
+      name
+      artBase {
+        code
+        fullpath
+      }
+    }
+  }
+}
+
+# Update an imported frame.
+mutation UpdateFrame {
+  updateFrame(
+    fullpath: "/Imports/ProductHierarchy/Families/TA-ALPHA/ALP-OPT-01/ALP-OPT-01-101"
+    input: {
+      name: "Alpha Optical Black Gold Updated"
+      ecomFileName: "alp-opt-01-101-v2.jpg"
+    }
+  ) {
+    success
+    message
+    output {
+      id
+      fullpath
+      name
+      ecomFileName
+    }
+  }
+}
+
+# Delete a frame by full path.
+mutation DeleteFrame {
+  deleteFrame(fullpath: "/Imports/ProductHierarchy/Families/TA-ALPHA/ALP-OPT-01/ALP-OPT-01-450") {
+    success
+    message
+  }
+}

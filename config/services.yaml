@@ -121,6 +121,10 @@ services:
       tags:
         - { name: kernel.event_subscriber }
 
+    App\EventSubscriber\QualityControlSubscriber:
+      tags:
+        - { name: kernel.event_subscriber }
+
     App\EventSubscriber\DashboardDefaultsSubscriber:
       tags:
         - { name: kernel.event_subscriber }

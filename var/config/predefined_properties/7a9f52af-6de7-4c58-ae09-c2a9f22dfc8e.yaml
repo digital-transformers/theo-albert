@@ -1,0 +1,15 @@
+pimcore:
+    properties:
+        predefined:
+            definitions:
+                7a9f52af-6de7-4c58-ae09-c2a9f22dfc8e:
+                    name: 'Quality control asset folder'
+                    description: 'Base asset folder for quality control uploads on family, model, and frame objects.'
+                    key: quality_control_asset_folder
+                    type: text
+                    data: '/Quality Control'
+                    config: ''
+                    ctype: object
+                    inheritable: false
+                    creationDate: 1777377600
+                    modificationDate: 1777377600

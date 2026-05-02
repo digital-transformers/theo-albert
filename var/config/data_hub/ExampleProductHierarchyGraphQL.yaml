@@ -1,0 +1,451 @@
+pimcore_data_hub:
+    configurations:
+        ExampleProductHierarchyGraphQL:
+            general:
+                active: false
+                type: graphql
+                name: ExampleProductHierarchyGraphQL
+                description: 'Example GraphQL endpoint for family, model, and frame queries/mutations'
+                group: Examples
+                sqlObjectCondition: ''
+                path: null
+                modificationDate: 1777334400
+                createDate: 1777334400
+            schema:
+                queryEntities:
+                    family:
+                        id: family
+                        columnConfig:
+                            columns:
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: key
+                                        label: Key
+                                        dataType: system
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: fullpath
+                                        label: Full Path
+                                        dataType: system
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: published
+                                        label: Published
+                                        dataType: system
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: code
+                                        label: Code
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: name
+                                        label: Name
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: familyType
+                                        label: Family Type
+                                        dataType: select
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: description
+                                        label: Description
+                                        dataType: textarea
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: phase
+                                        label: Phase
+                                        dataType: select
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: launchPeriod
+                                        label: Launch Period
+                                        dataType: select
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: launchYear
+                                        label: Launch Year
+                                        dataType: numeric
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: workingTitle
+                                        label: Working Title
+                                        dataType: input
+                    model:
+                        id: model
+                        columnConfig:
+                            columns:
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: key
+                                        label: Key
+                                        dataType: system
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: fullpath
+                                        label: Full Path
+                                        dataType: system
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: published
+                                        label: Published
+                                        dataType: system
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: code
+                                        label: Code
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: name
+                                        label: Name
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: frameBaseCode
+                                        label: Frame Base Code
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: description
+                                        label: Description
+                                        dataType: textarea
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: seriesCode
+                                        label: Series Code
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: material
+                                        label: Material
+                                        dataType: input
+                    frame:
+                        id: frame
+                        columnConfig:
+                            columns:
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: key
+                                        label: Key
+                                        dataType: system
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: fullpath
+                                        label: Full Path
+                                        dataType: system
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: published
+                                        label: Published
+                                        dataType: system
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: code
+                                        label: Code
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: mainColorCode
+                                        label: Main Color Code
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: name
+                                        label: Name
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: artBase
+                                        label: Art Base
+                                        dataType: manyToOneRelation
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: seriesCode
+                                        label: Series Code
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: ecomFileName
+                                        label: Ecom File Name
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: exchangeCode
+                                        label: Exchange Code
+                                        dataType: input
+                mutationEntities:
+                    family:
+                        id: family
+                        create: true
+                        update: true
+                        delete: true
+                        columnConfig:
+                            columns:
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: key
+                                        label: Key
+                                        dataType: system
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: published
+                                        label: Published
+                                        dataType: system
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: code
+                                        label: Code
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: name
+                                        label: Name
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: familyType
+                                        label: Family Type
+                                        dataType: select
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: description
+                                        label: Description
+                                        dataType: textarea
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: phase
+                                        label: Phase
+                                        dataType: select
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: launchPeriod
+                                        label: Launch Period
+                                        dataType: select
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: launchYear
+                                        label: Launch Year
+                                        dataType: numeric
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: workingTitle
+                                        label: Working Title
+                                        dataType: input
+                    model:
+                        id: model
+                        create: true
+                        update: true
+                        delete: true
+                        columnConfig:
+                            columns:
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: key
+                                        label: Key
+                                        dataType: system
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: published
+                                        label: Published
+                                        dataType: system
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: code
+                                        label: Code
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: name
+                                        label: Name
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: frameBaseCode
+                                        label: Frame Base Code
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: description
+                                        label: Description
+                                        dataType: textarea
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: seriesCode
+                                        label: Series Code
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: material
+                                        label: Material
+                                        dataType: input
+                    frame:
+                        id: frame
+                        create: true
+                        update: true
+                        delete: true
+                        columnConfig:
+                            columns:
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: key
+                                        label: Key
+                                        dataType: system
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: published
+                                        label: Published
+                                        dataType: system
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: code
+                                        label: Code
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: mainColorCode
+                                        label: Main Color Code
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: name
+                                        label: Name
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: artBase
+                                        label: Art Base
+                                        dataType: manyToOneRelation
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: seriesCode
+                                        label: Series Code
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: ecomFileName
+                                        label: Ecom File Name
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: exchangeCode
+                                        label: Exchange Code
+                                        dataType: input
+                specialEntities:
+                    document:
+                        read: false
+                        create: false
+                        update: false
+                        delete: false
+                    document_folder:
+                        read: false
+                        create: false
+                        update: false
+                        delete: false
+                    asset:
+                        read: false
+                        create: false
+                        update: false
+                        delete: false
+                    asset_folder:
+                        read: false
+                        create: false
+                        update: false
+                        delete: false
+                    asset_listing:
+                        read: false
+                        create: false
+                        update: false
+                        delete: false
+                    object_folder:
+                        read: false
+                        create: false
+                        update: false
+                        delete: false
+                    translation:
+                        read: false
+                        create: false
+                        update: false
+                        delete: false
+                    translation_listing:
+                        read: false
+                        create: false
+                        update: false
+                        delete: false
+            security:
+                method: datahub_apikey
+                apikey:
+                    - change-me-product-hierarchy-api-key
+                skipPermissionCheck: false
+                disableIntrospection: false
+            workspaces:
+                document: {  }
+                asset: {  }
+                object:
+                    -
+                        cpath: /Imports/ProductHierarchy/Families
+                        read: true
+                        create: true
+                        update: true
+                        delete: true
+            permissions:
+                user: {  }
+                role: {  }

@@ -28,6 +28,10 @@
  * - instagramImageGallery [imageGallery]
  * - video [video]
  * - attachments [advancedManyToManyRelation]
+ * - qualityControlTargetFolder [input]
+ * - qualityControlDocuments [advancedManyToManyRelation]
+ * - qualityControlImages [advancedManyToManyRelation]
+ * - qualityControlRemarks [table]
  * - publicationChannels [multiselect]
  * - workingTitle [input]
  * - internalFollowupDesigner [select]
@@ -1240,6 +1244,236 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
                  'fieldDefinitionsCache' => NULL,
+              )),
+            ),
+             'locked' => false,
+             'blockedVarsForExport' => 
+            array (
+            ),
+             'fieldtype' => 'panel',
+             'layout' => NULL,
+             'border' => false,
+             'icon' => '',
+             'labelWidth' => 100,
+             'labelAlign' => 'left',
+          )),
+          3 => 
+          \Pimcore\Model\DataObject\ClassDefinition\Layout\Panel::__set_state(array(
+             'name' => 'qualityControl',
+             'type' => NULL,
+             'region' => NULL,
+             'title' => 'Quality Control',
+             'width' => '',
+             'height' => '',
+             'collapsible' => false,
+             'collapsed' => false,
+             'bodyStyle' => '',
+             'datatype' => 'layout',
+             'children' => 
+            array (
+              0 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
+                 'name' => 'qualityControlTargetFolder',
+                 'title' => 'Target Folder',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => true,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'defaultValue' => '',
+                 'columnLength' => 255,
+                 'regex' => '',
+                 'regexFlags' => 
+                array (
+                ),
+                 'unique' => false,
+                 'showCharCount' => false,
+                 'width' => '',
+                 'defaultValueGenerator' => '',
+              )),
+              1 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyRelation::__set_state(array(
+                 'name' => 'qualityControlDocuments',
+                 'title' => 'Quality Control Documents',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => true,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'classes' => 
+                array (
+                ),
+                 'displayMode' => NULL,
+                 'pathFormatterClass' => '',
+                 'maxItems' => NULL,
+                 'assetInlineDownloadAllowed' => false,
+                 'assetUploadPath' => '',
+                 'allowToClearRelation' => true,
+                 'objectsAllowed' => false,
+                 'assetsAllowed' => true,
+                 'assetTypes' => 
+                array (
+                  0 => 
+                  array (
+                    'assetTypes' => 'archive',
+                  ),
+                  1 => 
+                  array (
+                    'assetTypes' => 'document',
+                  ),
+                  2 => 
+                  array (
+                    'assetTypes' => 'text',
+                  ),
+                ),
+                 'documentsAllowed' => false,
+                 'documentTypes' => 
+                array (
+                ),
+                 'enableTextSelection' => false,
+                 'width' => '',
+                 'height' => NULL,
+                 'columns' => 
+                array (
+                ),
+                 'columnKeys' => 
+                array (
+                ),
+                 'phpdocType' => '\\Pimcore\\Model\\DataObject\\Data\\ElementMetadata[]',
+                 'optimizedAdminLoading' => false,
+                 'enableBatchEdit' => false,
+                 'allowMultipleAssignments' => false,
+              )),
+              2 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyRelation::__set_state(array(
+                 'name' => 'qualityControlImages',
+                 'title' => 'Quality Control Images',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => true,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'classes' => 
+                array (
+                ),
+                 'displayMode' => NULL,
+                 'pathFormatterClass' => '',
+                 'maxItems' => NULL,
+                 'assetInlineDownloadAllowed' => false,
+                 'assetUploadPath' => '',
+                 'allowToClearRelation' => true,
+                 'objectsAllowed' => false,
+                 'assetsAllowed' => true,
+                 'assetTypes' => 
+                array (
+                  0 => 
+                  array (
+                    'assetTypes' => 'image',
+                  ),
+                ),
+                 'documentsAllowed' => false,
+                 'documentTypes' => 
+                array (
+                ),
+                 'enableTextSelection' => false,
+                 'width' => '',
+                 'height' => NULL,
+                 'columns' => 
+                array (
+                ),
+                 'columnKeys' => 
+                array (
+                ),
+                 'phpdocType' => '\\Pimcore\\Model\\DataObject\\Data\\ElementMetadata[]',
+                 'optimizedAdminLoading' => false,
+                 'enableBatchEdit' => false,
+                 'allowMultipleAssignments' => false,
+              )),
+              3 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Table::__set_state(array(
+                 'name' => 'qualityControlRemarks',
+                 'title' => 'Quality Remarks',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'cols' => 5,
+                 'colsFixed' => true,
+                 'rows' => 3,
+                 'rowsFixed' => false,
+                 'data' => '',
+                 'columnConfigActivated' => true,
+                 'columnConfig' => 
+                array (
+                  0 => 
+                  array (
+                    'key' => 'createdAt',
+                    'label' => 'Date',
+                  ),
+                  1 => 
+                  array (
+                    'key' => 'createdBy',
+                    'label' => 'By',
+                  ),
+                  2 => 
+                  array (
+                    'key' => 'type',
+                    'label' => 'Type',
+                  ),
+                  3 => 
+                  array (
+                    'key' => 'status',
+                    'label' => 'Status',
+                  ),
+                  4 => 
+                  array (
+                    'key' => 'remark',
+                    'label' => 'Remark',
+                  ),
+                ),
+                 'height' => 240,
+                 'width' => '',
               )),
             ),
              'locked' => false,
