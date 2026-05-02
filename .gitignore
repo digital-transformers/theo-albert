@@ -20,6 +20,20 @@
 !/var/.gitkeep
 !/var/classes/
 /var/classes/DataObject
+!/var/classes/DataObject/
+/var/classes/DataObject/*
+!/var/classes/DataObject/Family.php
+!/var/classes/DataObject/Model.php
+!/var/classes/DataObject/Frame.php
+!/var/classes/DataObject/Family/
+/var/classes/DataObject/Family/*
+!/var/classes/DataObject/Family/Listing.php
+!/var/classes/DataObject/Model/
+/var/classes/DataObject/Model/*
+!/var/classes/DataObject/Model/Listing.php
+!/var/classes/DataObject/Frame/
+/var/classes/DataObject/Frame/*
+!/var/classes/DataObject/Frame/Listing.php
 
 !/var/config
 /var/config/system.yml
