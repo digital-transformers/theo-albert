@@ -10,7 +10,10 @@ final class PimcoreAdminListener implements EventSubscriberInterface
 {
     public static function getSubscribedEvents(): array
     {
-        return [ BundleManagerEvents::JS_PATHS => 'addJSFiles' ];
+        return [
+            BundleManagerEvents::JS_PATHS => 'addJSFiles',
+            BundleManagerEvents::CSS_PATHS => 'addCSSFiles',
+        ];
     }
 
     public function addJSFiles(PathsEvent $event): void
@@ -23,6 +26,13 @@ final class PimcoreAdminListener implements EventSubscriberInterface
             '/app/admin/family-launch-portlet.js',
             '/app/admin/quality-remarks-portlet.js',
             '/app/admin/default-dashboard.js',
+        ]);
+    }
+
+    public function addCSSFiles(PathsEvent $event): void
+    {
+        $event->addPaths([
+            '/app/admin/quality-control-tree.css',
         ]);
     }
 }

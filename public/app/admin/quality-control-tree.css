@@ -1,0 +1,20 @@
+.quality-control-tree-has-remarks span.x-tree-node-text::after {
+    content: "QC";
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 5px 0;
+    border: 1px solid #c56a18;
+    border-radius: 8px;
+    background: #fff3d6;
+    color: #8a3f00;
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 13px;
+    letter-spacing: .03em;
+    vertical-align: 1px;
+}
+
+.quality-control-tree-has-remarks.x-grid-item-selected span.x-tree-node-text::after {
+    background: #ffe3ad;
+    color: #5c2a00;
+}
