@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\EventSubscriber;
 
 use App\EventSubscriber\QualityControlSubscriber;
+use App\EventSubscriber\QualityControlTreeIndicatorSubscriber;
 use Codeception\Test\Unit;
 use Pimcore\Model\DataObject\Concrete;
 use Pimcore\Model\User;
@@ -180,6 +181,7 @@ final class QualityControlSubscriberTest extends Unit
             ->setClassName('family')
             ->setQualityControlRemarks([
                 ['', '', 'Inspection', 'Open', 'Lens coating issue'],
+                ['', '', '', 'open', ''],
                 ['', '', '', '', ''],
             ]);
 
@@ -189,11 +191,26 @@ final class QualityControlSubscriberTest extends Unit
 
         $rows = $object->getQualityControlRemarks();
         self::assertCount(1, $rows);
-        self::assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/', $rows[0]['createdAt']);
+        self::assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2}$/', $rows[0]['createdAt']);
         self::assertSame('Quality User', $rows[0]['createdBy']);
         self::assertSame('Inspection', $rows[0]['type']);
-        self::assertSame('Open', $rows[0]['status']);
+        self::assertSame('open', $rows[0]['status']);
         self::assertSame('Lens coating issue', $rows[0]['remark']);
+    }
+
+    public function testTreeIndicatorIgnoresResolvedRemarks(): void
+    {
+        $resolver = $this->createMock(TokenStorageUserResolver::class);
+        $resolver->method('getUser')->willReturn(null);
+
+        $subscriber = new QualityControlTreeIndicatorSubscriber($resolver);
+        $method = new \ReflectionMethod($subscriber, 'rowHasOpenRemark');
+        $method->setAccessible(true);
+
+        self::assertTrue($method->invoke($subscriber, ['', '', 'Inspection', 'open', 'Lens coating issue']));
+        self::assertTrue($method->invoke($subscriber, ['', '', 'Inspection', '', 'Lens coating issue']));
+        self::assertFalse($method->invoke($subscriber, ['', '', 'Inspection', 'resolved', 'Lens coating issue']));
+        self::assertFalse($method->invoke($subscriber, ['', '', '', 'open', '']));
     }
 }
 

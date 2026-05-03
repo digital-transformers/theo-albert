@@ -15,6 +15,7 @@ final class QualityControlTreeIndicatorSubscriber implements EventSubscriberInte
 {
     private const REMARKS_GETTER = 'getQualityControlRemarks';
     private const TREE_CLASS = 'quality-control-tree-has-remarks';
+    private const STATUS_RESOLVED = 'resolved';
     private const SUPPORTED_CLASS_NAMES = ['family', 'model', 'frame'];
 
     private const REMARK_COLUMNS = [
@@ -90,7 +91,7 @@ final class QualityControlTreeIndicatorSubscriber implements EventSubscriberInte
         }
 
         foreach ($rows as $row) {
-            if (is_array($row) && $this->rowHasContent($row)) {
+            if (is_array($row) && $this->rowHasOpenRemark($row)) {
                 return true;
             }
         }
@@ -101,16 +102,26 @@ final class QualityControlTreeIndicatorSubscriber implements EventSubscriberInte
     /**
      * @param array<string|int, mixed> $row
      */
-    private function rowHasContent(array $row): bool
+    private function rowHasOpenRemark(array $row): bool
     {
+        $hasContent = false;
+        $status = '';
+
         foreach (self::REMARK_COLUMNS as $index => $columnName) {
             $value = $row[$columnName] ?? $row[$index] ?? null;
-            if ($this->normalizeValue($value) !== '') {
-                return true;
+            $normalizedValue = $this->normalizeValue($value);
+
+            if ($columnName === 'status') {
+                $status = $normalizedValue;
+                continue;
+            }
+
+            if ($normalizedValue !== '') {
+                $hasContent = true;
             }
         }
 
-        return false;
+        return $hasContent && strtolower(trim($status)) !== self::STATUS_RESOLVED;
     }
 
     private function normalizeValue(mixed $value): string

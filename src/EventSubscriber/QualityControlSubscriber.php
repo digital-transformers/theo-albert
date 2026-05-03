@@ -30,6 +30,8 @@ final class QualityControlSubscriber implements EventSubscriberInterface
     private const DOCUMENTS_FIELD = 'qualityControlDocuments';
     private const IMAGES_FIELD = 'qualityControlImages';
     private const REMARKS_FIELD = 'qualityControlRemarks';
+    private const STATUS_OPEN = 'open';
+    private const STATUS_RESOLVED = 'resolved';
     private const RELATION_FIELDS = [
         self::DOCUMENTS_FIELD,
         self::IMAGES_FIELD,
@@ -187,7 +189,7 @@ final class QualityControlSubscriber implements EventSubscriberInterface
         }
 
         $normalizedRows = [];
-        $timestamp = (new \DateTimeImmutable())->format('Y-m-d H:i');
+        $timestamp = (new \DateTimeImmutable())->format('Y-m-d');
         $userLabel = $this->resolveCurrentUserLabel();
 
         foreach ($rows as $row) {
@@ -211,6 +213,8 @@ final class QualityControlSubscriber implements EventSubscriberInterface
             if ($normalizedRow['createdBy'] === '' && $userLabel !== '') {
                 $normalizedRow['createdBy'] = $userLabel;
             }
+
+            $normalizedRow['status'] = $this->normalizeRemarkStatus($normalizedRow['status']);
 
             $normalizedRows[] = $normalizedRow;
         }
@@ -236,6 +240,13 @@ final class QualityControlSubscriber implements EventSubscriberInterface
         return '';
     }
 
+    private function normalizeRemarkStatus(string $status): string
+    {
+        return strtolower(trim($status)) === self::STATUS_RESOLVED
+            ? self::STATUS_RESOLVED
+            : self::STATUS_OPEN;
+    }
+
     private function resolveCurrentUserLabel(): string
     {
         $user = $this->userResolver->getUser();
@@ -256,7 +267,11 @@ final class QualityControlSubscriber implements EventSubscriberInterface
      */
     private function isEmptyRow(array $row): bool
     {
-        foreach ($row as $value) {
+        foreach ($row as $columnName => $value) {
+            if ($columnName === 'status') {
+                continue;
+            }
+
             if (trim($value) !== '') {
                 return false;
             }
