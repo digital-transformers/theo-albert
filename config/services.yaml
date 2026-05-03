@@ -92,8 +92,10 @@ services:
 
     # Listeners
     App\EventListener\PimcoreAdminListener:
+        autoconfigure: false
         tags:
           - { name: kernel.event_listener, event: pimcore.bundle_manager.paths.js, method: addJSFiles }
+          - { name: kernel.event_listener, event: pimcore.bundle_manager.paths.css, method: addCSSFiles }
 
     App\EventListener\ColorListener:
         class: App\EventListener\ColorListener
@@ -122,6 +124,11 @@ services:
         - { name: kernel.event_subscriber }
 
     App\EventSubscriber\QualityControlSubscriber:
+      tags:
+        - { name: kernel.event_subscriber }
+
+    App\EventSubscriber\QualityControlTreeIndicatorSubscriber:
+      autoconfigure: false
       tags:
         - { name: kernel.event_subscriber }
 
