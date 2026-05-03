@@ -196,9 +196,8 @@ final class QualityControlSubscriber implements EventSubscriberInterface
             }
 
             $normalizedRow = [];
-            foreach (self::REMARK_COLUMNS as $columnName) {
-                $value = $row[$columnName] ?? '';
-                $normalizedRow[$columnName] = is_scalar($value) ? trim((string) $value) : '';
+            foreach (self::REMARK_COLUMNS as $index => $columnName) {
+                $normalizedRow[$columnName] = $this->readRemarkCell($row, $columnName, $index);
             }
 
             if ($this->isEmptyRow($normalizedRow)) {
@@ -217,6 +216,24 @@ final class QualityControlSubscriber implements EventSubscriberInterface
         }
 
         $this->writeFieldValue($object, self::REMARKS_FIELD, $normalizedRows === [] ? null : $normalizedRows);
+    }
+
+    /**
+     * @param array<string|int, mixed> $row
+     */
+    private function readRemarkCell(array $row, string $columnName, int $index): string
+    {
+        $value = $row[$columnName] ?? $row[$index] ?? '';
+
+        if ($value instanceof \DateTimeInterface) {
+            return $value->format('Y-m-d H:i');
+        }
+
+        if (is_scalar($value) || $value instanceof \Stringable) {
+            return trim((string) $value);
+        }
+
+        return '';
     }
 
     private function resolveCurrentUserLabel(): string

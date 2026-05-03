@@ -165,6 +165,36 @@ final class QualityControlSubscriberTest extends Unit
 
         self::assertSame('fallback-user', $method->invoke($fallbackSubscriber));
     }
+
+    public function testStampRemarksRowsPreservesNumericRowsPostedByTableEditor(): void
+    {
+        $resolver = $this->createMock(TokenStorageUserResolver::class);
+        $resolver->method('getUser')->willReturn(
+            (new User())
+                ->setUsername('quality-user')
+                ->setName('Quality User')
+        );
+
+        $subscriber = new QualityControlSubscriber($resolver);
+        $object = (new QualityControlTestObject())
+            ->setClassName('family')
+            ->setQualityControlRemarks([
+                ['', '', 'Inspection', 'Open', 'Lens coating issue'],
+                ['', '', '', '', ''],
+            ]);
+
+        $method = new \ReflectionMethod($subscriber, 'stampRemarksRows');
+        $method->setAccessible(true);
+        $method->invoke($subscriber, $object);
+
+        $rows = $object->getQualityControlRemarks();
+        self::assertCount(1, $rows);
+        self::assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/', $rows[0]['createdAt']);
+        self::assertSame('Quality User', $rows[0]['createdBy']);
+        self::assertSame('Inspection', $rows[0]['type']);
+        self::assertSame('Open', $rows[0]['status']);
+        self::assertSame('Lens coating issue', $rows[0]['remark']);
+    }
 }
 
 final class QualityControlTestObject extends Concrete
@@ -172,6 +202,7 @@ final class QualityControlTestObject extends Concrete
     private ?string $code = null;
     private ?self $testParent = null;
     private array $testProperties = [];
+    private ?array $qualityControlRemarks = null;
 
     public function getCode(): ?string
     {
@@ -181,6 +212,18 @@ final class QualityControlTestObject extends Concrete
     public function setCode(?string $code): static
     {
         $this->code = $code;
+
+        return $this;
+    }
+
+    public function getQualityControlRemarks(): ?array
+    {
+        return $this->qualityControlRemarks;
+    }
+
+    public function setQualityControlRemarks(?array $qualityControlRemarks): static
+    {
+        $this->qualityControlRemarks = $qualityControlRemarks;
 
         return $this;
     }
