@@ -15,7 +15,6 @@ final class QualityControlTreeIndicatorSubscriber implements EventSubscriberInte
 {
     private const REMARKS_GETTER = 'getQualityControlRemarks';
     private const TREE_CLASS = 'quality-control-tree-has-remarks';
-    private const TREE_ICON_CLASS = 'pimcore_icon_notes';
     private const SUPPORTED_CLASS_NAMES = ['family', 'model', 'frame'];
 
     private const REMARK_COLUMNS = [
@@ -54,7 +53,6 @@ final class QualityControlTreeIndicatorSubscriber implements EventSubscriberInte
         }
 
         $adminStyle = $event->getAdminStyle();
-        $adminStyle->setElementIconClass(self::TREE_ICON_CLASS);
         $adminStyle->appendElementCssClass(self::TREE_CLASS);
         $adminStyle->setElementQtipConfig($this->appendTooltip($adminStyle));
     }
