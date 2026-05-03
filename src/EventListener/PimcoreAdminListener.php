@@ -21,6 +21,7 @@ final class PimcoreAdminListener implements EventSubscriberInterface
             '/app/admin/frame-save-reload.js',
             '/app/admin/datahub-control.js',
             '/app/admin/family-launch-portlet.js',
+            '/app/admin/quality-remarks-portlet.js',
             '/app/admin/default-dashboard.js',
         ]);
     }
