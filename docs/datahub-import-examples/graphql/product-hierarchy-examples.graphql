@@ -54,14 +54,14 @@ query GetAlphaFrame {
 mutation CreateFamily {
   createFamily(
     path: "/Imports/ProductHierarchy/Families"
-    key: "TA-GAMMA"
+    key: "TA-OMEGA"
     published: true
     input: {
-      code: "TA-GAMMA"
-      name: "Gamma"
+      code: "TA-OMEGA"
+      name: "Omega"
       launchYear: 2027
       launchPeriod: "sep"
-      workingTitle: "Gamma Working Title"
+      workingTitle: "Omega Working Title"
       description: "Example family created through GraphQL"
     }
   ) {
@@ -79,16 +79,16 @@ mutation CreateFamily {
 # Create a model inside a family.
 mutation CreateModel {
   createModel(
-    path: "/Imports/ProductHierarchy/Families/TA-ALPHA"
-    key: "ALP-OPT-02"
+    path: "/Imports/ProductHierarchy/Families/TA-OMEGA"
+    key: "OME-OPT-01"
     published: true
     input: {
-      code: "ALP-OPT-02"
-      name: "Alpha Optical 02"
-      frameBaseCode: "ALP-OPT"
-      seriesCode: "ALPHA-2027"
+      code: "OME-OPT-01"
+      name: "Omega Optical 01"
+      frameBaseCode: "OME-OPT"
+      seriesCode: "OMEGA-2027"
       material: "Beta titanium"
-      description: "Second optical model created through GraphQL"
+      description: "Example model created through GraphQL"
     }
   ) {
     success
@@ -105,18 +105,18 @@ mutation CreateModel {
 # Create a frame and set the artBase relation with an element descriptor.
 mutation CreateFrame {
   createFrame(
-    path: "/Imports/ProductHierarchy/Families/TA-ALPHA/ALP-OPT-01"
-    key: "ALP-OPT-01-450"
+    path: "/Imports/ProductHierarchy/Families/TA-OMEGA/OME-OPT-01"
+    key: "OME-OPT-01-450"
     published: true
     input: {
-      code: "ALP-OPT-01-450"
-      name: "Alpha Optical Forest"
+      code: "OME-OPT-01-450"
+      name: "Omega Optical Forest"
       mainColorCode: "450"
-      seriesCode: "ALPHA-2026"
-      ecomFileName: "alp-opt-01-450.jpg"
-      exchangeCode: "EX-ALP-450"
+      seriesCode: "OMEGA-2027"
+      ecomFileName: "ome-opt-01-450.jpg"
+      exchangeCode: "EX-OME-450"
       artBase: {
-        fullpath: "/Imports/ProductHierarchy/Families/TA-ALPHA/ALP-OPT-01"
+        fullpath: "/Imports/ProductHierarchy/Families/TA-OMEGA/OME-OPT-01"
       }
     }
   ) {
@@ -157,7 +157,7 @@ mutation UpdateFrame {
 
 # Delete a frame by full path.
 mutation DeleteFrame {
-  deleteFrame(fullpath: "/Imports/ProductHierarchy/Families/TA-ALPHA/ALP-OPT-01/ALP-OPT-01-450") {
+  deleteFrame(fullpath: "/Imports/ProductHierarchy/Families/TA-OMEGA/OME-OPT-01/OME-OPT-01-450") {
     success
     message
   }

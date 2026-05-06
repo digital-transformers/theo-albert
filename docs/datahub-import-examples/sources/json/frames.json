@@ -147,5 +147,43 @@
     "attachment_asset_paths": [
       "/Datasource Files/Import Examples/assets/frames/bet-cmb-01-150-techsheet.pdf"
     ]
+  },
+  {
+    "frame_code": "DEL-HYB-01-520",
+    "frame_name": "Delta Hybrid Ink Blue",
+    "parent_model_code": "DEL-HYB-01",
+    "art_base_code": "DEL-HYB-01",
+    "main_color_code": "520",
+    "series_code": "DELTA-2027",
+    "ecom_file_name": "del-hyb-01-520.jpg",
+    "exchange_code": "EX-DEL-520",
+    "item_group_numbers": [
+      "COMBO"
+    ],
+    "supplier_code": "SUP-BETA-01",
+    "composed_color_codes": [
+      "INK",
+      "BLU"
+    ],
+    "component_item_codes": [
+      "CMP-HINGE-03",
+      "CMP-ENDTIP-02"
+    ],
+    "pos_material_item_codes": [
+      "POS-BETA-COUNTER-01"
+    ],
+    "service_part_codes": [
+      "SP-BETA-CASE-01"
+    ],
+    "downloadable_asset_keys": [
+      "beta-launch-pack"
+    ],
+    "image_gallery_asset_paths": [
+      "/Datasource Files/Import Examples/assets/frames/del-hyb-01-520-01.jpg",
+      "/Datasource Files/Import Examples/assets/frames/del-hyb-01-520-02.jpg"
+    ],
+    "attachment_asset_paths": [
+      "/Datasource Files/Import Examples/assets/frames/del-hyb-01-520-techsheet.pdf"
+    ]
   }
 ]
