@@ -583,6 +583,18 @@ public function filterByFinalProducts ($data, $operator = '='): static
 }
 
 /**
+* Filter by productCase (Case)
+* @param mixed $data
+* @param string $operator SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
+* @return $this
+*/
+public function filterByProductCase ($data, $operator = '='): static
+{
+	$this->getClass()->getFieldDefinition("productCase")->addListingFilter($this, $data, $operator);
+	return $this;
+}
+
+/**
 * Filter by attachments (Attachments)
 * @param mixed $data
 * @param string $operator SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"

@@ -28,9 +28,6 @@
  * - instagramImageGallery [imageGallery]
  * - video [video]
  * - attachments [advancedManyToManyRelation]
- * - qualityControlDocuments [advancedManyToManyRelation]
- * - qualityControlImages [advancedManyToManyRelation]
- * - qualityControlRemarks [table]
  * - publicationChannels [multiselect]
  * - workingTitle [input]
  * - internalFollowupDesigner [select]
@@ -38,6 +35,9 @@
  * - localizedfields [localizedfields]
  * -- storytellingShortText [textarea]
  * -- storytellingLongText [wysiwyg]
+ * - qualityControlDocuments [advancedManyToManyRelation]
+ * - qualityControlImages [advancedManyToManyRelation]
+ * - qualityControlRemarks [table]
  */
 
 return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
@@ -47,7 +47,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1760068097,
+   'modificationDate' => 1777836474,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -189,6 +189,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'defaultValue' => '',
                  'columnLength' => 190,
                  'dynamicOptions' => false,
+                 'enforceValidation' => false,
                  'defaultValueGenerator' => '',
                  'width' => '',
                  'optionsProviderType' => 'configure',
@@ -241,6 +242,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 ),
                  'maxItems' => NULL,
                  'renderType' => 'tags',
+                 'enforceValidation' => false,
                  'dynamicOptions' => false,
                  'defaultValue' => NULL,
                  'height' => '',
@@ -335,6 +337,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'defaultValue' => '',
                  'columnLength' => 190,
                  'dynamicOptions' => false,
+                 'enforceValidation' => false,
                  'defaultValueGenerator' => '',
                  'width' => '',
                  'optionsProviderType' => 'configure',
@@ -481,6 +484,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'defaultValue' => '',
                  'columnLength' => 190,
                  'dynamicOptions' => false,
+                 'enforceValidation' => false,
                  'defaultValueGenerator' => '',
                  'width' => '',
                  'optionsProviderType' => 'configure',
@@ -556,6 +560,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'defaultValue' => '',
                  'columnLength' => 190,
                  'dynamicOptions' => false,
+                 'enforceValidation' => false,
                  'defaultValueGenerator' => '',
                  'width' => '',
                  'optionsProviderType' => 'configure',
@@ -1055,6 +1060,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 ),
                  'maxItems' => NULL,
                  'renderType' => 'tags',
+                 'enforceValidation' => false,
                  'dynamicOptions' => false,
                  'defaultValue' => 
                 array (
@@ -1118,6 +1124,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'defaultValue' => NULL,
                  'columnLength' => 190,
                  'dynamicOptions' => false,
+                 'enforceValidation' => false,
                  'defaultValueGenerator' => '',
                  'width' => '',
                  'optionsProviderType' => 'class',
@@ -1441,8 +1448,8 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                     'label' => 'Remark',
                   ),
                 ),
-                 'height' => 240,
-                 'width' => '',
+                 'height' => '',
+                 'width' => '1005%',
               )),
             ),
              'locked' => false,

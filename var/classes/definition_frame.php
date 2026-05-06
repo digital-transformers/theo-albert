@@ -42,14 +42,14 @@
  * - instagramImageGallery [imageGallery]
  * - video [video]
  * - attachments [advancedManyToManyRelation]
- * - qualityControlDocuments [advancedManyToManyRelation]
- * - qualityControlImages [advancedManyToManyRelation]
- * - qualityControlRemarks [table]
  * - publicationChannels [multiselect]
  * - magicMechanismScore [numeric]
  * - localizedfields [localizedfields]
  * -- storytellingShortText [textarea]
  * -- storytellingLongText [wysiwyg]
+ * - qualityControlDocuments [advancedManyToManyRelation]
+ * - qualityControlImages [advancedManyToManyRelation]
+ * - qualityControlRemarks [table]
  */
 
 return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
@@ -59,7 +59,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1777361511,
+   'modificationDate' => 1777836439,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => 'Pimcore\\Model\\DataObject\\Model',
@@ -1933,8 +1933,8 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                     'label' => 'Remark',
                   ),
                 ),
-                 'height' => 240,
-                 'width' => '',
+                 'height' => '',
+                 'width' => '100%',
               )),
             ),
              'locked' => false,

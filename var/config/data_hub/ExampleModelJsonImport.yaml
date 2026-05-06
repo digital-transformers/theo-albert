@@ -2,13 +2,13 @@ pimcore_data_hub:
     configurations:
         ExampleModelJsonImport:
             general:
-                active: false
                 type: dataImporterDataObject
                 name: ExampleModelJsonImport
                 description: 'Example model importer using docs/datahub-import-examples/sources/json/models.json'
                 group: Examples
+                active: false
                 path: null
-                modificationDate: 1777334400
+                modificationDate: 1778055390
                 createDate: 1777334400
             loaderConfig:
                 type: asset
@@ -31,31 +31,37 @@ pimcore_data_hub:
                 createLocationStrategy:
                     type: findParent
                     settings:
-                        dataSourceIndex: parent_family_code
                         findStrategy: attribute
                         attributeDataObjectClassId: family
                         attributeName: code
                         attributeLanguage: ''
-                        fallbackPath: '/Imports/ProductHierarchy/Families'
+                        dataSourceIndex: parent_family_code
+                        fallbackPath: /Imports/ProductHierarchy/Families
                 locationUpdateStrategy:
                     type: findParent
                     settings:
-                        dataSourceIndex: parent_family_code
                         findStrategy: attribute
                         attributeDataObjectClassId: family
                         attributeName: code
                         attributeLanguage: ''
-                        fallbackPath: '/Imports/ProductHierarchy/Families'
+                        dataSourceIndex: parent_family_code
+                        fallbackPath: /Imports/ProductHierarchy/Families
                 publishingStrategy:
                     type: noChangePublishNew
             processingConfig:
                 executionType: sequential
                 idDataIndex: model_code
+                cleanup:
+                    strategy: unpublish
             mappingConfig:
                 -
                     label: KEY
                     dataSourceIndex:
                         - model_code
+                    settings:
+                        search: /
+                        replace: '-'
+                        mode: both
                     transformationResultType: default
                     dataTarget:
                         type: direct
@@ -101,7 +107,7 @@ pimcore_data_hub:
                             writeIfSourceIsEmpty: true
                     transformationPipeline: {  }
                 -
-                    label: Frame Base Code
+                    label: 'Frame Base Code'
                     dataSourceIndex:
                         - frame_base_code
                     transformationResultType: default
@@ -114,7 +120,7 @@ pimcore_data_hub:
                             writeIfSourceIsEmpty: true
                     transformationPipeline: {  }
                 -
-                    label: Series Code
+                    label: 'Series Code'
                     dataSourceIndex:
                         - series_code
                     transformationResultType: default
@@ -153,9 +159,11 @@ pimcore_data_hub:
                             writeIfSourceIsEmpty: true
                     transformationPipeline: {  }
                 -
-                    label: Outline Image
+                    label: 'Outline Image'
                     dataSourceIndex:
                         - outline_image_asset_path
+                    settings:
+                        loadStrategy: path
                     transformationResultType: asset
                     dataTarget:
                         type: direct
@@ -170,92 +178,123 @@ pimcore_data_hub:
                                 loadStrategy: path
                             type: loadAsset
                 -
-                    label: Plan Attachment
+                    label: 'Plan Attachment'
                     dataSourceIndex:
                         - plan_attachment_asset_paths
-                    transformationResultType: advancedAssetArray
+                    settings:
+                        loadStrategy: path
+                    transformationResultType: assetArray
                     dataTarget:
-                        type: direct
+                        type: manyToManyRelation
                         settings:
                             fieldName: planAttachment
                             language: ''
                             writeIfTargetIsNotEmpty: true
                             writeIfSourceIsEmpty: true
+                            overwriteMode: replace
                     transformationPipeline:
+                        -
+                            type: asArray
                         -
                             settings:
                                 loadStrategy: path
                             type: loadAsset
                 -
-                    label: POS Material Products
+                    label: 'POS Material Products'
                     dataSourceIndex:
                         - pos_material_item_codes
+                    settings:
+                        loadStrategy: attribute
+                        attributeDataObjectClassId: posMaterialProduct
+                        attributeName: itemCode
+                        attributeLanguage: ''
+                        loadUnpublished: 'on'
                     transformationResultType: dataObjectArray
                     dataTarget:
-                        type: direct
+                        type: manyToManyRelation
                         settings:
                             fieldName: posMaterialProducts
                             language: ''
                             writeIfTargetIsNotEmpty: true
                             writeIfSourceIsEmpty: true
+                            overwriteMode: replace
                     transformationPipeline:
+                        -
+                            type: asArray
                         -
                             settings:
                                 loadStrategy: attribute
                                 attributeDataObjectClassId: posMaterialProduct
                                 attributeName: itemCode
                                 attributeLanguage: ''
-                                partialMatch: false
-                                loadUnpublished: true
+                                loadUnpublished: 'on'
                             type: loadDataObject
                 -
-                    label: Service Part Products
+                    label: 'Service Part Products'
                     dataSourceIndex:
                         - service_part_codes
+                    settings:
+                        loadStrategy: attribute
+                        attributeDataObjectClassId: servicePartsProduct
+                        attributeName: code
+                        attributeLanguage: ''
+                        loadUnpublished: 'on'
                     transformationResultType: dataObjectArray
                     dataTarget:
-                        type: direct
+                        type: manyToManyRelation
                         settings:
                             fieldName: servicePartProducts
                             language: ''
                             writeIfTargetIsNotEmpty: true
                             writeIfSourceIsEmpty: true
+                            overwriteMode: replace
                     transformationPipeline:
+                        -
+                            type: asArray
                         -
                             settings:
                                 loadStrategy: attribute
                                 attributeDataObjectClassId: servicePartsProduct
                                 attributeName: code
                                 attributeLanguage: ''
-                                partialMatch: false
-                                loadUnpublished: true
+                                loadUnpublished: 'on'
                             type: loadDataObject
                 -
-                    label: Downloadable Assets
+                    label: 'Downloadable Assets'
                     dataSourceIndex:
                         - downloadable_asset_keys
+                    settings:
+                        loadStrategy: attribute
+                        attributeDataObjectClassId: downloadableAsset
+                        attributeName: key
+                        attributeLanguage: ''
+                        loadUnpublished: 'on'
                     transformationResultType: dataObjectArray
                     dataTarget:
-                        type: direct
+                        type: manyToManyRelation
                         settings:
                             fieldName: downloadableAssets
                             language: ''
                             writeIfTargetIsNotEmpty: true
                             writeIfSourceIsEmpty: true
+                            overwriteMode: replace
                     transformationPipeline:
+                        -
+                            type: asArray
                         -
                             settings:
                                 loadStrategy: attribute
                                 attributeDataObjectClassId: downloadableAsset
                                 attributeName: key
                                 attributeLanguage: ''
-                                partialMatch: false
-                                loadUnpublished: true
+                                loadUnpublished: 'on'
                             type: loadDataObject
                 -
-                    label: Image Gallery
+                    label: 'Image Gallery'
                     dataSourceIndex:
                         - image_gallery_asset_paths
+                    settings:
+                        loadStrategy: path
                     transformationResultType: gallery
                     dataTarget:
                         type: direct
@@ -270,21 +309,25 @@ pimcore_data_hub:
                                 loadStrategy: path
                             type: loadAsset
                         -
-                            settings: {  }
                             type: gallery
                 -
                     label: Attachments
                     dataSourceIndex:
                         - attachment_asset_paths
-                    transformationResultType: advancedAssetArray
+                    settings:
+                        loadStrategy: path
+                    transformationResultType: assetArray
                     dataTarget:
-                        type: direct
+                        type: manyToManyRelation
                         settings:
                             fieldName: attachments
                             language: ''
                             writeIfTargetIsNotEmpty: true
                             writeIfSourceIsEmpty: true
+                            overwriteMode: replace
                     transformationPipeline:
+                        -
+                            type: asArray
                         -
                             settings:
                                 loadStrategy: path

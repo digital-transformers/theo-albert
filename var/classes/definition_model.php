@@ -54,19 +54,20 @@
  * - masterUDI [input]
  * - finalProductDetails [fieldcollections]
  * - finalProducts [manyToManyObjectRelation]
+ * - productCase [manyToManyObjectRelation]
  * - imageGallery [imageGallery]
  * - facebookImageGallery [imageGallery]
  * - instagramImageGallery [imageGallery]
  * - video [video]
  * - attachments [advancedManyToManyRelation]
- * - qualityControlDocuments [advancedManyToManyRelation]
- * - qualityControlImages [advancedManyToManyRelation]
- * - qualityControlRemarks [table]
  * - publicationChannels [multiselect]
  * - magicMechanismScore [numeric]
  * - localizedfields [localizedfields]
  * -- storytellingShortText [textarea]
  * -- storytellingLongText [wysiwyg]
+ * - qualityControlDocuments [advancedManyToManyRelation]
+ * - qualityControlImages [advancedManyToManyRelation]
+ * - qualityControlRemarks [table]
  */
 
 return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
@@ -76,9 +77,9 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1776345591,
+   'modificationDate' => 1777977222,
    'userOwner' => 2,
-   'userModification' => 5,
+   'userModification' => 2,
    'parentClass' => 'Pimcore\\Model\\DataObject\\Family',
    'implementsInterfaces' => '',
    'listingParentClass' => '',
@@ -1927,6 +1928,46 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
               )),
+              2 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
+                 'name' => 'productCase',
+                 'title' => 'Case',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => true,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'classes' => 
+                array (
+                  0 => 
+                  array (
+                    'classes' => 'posMaterialProduct',
+                  ),
+                ),
+                 'displayMode' => 'grid',
+                 'pathFormatterClass' => '',
+                 'maxItems' => 1,
+                 'visibleFields' => 'id,key,itemCode,itemName',
+                 'allowToCreateNewObject' => false,
+                 'allowToClearRelation' => true,
+                 'optimizedAdminLoading' => false,
+                 'enableTextSelection' => false,
+                 'visibleFieldDefinitions' => 
+                array (
+                ),
+                 'width' => '',
+                 'height' => '',
+              )),
             ),
              'locked' => false,
              'blockedVarsForExport' => 
@@ -2511,8 +2552,8 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                     'label' => 'Remark',
                   ),
                 ),
-                 'height' => 240,
-                 'width' => '',
+                 'height' => '',
+                 'width' => '100%',
               )),
             ),
              'locked' => false,

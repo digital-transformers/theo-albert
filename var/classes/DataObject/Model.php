@@ -54,6 +54,7 @@
  * - masterUDI [input]
  * - finalProductDetails [fieldcollections]
  * - finalProducts [manyToManyObjectRelation]
+ * - productCase [manyToManyObjectRelation]
  * - imageGallery [imageGallery]
  * - facebookImageGallery [imageGallery]
  * - instagramImageGallery [imageGallery]
@@ -123,6 +124,7 @@ use Pimcore\Model\DataObject\PreGetValueHookInterface;
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByBasicUDI(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByMasterUDI(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByFinalProducts(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByProductCase(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByAttachments(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByPublicationChannels(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByMagicMechanismScore(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
@@ -184,6 +186,7 @@ public const FIELD_BASIC_UDI = 'basicUDI';
 public const FIELD_MASTER_UDI = 'masterUDI';
 public const FIELD_FINAL_PRODUCT_DETAILS = 'finalProductDetails';
 public const FIELD_FINAL_PRODUCTS = 'finalProducts';
+public const FIELD_PRODUCT_CASE = 'productCase';
 public const FIELD_IMAGE_GALLERY = 'imageGallery';
 public const FIELD_FACEBOOK_IMAGE_GALLERY = 'facebookImageGallery';
 public const FIELD_INSTAGRAM_IMAGE_GALLERY = 'instagramImageGallery';
@@ -248,6 +251,7 @@ protected $basicUDI;
 protected $masterUDI;
 protected $finalProductDetails;
 protected $finalProducts;
+protected $productCase;
 protected $imageGallery;
 protected $facebookImageGallery;
 protected $instagramImageGallery;
@@ -2466,6 +2470,59 @@ public function setFinalProducts(?array $finalProducts): static
 }
 
 /**
+* Get productCase - Case
+* @return \Pimcore\Model\DataObject\PosMaterialProduct[]
+*/
+public function getProductCase(): array
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("productCase");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->getClass()->getFieldDefinition("productCase")->preGetData($this);
+
+	if (\Pimcore\Model\DataObject::doGetInheritedValues() && $this->getClass()->getFieldDefinition("productCase")->isEmpty($data)) {
+		try {
+			return $this->getValueFromParent("productCase");
+		} catch (InheritanceParentNotFoundException $e) {
+			// no data from parent available, continue ...
+		}
+	}
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set productCase - Case
+* @param \Pimcore\Model\DataObject\PosMaterialProduct[] $productCase
+* @return $this
+*/
+public function setProductCase(?array $productCase): static
+{
+	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation $fd */
+	$fd = $this->getClass()->getFieldDefinition("productCase");
+	$hideUnpublished = \Pimcore\Model\DataObject\Concrete::getHideUnpublished();
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished(false);
+	$currentData = \Pimcore\Model\DataObject\Service::useInheritedValues(false, function() {
+		return $this->getProductCase();
+	});
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished($hideUnpublished);
+	$isEqual = $fd->isEqual($currentData, $productCase);
+	if (!$isEqual) {
+		$this->markFieldDirty("productCase", true);
+	}
+	$this->productCase = $fd->preSetData($this, $productCase);
+	return $this;
+}
+
+/**
 * Get imageGallery - Image Gallery
 * @return \Pimcore\Model\DataObject\Data\ImageGallery|null
 */
@@ -3051,3 +3108,4 @@ public function setQualityControlRemarks(?array $qualityControlRemarks): static
 }
 
 }
+

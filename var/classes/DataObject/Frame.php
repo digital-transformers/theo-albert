@@ -1893,3 +1893,4 @@ public function setQualityControlRemarks(?array $qualityControlRemarks): static
 }
 
 }
+

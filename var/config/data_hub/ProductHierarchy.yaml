@@ -1,13 +1,13 @@
 pimcore_data_hub:
     configurations:
-        ExampleProductHierarchyGraphQL:
+        ProductHierarchy:
             general:
                 active: true
                 type: graphql
-                name: ExampleProductHierarchyGraphQL
+                name: ProductHierarchy
                 description: 'Example GraphQL endpoint for family, model, and frame queries/mutations'
                 group: Examples
-                modificationDate: 1778055446
+                modificationDate: 1778055437
                 path: null
                 createDate: 1777334400
             schema:
