@@ -1,0 +1,341 @@
+{
+  "info": {
+    "_postman_id": "d90e9041-ee9a-4312-bd7c-eb7df806a90f",
+    "name": "Example Product Hierarchy GraphQL (DEV)",
+    "description": "Postman collection for the DEV Pimcore Datahub GraphQL endpoint used by the family/model/frame examples.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://theo.digital-transformers.it"
+    },
+    {
+      "key": "endpointPath",
+      "value": "/pimcore-graphql-webservices/ExampleProductHierarchyGraphQL"
+    },
+    {
+      "key": "apikey",
+      "value": "a0de74f6e155ee9e0f8b8e097a1b2fff"
+    },
+    {
+      "key": "alphaFamilyPath",
+      "value": "/Product Data/Families/Pop Art"
+    },
+    {
+      "key": "alphaModelPath",
+      "value": "/Product Data/Families/Pop Art/ELVIS"
+    },
+    {
+      "key": "alphaFramePath",
+      "value": "/Product Data/Families/Pop Art/ELVIS/ELVI 115"
+    },
+    {
+      "key": "omegaFamilyPath",
+      "value": "/Imports/ProductHierarchy/Families/TA-OMEGA"
+    },
+    {
+      "key": "omegaModelPath",
+      "value": "/Imports/ProductHierarchy/Families/TA-OMEGA/OME-OPT-01"
+    },
+    {
+      "key": "omegaFramePath",
+      "value": "/Imports/ProductHierarchy/Families/TA-OMEGA/OME-OPT-01/OME-OPT-01-450"
+    }
+  ],
+  "item": [
+    {
+      "name": "Queries",
+      "item": [
+        {
+          "name": "Get Alpha Family",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query GetAlphaFamily { getFamily(fullpath: \\\"{{alphaFamilyPath}}\\\") { id key fullpath published code name launchYear launchPeriod workingTitle description } }\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{endpointPath}}?apikey={{apikey}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{endpointPath}}"
+              ],
+              "query": [
+                {
+                  "key": "apikey",
+                  "value": "{{apikey}}"
+                }
+              ]
+            },
+            "description": "Reads one imported family by full path."
+          }
+        },
+        {
+          "name": "Get Alpha Model",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query GetAlphaModel { getModel(fullpath: \\\"{{alphaModelPath}}\\\") { id key fullpath code name frameBaseCode seriesCode material description } }\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{endpointPath}}?apikey={{apikey}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{endpointPath}}"
+              ],
+              "query": [
+                {
+                  "key": "apikey",
+                  "value": "{{apikey}}"
+                }
+              ]
+            },
+            "description": "Reads one imported model by full path."
+          }
+        },
+        {
+          "name": "Get Alpha Frame",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query GetAlphaFrame { getFrame(fullpath: \\\"{{alphaFramePath}}\\\") { id key fullpath code name mainColorCode seriesCode ecomFileName exchangeCode artBase { ... on object_model { id key fullpath code name } } } }\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{endpointPath}}?apikey={{apikey}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{endpointPath}}"
+              ],
+              "query": [
+                {
+                  "key": "apikey",
+                  "value": "{{apikey}}"
+                }
+              ]
+            },
+            "description": "Reads one imported frame and follows the artBase relation."
+          }
+        },
+        {
+          "name": "List Families",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query ListFamilies { getFamilyListing(first: 10) { edges { node { id key fullpath code name launchYear launchPeriod } } } }\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{endpointPath}}?apikey={{apikey}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{endpointPath}}"
+              ],
+              "query": [
+                {
+                  "key": "apikey",
+                  "value": "{{apikey}}"
+                }
+              ]
+            },
+            "description": "Example export-style query using a listing operation."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mutations",
+      "item": [
+        {
+          "name": "Create Omega Family",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation CreateFamily { createFamily(path: \\\"/Imports/ProductHierarchy/Families\\\", key: \\\"TA-OMEGA\\\", published: true, input: { code: \\\"TA-OMEGA\\\", name: \\\"Omega\\\", launchYear: 2027, launchPeriod: \\\"sep\\\", workingTitle: \\\"Omega Working Title\\\", description: \\\"Example family created through GraphQL\\\" }) { success message output { id fullpath code name } } }\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{endpointPath}}?apikey={{apikey}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{endpointPath}}"
+              ],
+              "query": [
+                {
+                  "key": "apikey",
+                  "value": "{{apikey}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Omega Model",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation CreateModel { createModel(path: \\\"{{omegaFamilyPath}}\\\", key: \\\"OME-OPT-01\\\", published: true, input: { code: \\\"OME-OPT-01\\\", name: \\\"Omega Optical 01\\\", frameBaseCode: \\\"OME-OPT\\\", seriesCode: \\\"OMEGA-2027\\\", material: \\\"Beta titanium\\\", description: \\\"Example model created through GraphQL\\\" }) { success message output { id fullpath code name } } }\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{endpointPath}}?apikey={{apikey}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{endpointPath}}"
+              ],
+              "query": [
+                {
+                  "key": "apikey",
+                  "value": "{{apikey}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Omega Frame",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation CreateFrame { createFrame(path: \\\"{{omegaModelPath}}\\\", key: \\\"OME-OPT-01-450\\\", published: true, input: { code: \\\"OME-OPT-01-450\\\", name: \\\"Omega Optical Forest\\\", mainColorCode: \\\"450\\\", seriesCode: \\\"OMEGA-2027\\\", ecomFileName: \\\"ome-opt-01-450.jpg\\\", exchangeCode: \\\"EX-OME-450\\\", artBase: { fullpath: \\\"{{omegaModelPath}}\\\" } }) { success message output { id fullpath code name artBase { code fullpath } } } }\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{endpointPath}}?apikey={{apikey}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{endpointPath}}"
+              ],
+              "query": [
+                {
+                  "key": "apikey",
+                  "value": "{{apikey}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Alpha Frame",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation UpdateFrame { updateFrame(fullpath: \\\"{{alphaFramePath}}\\\", input: { name: \\\"Alpha Optical Black Gold Updated\\\", ecomFileName: \\\"alp-opt-01-101-v2.jpg\\\" }) { success message output { id fullpath name ecomFileName } } }\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{endpointPath}}?apikey={{apikey}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{endpointPath}}"
+              ],
+              "query": [
+                {
+                  "key": "apikey",
+                  "value": "{{apikey}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Omega Frame",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation DeleteFrame { deleteFrame(fullpath: \\\"{{omegaFramePath}}\\\") { success message } }\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{endpointPath}}?apikey={{apikey}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{endpointPath}}"
+              ],
+              "query": [
+                {
+                  "key": "apikey",
+                  "value": "{{apikey}}"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
