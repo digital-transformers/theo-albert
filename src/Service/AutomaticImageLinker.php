@@ -17,8 +17,8 @@ use Pimcore\Model\DataObject\Model as ModelObject;
 use Pimcore\Model\DataObject\Model\Listing as ModelListing;
 use Pimcore\Model\Element\Service as ElementService;
 use Pimcore\Model\Notification\Service\NotificationService;
+use Pimcore\Model\Property\Predefined;
 use Pimcore\Model\User;
-use Pimcore\Model\WebsiteSetting;
 use ZipArchive;
 
 final class AutomaticImageLinker
@@ -499,21 +499,16 @@ final class AutomaticImageLinker
     private function getSettingString(string $name): string
     {
         try {
-            $setting = WebsiteSetting::getByName($name);
+            $setting = Predefined::getByKey($name);
         } catch (\Throwable) {
             return '';
         }
 
-        if (!$setting instanceof WebsiteSetting) {
+        if (!$setting instanceof Predefined) {
             return '';
         }
 
-        $data = $setting->getData();
-        if ($data instanceof Asset) {
-            return $data->getRealFullPath();
-        }
-
-        return trim((string) $data);
+        return trim((string) $setting->getData());
     }
 
     private function isZipAsset(Asset $asset): bool

@@ -1,0 +1,15 @@
+pimcore:
+    properties:
+        predefined:
+            definitions:
+                5e5aa25f-ff1a-4720-b23c-e34cf2560184:
+                    name: 'Automatic image linking folder'
+                    description: 'Default asset folder where uploaded images and ZIP files are automatically linked to family, model, and frame objects.'
+                    key: automatic_image_linking_folder
+                    type: text
+                    data: '/Automatic Image Linking'
+                    config: ''
+                    ctype: asset
+                    inheritable: false
+                    creationDate: 1779196800
+                    modificationDate: 1779196800

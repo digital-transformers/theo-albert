@@ -1,0 +1,15 @@
+pimcore:
+    properties:
+        predefined:
+            definitions:
+                1c949f49-5b19-4778-83ee-b8b95ce9815b:
+                    name: 'Automatic image linking notification users'
+                    description: 'Pimcore users who receive automatic image linking notifications. Use usernames or user IDs separated with commas, semicolons, or new lines.'
+                    key: automatic_image_linking_notification_users
+                    type: text
+                    data: ''
+                    config: ''
+                    ctype: asset
+                    inheritable: false
+                    creationDate: 1779196800
+                    modificationDate: 1779196800

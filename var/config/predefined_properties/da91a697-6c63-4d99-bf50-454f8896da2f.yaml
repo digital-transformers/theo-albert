@@ -1,0 +1,15 @@
+pimcore:
+    properties:
+        predefined:
+            definitions:
+                da91a697-6c63-4d99-bf50-454f8896da2f:
+                    name: 'Automatic image linking report emails'
+                    description: 'Email recipients for automatic image linking reports. Separate multiple addresses with commas, semicolons, or new lines.'
+                    key: automatic_image_linking_report_emails
+                    type: text
+                    data: ''
+                    config: ''
+                    ctype: asset
+                    inheritable: false
+                    creationDate: 1779196800
+                    modificationDate: 1779196800
