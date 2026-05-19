@@ -7,7 +7,7 @@ pimcore:
                     description: 'Default asset folder where uploaded images and ZIP files are automatically linked to family, model, and frame objects.'
                     key: automatic_image_linking_folder
                     type: text
-                    data: '/Automatic Image Linking'
+                    data: '/Upload Frame Pictures'
                     config: ''
                     ctype: asset
                     inheritable: false

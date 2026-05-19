@@ -151,3 +151,7 @@ services:
     App\EventSubscriber\AutomaticImageLinkingSubscriber:
       tags:
         - { name: kernel.event_subscriber }
+
+    App\EventSubscriber\PhotographerAssetPermissionSubscriber:
+      tags:
+        - { name: kernel.event_subscriber }
