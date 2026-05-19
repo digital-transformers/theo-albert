@@ -12,7 +12,7 @@
  * - outlineImage [image]
  * - planAttachment [advancedManyToManyRelation]
  * - posMaterialProducts [manyToManyObjectRelation]
- * - servicePartProducts [manyToManyObjectRelation]
+ * - servicePartProducts [advancedManyToManyObjectRelation]
  * - downloadableAssets [manyToManyObjectRelation]
  * - seriesCode [input]
  * - createDate [date]
@@ -604,7 +604,7 @@ public function setPosMaterialProducts(?array $posMaterialProducts): static
 
 /**
 * Get servicePartProducts - Service Part Products
-* @return \Pimcore\Model\DataObject\ServicePartsProduct[]
+* @return \Pimcore\Model\DataObject\Data\ObjectMetadata[]
 */
 public function getServicePartProducts(): array
 {
@@ -634,12 +634,12 @@ public function getServicePartProducts(): array
 
 /**
 * Set servicePartProducts - Service Part Products
-* @param \Pimcore\Model\DataObject\ServicePartsProduct[] $servicePartProducts
+* @param \Pimcore\Model\DataObject\Data\ObjectMetadata[] $servicePartProducts
 * @return $this
 */
 public function setServicePartProducts(?array $servicePartProducts): static
 {
-	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation $fd */
+	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation $fd */
 	$fd = $this->getClass()->getFieldDefinition("servicePartProducts");
 	$hideUnpublished = \Pimcore\Model\DataObject\Concrete::getHideUnpublished();
 	\Pimcore\Model\DataObject\Concrete::setHideUnpublished(false);

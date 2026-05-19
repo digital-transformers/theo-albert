@@ -12,7 +12,7 @@
  * - outlineImage [image]
  * - planAttachment [advancedManyToManyRelation]
  * - posMaterialProducts [manyToManyObjectRelation]
- * - servicePartProducts [manyToManyObjectRelation]
+ * - servicePartProducts [advancedManyToManyObjectRelation]
  * - downloadableAssets [manyToManyObjectRelation]
  * - seriesCode [input]
  * - createDate [date]
@@ -77,7 +77,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1777977222,
+   'modificationDate' => 1779168380,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => 'Pimcore\\Model\\DataObject\\Family',
@@ -377,7 +377,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'height' => '',
               )),
               7 => 
-              \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
+              \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
                  'name' => 'servicePartProducts',
                  'title' => 'Service Part Products',
                  'tooltip' => '',
@@ -402,7 +402,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                     'classes' => 'servicePartsProduct',
                   ),
                 ),
-                 'displayMode' => 'grid',
+                 'displayMode' => NULL,
                  'pathFormatterClass' => '',
                  'maxItems' => NULL,
                  'visibleFields' => 'code,name',
@@ -415,6 +415,35 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 ),
                  'width' => '',
                  'height' => '',
+                 'allowedClassId' => 'servicePartsProduct',
+                 'columns' => 
+                array (
+                  0 => 
+                  array (
+                    'type' => 'select',
+                    'position' => 1,
+                    'key' => 'service_type',
+                    'label' => 'Service Type',
+                    'value' => 'SCREW FR ;SCREW TEMP;EAR TIP;SCREW LBL',
+                    'width' => 50,
+                  ),
+                  1 => 
+                  array (
+                    'type' => 'select',
+                    'position' => 2,
+                    'key' => 'color',
+                    'label' => 'Color',
+                    'value' => 'Color 1;Color 2;No Color;Acetate Color',
+                    'width' => 50,
+                  ),
+                ),
+                 'columnKeys' => 
+                array (
+                  0 => 'service_type',
+                  1 => 'color',
+                ),
+                 'enableBatchEdit' => false,
+                 'allowMultipleAssignments' => false,
               )),
               8 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
