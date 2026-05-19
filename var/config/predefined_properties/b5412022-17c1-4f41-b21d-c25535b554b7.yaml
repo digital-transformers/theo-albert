@@ -1,0 +1,15 @@
+pimcore:
+    properties:
+        predefined:
+            definitions:
+                b5412022-17c1-4f41-b21d-c25535b554b7:
+                    name: 'Marketing materials asset folder'
+                    description: 'Base asset folder for marketing material uploads on family, model, and frame objects.'
+                    key: marketing_materials_asset_folder
+                    type: text
+                    data: '/Marketing materials'
+                    config: ''
+                    ctype: object
+                    inheritable: false
+                    creationDate: 1779148800
+                    modificationDate: 1779148800
