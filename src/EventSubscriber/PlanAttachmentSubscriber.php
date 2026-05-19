@@ -8,6 +8,7 @@ use Pimcore\Event\Model\DataObjectEvent;
 use Pimcore\Model\Asset;
 use Pimcore\Model\Asset\Folder as AssetFolder;
 use Pimcore\Model\Asset\Service as AssetService;
+use Pimcore\Model\DataObject\AbstractObject;
 use Pimcore\Model\DataObject\Concrete;
 use Pimcore\Model\DataObject\Data\ElementMetadata;
 use Pimcore\Model\Element\Service as ElementService;
@@ -85,8 +86,7 @@ final class PlanAttachmentSubscriber implements EventSubscriberInterface
     {
         $planType = $this->getPlanType($attachment);
         $baseFolderPath = $this->getBaseFolderPath($planType);
-        $code = $this->getModelCode($object);
-        $targetFolderPath = $this->buildTargetFolderPath($baseFolderPath, $code);
+        $targetFolderPath = $this->buildTargetFolderPath($baseFolderPath, $object);
         $targetFolder = $this->getOrCreateFolder($targetFolderPath);
 
         $this->moveAssetToFolder($asset, $targetFolder);
@@ -147,31 +147,67 @@ final class PlanAttachmentSubscriber implements EventSubscriberInterface
     /**
      * @throws ValidationException
      */
-    private function getModelCode(Concrete $object): string
+    private function buildTargetFolderPath(string $baseFolderPath, Concrete $model): string
     {
-        if (!method_exists($object, 'getCode')) {
-            throw new ValidationException('The model Code field is not available for plan attachment folder creation.');
+        $family = $this->findParentFamily($model);
+        if (!$family instanceof Concrete) {
+            throw new ValidationException('Place the model below a family before saving a Plan Attachment.');
         }
 
-        $code = trim((string) ($object->getCode() ?? ''));
-        if ($code === '') {
-            throw new ValidationException('Set the model Code before saving a Plan Attachment.');
-        }
+        $segments = [
+            $this->buildObjectFolderSegment($family, 'family'),
+            $this->buildObjectFolderSegment($model, 'model'),
+        ];
 
-        return $code;
+        return ElementService::correctPath(
+            ($baseFolderPath === '/' ? '' : $baseFolderPath) . '/' . implode('/', $segments)
+        );
     }
 
     /**
      * @throws ValidationException
      */
-    private function buildTargetFolderPath(string $baseFolderPath, string $code): string
+    private function buildObjectFolderSegment(Concrete $object, string $classLabel): string
     {
-        $folderName = ElementService::getValidKey($code, 'asset');
-        if ($folderName === '') {
-            throw new ValidationException('The model Code cannot be converted into a valid asset folder name.');
+        if (!method_exists($object, 'getCode')) {
+            throw new ValidationException(sprintf(
+                'The %s Code field is not available for plan attachment folder creation.',
+                $classLabel
+            ));
         }
 
-        return ElementService::correctPath(($baseFolderPath === '/' ? '' : $baseFolderPath) . '/' . $folderName);
+        $code = trim((string) ($object->getCode() ?? ''));
+        if ($code === '') {
+            throw new ValidationException(sprintf(
+                'Set the %s Code before saving a Plan Attachment.',
+                $classLabel
+            ));
+        }
+
+        $folderName = ElementService::getValidKey($code, 'asset');
+        if ($folderName !== '') {
+            return $folderName;
+        }
+
+        throw new ValidationException(sprintf(
+            'The %s Code cannot be converted into a valid asset folder name.',
+            $classLabel
+        ));
+    }
+
+    private function findParentFamily(Concrete $model): ?Concrete
+    {
+        $current = $model->getParent();
+
+        for ($depth = 0; $depth < 10 && $current instanceof AbstractObject; $depth++) {
+            if ($current instanceof Concrete && strtolower((string) $current->getClassName()) === 'family') {
+                return $current;
+            }
+
+            $current = $current->getParent();
+        }
+
+        return null;
     }
 
     private function normalizeAssetFolderPath(string $folderPath): string
