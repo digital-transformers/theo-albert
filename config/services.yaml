@@ -147,3 +147,7 @@ services:
     App\EventSubscriber\ModelFinalProductDetailsColorsSubscriber:
       tags:
         - { name: kernel.event_subscriber }
+
+    App\EventSubscriber\AutomaticImageLinkingSubscriber:
+      tags:
+        - { name: kernel.event_subscriber }

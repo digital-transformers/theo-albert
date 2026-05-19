@@ -6,13 +6,33 @@ namespace App\Tests\Unit\EventSubscriber;
 use App\EventSubscriber\QualityControlSubscriber;
 use App\EventSubscriber\QualityControlTreeIndicatorSubscriber;
 use Codeception\Test\Unit;
+use Pimcore;
 use Pimcore\Model\DataObject\Concrete;
 use Pimcore\Model\User;
 use Pimcore\Security\User\TokenStorageUserResolver;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 final class QualityControlSubscriberTest extends Unit
 {
+    protected function _before(): void
+    {
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher->method('dispatch')->willReturnArgument(0);
+
+        $container = $this->createMock(ContainerInterface::class);
+        $container->method('get')
+            ->with('event_dispatcher')
+            ->willReturn($dispatcher);
+
+        $kernel = $this->createMock(KernelInterface::class);
+        $kernel->method('getContainer')->willReturn($container);
+
+        Pimcore::setKernel($kernel);
+    }
+
     public function testOnPreSendDataRemovesQualityControlTabAndFieldsWithoutPermission(): void
     {
         $resolver = $this->createMock(TokenStorageUserResolver::class);
@@ -142,6 +162,23 @@ final class QualityControlSubscriberTest extends Unit
         self::assertNull($method->invoke($subscriber, $object, false));
     }
 
+    public function testBuildObjectFolderSegmentUsesFamilyCodeAndNameWhenAvailable(): void
+    {
+        $resolver = $this->createMock(TokenStorageUserResolver::class);
+        $resolver->method('getUser')->willReturn(null);
+
+        $subscriber = new QualityControlSubscriber($resolver);
+        $object = (new QualityControlTestObject())
+            ->setClassName('family')
+            ->setCode('TA-ALPHA')
+            ->setName('Alpha');
+
+        $method = new \ReflectionMethod($subscriber, 'buildObjectFolderSegment');
+        $method->setAccessible(true);
+
+        self::assertSame('TA-ALPHA - Alpha', $method->invoke($subscriber, $object, true));
+    }
+
     public function testResolveCurrentUserLabelPrefersNameThenFallsBackToUsername(): void
     {
         $namedResolver = $this->createMock(TokenStorageUserResolver::class);
@@ -217,6 +254,7 @@ final class QualityControlSubscriberTest extends Unit
 final class QualityControlTestObject extends Concrete
 {
     private ?string $code = null;
+    private ?string $name = null;
     private ?self $testParent = null;
     private array $testProperties = [];
     private ?array $qualityControlRemarks = null;
@@ -229,6 +267,18 @@ final class QualityControlTestObject extends Concrete
     public function setCode(?string $code): static
     {
         $this->code = $code;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }
