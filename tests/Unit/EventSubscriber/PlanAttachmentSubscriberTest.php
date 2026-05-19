@@ -35,7 +35,8 @@ final class PlanAttachmentSubscriberTest extends Unit
         $subscriber = new PlanAttachmentSubscriber();
         $family = (new PlanAttachmentTestObject())
             ->setClassName('family')
-            ->setCode('TA-ALPHA');
+            ->setCode('TA-ALPHA')
+            ->setName('Alpha');
         $model = (new PlanAttachmentTestObject())
             ->setClassName('model')
             ->setCode('ALP-OPT-01')
@@ -44,7 +45,7 @@ final class PlanAttachmentSubscriberTest extends Unit
         $method = new \ReflectionMethod($subscriber, 'buildTargetFolderPath');
         $method->setAccessible(true);
 
-        self::assertSame('/Plans/TA-ALPHA/ALP-OPT-01', $method->invoke($subscriber, '/Plans', $model));
+        self::assertSame('/Plans/TA-ALPHA - Alpha/ALP-OPT-01', $method->invoke($subscriber, '/Plans', $model));
     }
 
     public function testBuildTargetFolderPathRequiresFamilyAncestor(): void
@@ -67,6 +68,7 @@ final class PlanAttachmentSubscriberTest extends Unit
 final class PlanAttachmentTestObject extends Concrete
 {
     private ?string $code = null;
+    private ?string $name = null;
     private ?self $testParent = null;
 
     public function getCode(): ?string
@@ -77,6 +79,18 @@ final class PlanAttachmentTestObject extends Concrete
     public function setCode(?string $code): static
     {
         $this->code = $code;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }

@@ -184,7 +184,15 @@ final class PlanAttachmentSubscriber implements EventSubscriberInterface
             ));
         }
 
-        $folderName = ElementService::getValidKey($code, 'asset');
+        $identifier = $code;
+        if ($classLabel === 'family' && method_exists($object, 'getName')) {
+            $name = trim((string) ($object->getName() ?? ''));
+            if ($name !== '') {
+                $identifier .= ' | ' . $name;
+            }
+        }
+
+        $folderName = ElementService::getValidKey($identifier, 'asset');
         if ($folderName !== '') {
             return $folderName;
         }

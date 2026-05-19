@@ -394,6 +394,17 @@ final class QualityControlSubscriber implements EventSubscriberInterface
             $identifier = trim((string) $object->getKey());
         }
 
+        if (
+            strtolower((string) $object->getClassName()) === 'family'
+            && $identifier !== ''
+            && method_exists($object, 'getName')
+        ) {
+            $name = trim((string) ($object->getName() ?? ''));
+            if ($name !== '') {
+                $identifier .= ' | ' . $name;
+            }
+        }
+
         if ($identifier === '') {
             if ($required) {
                 throw new ValidationException(sprintf(
