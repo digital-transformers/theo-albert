@@ -6,8 +6,8 @@ pimcore_data_hub:
                 type: graphql
                 name: ProductHierarchy
                 description: 'Example GraphQL endpoint for family, model, and frame queries/mutations'
-                group: Examples
-                modificationDate: 1778055437
+                group: ''
+                modificationDate: 1779341902
                 path: null
                 createDate: 1777334400
             schema:
