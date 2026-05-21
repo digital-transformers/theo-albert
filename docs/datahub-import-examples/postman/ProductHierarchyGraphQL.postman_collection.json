@@ -1,18 +1,22 @@
 {
   "info": {
     "_postman_id": "48d0ea6d-68d5-4778-bbfc-b9e45dbecc12",
-    "name": "Example Product Hierarchy GraphQL",
-    "description": "Postman collection for the active Pimcore Datahub GraphQL endpoint used by the family/model/frame examples.",
+    "name": "Product Hierarchy GraphQL",
+    "description": "Postman collection for the ProductHierarchy Pimcore Datahub GraphQL endpoint used by the family/model/frame data.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
     {
       "key": "baseUrl",
-      "value": "https://theo-albert.ddev.site"
+      "value": "https://jules2.pimcore.xcommerce.eu"
+    },
+    {
+      "key": "graphqlUrl",
+      "value": "https://jules2.pimcore.xcommerce.eu/pimcore-graphql-webservices/ProductHierarchy"
     },
     {
       "key": "endpointPath",
-      "value": "/pimcore-graphql-webservices/ExampleProductHierarchyGraphQL"
+      "value": "pimcore-graphql-webservices/ProductHierarchy"
     },
     {
       "key": "apikey",
@@ -62,13 +66,7 @@
               "raw": "{\n  \"query\": \"query GetAlphaFamily { getFamily(fullpath: \\\"{{alphaFamilyPath}}\\\") { id key fullpath published code name launchYear launchPeriod workingTitle description } }\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}{{endpointPath}}?apikey={{apikey}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "{{endpointPath}}"
-              ],
+              "raw": "{{graphqlUrl}}?apikey={{apikey}}",
               "query": [
                 {
                   "key": "apikey",
@@ -94,13 +92,7 @@
               "raw": "{\n  \"query\": \"query GetAlphaModel { getModel(fullpath: \\\"{{alphaModelPath}}\\\") { id key fullpath code name frameBaseCode seriesCode material description } }\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}{{endpointPath}}?apikey={{apikey}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "{{endpointPath}}"
-              ],
+              "raw": "{{graphqlUrl}}?apikey={{apikey}}",
               "query": [
                 {
                   "key": "apikey",
@@ -126,13 +118,7 @@
               "raw": "{\n  \"query\": \"query GetAlphaFrame { getFrame(fullpath: \\\"{{alphaFramePath}}\\\") { id key fullpath code name mainColorCode seriesCode ecomFileName exchangeCode artBase { id code name fullpath } } }\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}{{endpointPath}}?apikey={{apikey}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "{{endpointPath}}"
-              ],
+              "raw": "{{graphqlUrl}}?apikey={{apikey}}",
               "query": [
                 {
                   "key": "apikey",
@@ -158,13 +144,7 @@
               "raw": "{\n  \"query\": \"query ListFamilies { getFamilyListing(first: 10) { edges { node { id key fullpath code name launchYear launchPeriod } } } }\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}{{endpointPath}}?apikey={{apikey}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "{{endpointPath}}"
-              ],
+              "raw": "{{graphqlUrl}}?apikey={{apikey}}",
               "query": [
                 {
                   "key": "apikey",
@@ -195,13 +175,7 @@
               "raw": "{\n  \"query\": \"mutation CreateFamily { createFamily(path: \\\"/Imports/ProductHierarchy/Families\\\", key: \\\"TA-OMEGA\\\", published: true, input: { code: \\\"TA-OMEGA\\\", name: \\\"Omega\\\", launchYear: 2027, launchPeriod: \\\"sep\\\", workingTitle: \\\"Omega Working Title\\\", description: \\\"Example family created through GraphQL\\\" }) { success message output { id fullpath code name } } }\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}{{endpointPath}}?apikey={{apikey}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "{{endpointPath}}"
-              ],
+              "raw": "{{graphqlUrl}}?apikey={{apikey}}",
               "query": [
                 {
                   "key": "apikey",
@@ -226,13 +200,7 @@
               "raw": "{\n  \"query\": \"mutation CreateModel { createModel(path: \\\"{{omegaFamilyPath}}\\\", key: \\\"OME-OPT-01\\\", published: true, input: { code: \\\"OME-OPT-01\\\", name: \\\"Omega Optical 01\\\", frameBaseCode: \\\"OME-OPT\\\", seriesCode: \\\"OMEGA-2027\\\", material: \\\"Beta titanium\\\", description: \\\"Example model created through GraphQL\\\" }) { success message output { id fullpath code name } } }\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}{{endpointPath}}?apikey={{apikey}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "{{endpointPath}}"
-              ],
+              "raw": "{{graphqlUrl}}?apikey={{apikey}}",
               "query": [
                 {
                   "key": "apikey",
@@ -257,13 +225,7 @@
               "raw": "{\n  \"query\": \"mutation CreateFrame { createFrame(path: \\\"{{omegaModelPath}}\\\", key: \\\"OME-OPT-01-450\\\", published: true, input: { code: \\\"OME-OPT-01-450\\\", name: \\\"Omega Optical Forest\\\", mainColorCode: \\\"450\\\", seriesCode: \\\"OMEGA-2027\\\", ecomFileName: \\\"ome-opt-01-450.jpg\\\", exchangeCode: \\\"EX-OME-450\\\", artBase: { fullpath: \\\"{{omegaModelPath}}\\\" } }) { success message output { id fullpath code name artBase { code fullpath } } } }\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}{{endpointPath}}?apikey={{apikey}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "{{endpointPath}}"
-              ],
+              "raw": "{{graphqlUrl}}?apikey={{apikey}}",
               "query": [
                 {
                   "key": "apikey",
@@ -288,13 +250,7 @@
               "raw": "{\n  \"query\": \"mutation UpdateFrame { updateFrame(fullpath: \\\"{{alphaFramePath}}\\\", input: { name: \\\"Alpha Optical Black Gold Updated\\\", ecomFileName: \\\"alp-opt-01-101-v2.jpg\\\" }) { success message output { id fullpath name ecomFileName } } }\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}{{endpointPath}}?apikey={{apikey}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "{{endpointPath}}"
-              ],
+              "raw": "{{graphqlUrl}}?apikey={{apikey}}",
               "query": [
                 {
                   "key": "apikey",
@@ -319,13 +275,7 @@
               "raw": "{\n  \"query\": \"mutation DeleteFrame { deleteFrame(fullpath: \\\"{{omegaFramePath}}\\\") { success message } }\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}{{endpointPath}}?apikey={{apikey}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "{{endpointPath}}"
-              ],
+              "raw": "{{graphqlUrl}}?apikey={{apikey}}",
               "query": [
                 {
                   "key": "apikey",

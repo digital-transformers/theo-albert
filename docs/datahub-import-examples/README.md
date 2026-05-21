@@ -138,21 +138,22 @@ Before using it:
 bin/console datahub:configuration:rebuild-workspaces
 ```
 
-The endpoint URL will then be:
+The example endpoint URL will then be:
 
 ```text
 /pimcore-graphql-webservices/ExampleProductHierarchyGraphQL?apikey=YOUR_API_KEY
 ```
 
-In this workspace, the full DDEV URL is:
+The current example environment URL is:
 
 ```text
-https://theo-albert.ddev.site/pimcore-graphql-webservices/ExampleProductHierarchyGraphQL?apikey=YOUR_API_KEY
+https://theo.digital-transformers.it/pimcore-graphql-webservices/ExampleProductHierarchyGraphQL?apikey=YOUR_API_KEY
 ```
 
-The current repository also includes a ready-to-import Postman collection:
+The current repository also includes ready-to-import Postman collections:
 
-- `postman/ExampleProductHierarchyGraphQL.postman_collection.json`
+- `postman/ExampleProductHierarchyGraphQL.dev.postman_collection.json` for the example endpoint on `theo.digital-transformers.it`
+- `postman/ProductHierarchyGraphQL.postman_collection.json` for the `ProductHierarchy` endpoint on `jules2.pimcore.xcommerce.eu`
 
 ## Import and export model
 
@@ -185,7 +186,8 @@ That gives you operations such as:
 Concrete query and mutation examples are included here:
 
 - `graphql/product-hierarchy-examples.graphql`
-- `postman/ExampleProductHierarchyGraphQL.postman_collection.json`
+- `postman/ExampleProductHierarchyGraphQL.dev.postman_collection.json`
+- `postman/ProductHierarchyGraphQL.postman_collection.json`
 
 Those samples assume the example JSON imports were executed first, so records exist under paths
 such as:
