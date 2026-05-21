@@ -451,7 +451,7 @@ pimcore_data_hub:
                         cpath: /
                         create: true
                         update: true
-                        delete: false
+                        delete: true
                         id: extModel632-4
             permissions:
                 user: {  }

@@ -1,3 +1,7 @@
+# GraphQL mutations create data objects, not object folders.
+# The create examples below use /Product Data/Families because that parent folder exists in the
+# live environments. Change it to another existing folder if needed.
+
 # Query a family by full path.
 query GetAlphaFamily {
   getFamily(fullpath: "/Imports/ProductHierarchy/Families/TA-ALPHA") {
@@ -50,10 +54,10 @@ query GetAlphaFrame {
   }
 }
 
-# Create a family under the same sample root folder.
+# Create a family under an existing sample root folder.
 mutation CreateFamily {
   createFamily(
-    path: "/Imports/ProductHierarchy/Families"
+    path: "/Product Data/Families"
     key: "TA-OMEGA"
     published: true
     input: {
@@ -62,7 +66,7 @@ mutation CreateFamily {
       launchYear: 2027
       launchPeriod: "sep"
       workingTitle: "Omega Working Title"
-      description: "Example family created through GraphQL"
+      description: "Sample family created through GraphQL"
     }
   ) {
     success
@@ -79,7 +83,7 @@ mutation CreateFamily {
 # Create a model inside a family.
 mutation CreateModel {
   createModel(
-    path: "/Imports/ProductHierarchy/Families/TA-OMEGA"
+    path: "/Product Data/Families/TA-OMEGA"
     key: "OME-OPT-01"
     published: true
     input: {
@@ -88,7 +92,7 @@ mutation CreateModel {
       frameBaseCode: "OME-OPT"
       seriesCode: "OMEGA-2027"
       material: "Beta titanium"
-      description: "Example model created through GraphQL"
+      description: "Sample model created through GraphQL"
     }
   ) {
     success
@@ -105,7 +109,7 @@ mutation CreateModel {
 # Create a frame and set the artBase relation with an element descriptor.
 mutation CreateFrame {
   createFrame(
-    path: "/Imports/ProductHierarchy/Families/TA-OMEGA/OME-OPT-01"
+    path: "/Product Data/Families/TA-OMEGA/OME-OPT-01"
     key: "OME-OPT-01-450"
     published: true
     input: {
@@ -116,7 +120,8 @@ mutation CreateFrame {
       ecomFileName: "ome-opt-01-450.jpg"
       exchangeCode: "EX-OME-450"
       artBase: {
-        fullpath: "/Imports/ProductHierarchy/Families/TA-OMEGA/OME-OPT-01"
+        type: "object"
+        fullpath: "/Product Data/Families/TA-OMEGA/OME-OPT-01"
       }
     }
   ) {
@@ -127,21 +132,18 @@ mutation CreateFrame {
       fullpath
       code
       name
-      artBase {
-        code
-        fullpath
-      }
     }
   }
 }
 
-# Update an imported frame.
+# The frame class normalizes the object key/fullpath by appending the main color code.
+# Update the Omega frame created above.
 mutation UpdateFrame {
   updateFrame(
-    fullpath: "/Imports/ProductHierarchy/Families/TA-ALPHA/ALP-OPT-01/ALP-OPT-01-101"
+    fullpath: "/Product Data/Families/TA-OMEGA/OME-OPT-01/OME-OPT-01-450 450"
     input: {
-      name: "Alpha Optical Black Gold Updated"
-      ecomFileName: "alp-opt-01-101-v2.jpg"
+      name: "Omega Optical Forest Updated"
+      ecomFileName: "ome-opt-01-450-v2.jpg"
     }
   ) {
     success
@@ -157,7 +159,23 @@ mutation UpdateFrame {
 
 # Delete a frame by full path.
 mutation DeleteFrame {
-  deleteFrame(fullpath: "/Imports/ProductHierarchy/Families/TA-OMEGA/OME-OPT-01/OME-OPT-01-450") {
+  deleteFrame(fullpath: "/Product Data/Families/TA-OMEGA/OME-OPT-01/OME-OPT-01-450 450") {
+    success
+    message
+  }
+}
+
+# Delete the model after deleting its child frame.
+mutation DeleteModel {
+  deleteModel(fullpath: "/Product Data/Families/TA-OMEGA/OME-OPT-01") {
+    success
+    message
+  }
+}
+
+# Delete the family after deleting its child model.
+mutation DeleteFamily {
+  deleteFamily(fullpath: "/Product Data/Families/TA-OMEGA") {
     success
     message
   }

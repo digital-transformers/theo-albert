@@ -91,8 +91,16 @@ The model and frame importers use this fallback object folder when a parent cann
 - `/Imports/ProductHierarchy/Families`
 
 The GraphQL workspace is currently configured on `/`, so queries and mutations are not limited to
-that folder. The sample records and examples in this package still use
-`/Imports/ProductHierarchy/Families` as their working object tree.
+that folder. GraphQL mutations can create family, model, and frame objects, but they do not create
+missing object folders. The parent path passed to `createFamily(path: ...)` must already exist.
+
+The live Postman collections default write examples to:
+
+- `/Product Data/Families`
+
+If you want to run the JSON-import examples instead, make sure this folder exists first:
+
+- `/Imports/ProductHierarchy/Families`
 
 ## Class id note
 
@@ -131,8 +139,8 @@ The example GraphQL config file is:
 
 Before using it:
 
-1. Make sure the object path `/Imports/ProductHierarchy/Families` exists.
-2. Rebuild Datahub workspaces if you deploy configs from YAML:
+1. Make sure the parent object folder used by the mutations exists. The Postman collections use `/Product Data/Families` by default.
+2. Rebuild Datahub workspaces if you deploy configs from YAML. This is required for workspace permissions such as delete access to take effect:
 
 ```bash
 bin/console datahub:configuration:rebuild-workspaces
@@ -189,21 +197,42 @@ Concrete query and mutation examples are included here:
 - `postman/ExampleProductHierarchyGraphQL.dev.postman_collection.json`
 - `postman/ProductHierarchyGraphQL.postman_collection.json`
 
-Those samples assume the example JSON imports were executed first, so records exist under paths
+The JSON import samples assume the example imports were executed first, so records exist under paths
 such as:
 
 - `/Imports/ProductHierarchy/Families/TA-ALPHA`
 - `/Imports/ProductHierarchy/Families/TA-ALPHA/ALP-OPT-01`
 - `/Imports/ProductHierarchy/Families/TA-ALPHA/ALP-OPT-01/ALP-OPT-01-101`
 
+The Postman mutation samples use the `familyParentPath` collection variable. It defaults to
+`/Product Data/Families` because that folder exists in the live environments. Change it if you want
+to create objects under a different existing folder.
+
+Run the sample mutation requests in this order so every parent exists before its child:
+
+1. `Create Omega Family`
+2. `Create Omega Model`
+3. `Create Omega Frame`
+4. `Update Omega Frame`
+5. `Delete Omega Frame`
+6. `Delete Omega Model`
+7. `Delete Omega Family`
+
+The frame class normalizes the created frame key/fullpath by appending the main color code. For the
+sample input, the created frame path is:
+
+- `/Product Data/Families/TA-OMEGA/OME-OPT-01/OME-OPT-01-450 450`
+
+For `artBase`, include the element descriptor type:
+
+```graphql
+artBase: {
+  type: "object"
+  fullpath: "/Product Data/Families/TA-OMEGA/OME-OPT-01"
+}
+```
+
 ## Troubleshooting
 
-If every GraphQL request returns `500 Internal Server Error` before any GraphQL payload is
-processed, verify the Pimcore instance itself is healthy first.
-
-In the current environment, live endpoint checks are blocked by this runtime error:
-
-- `Your product key is empty. Please register your product ... and provide the product key.`
-
-That is an application-level prerequisite issue, so GraphQL query and mutation testing cannot
-complete until the Pimcore product key is configured and the instance responds normally again.
+If delete mutations return `permission denied`, verify the Datahub object workspace has
+`delete: true` and run `bin/console datahub:configuration:rebuild-workspaces`.

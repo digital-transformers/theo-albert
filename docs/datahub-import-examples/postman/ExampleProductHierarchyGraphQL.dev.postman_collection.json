@@ -23,6 +23,10 @@
       "value": "a0de74f6e155ee9e0f8b8e097a1b2fff"
     },
     {
+      "key": "familyParentPath",
+      "value": "/Product Data/Families"
+    },
+    {
       "key": "alphaFamilyPath",
       "value": "/Product Data/Families/Pop Art"
     },
@@ -36,15 +40,15 @@
     },
     {
       "key": "omegaFamilyPath",
-      "value": "/Imports/ProductHierarchy/Families/TA-OMEGA"
+      "value": "/Product Data/Families/TA-OMEGA"
     },
     {
       "key": "omegaModelPath",
-      "value": "/Imports/ProductHierarchy/Families/TA-OMEGA/OME-OPT-01"
+      "value": "/Product Data/Families/TA-OMEGA/OME-OPT-01"
     },
     {
       "key": "omegaFramePath",
-      "value": "/Imports/ProductHierarchy/Families/TA-OMEGA/OME-OPT-01/OME-OPT-01-450"
+      "value": "/Product Data/Families/TA-OMEGA/OME-OPT-01/OME-OPT-01-450 450"
     }
   ],
   "item": [
@@ -66,7 +70,17 @@
               "raw": "{\n  \"query\": \"query GetAlphaFamily { getFamily(fullpath: \\\"{{alphaFamilyPath}}\\\") { id key fullpath published code name launchYear launchPeriod workingTitle description } }\"\n}"
             },
             "url": {
-              "raw": "{{graphqlUrl}}?apikey={{apikey}}",
+              "raw": "https://theo.digital-transformers.it/pimcore-graphql-webservices/ExampleProductHierarchyGraphQL?apikey={{apikey}}",
+              "protocol": "https",
+              "host": [
+                "theo",
+                "digital-transformers",
+                "it"
+              ],
+              "path": [
+                "pimcore-graphql-webservices",
+                "ExampleProductHierarchyGraphQL"
+              ],
               "query": [
                 {
                   "key": "apikey",
@@ -92,7 +106,17 @@
               "raw": "{\n  \"query\": \"query GetAlphaModel { getModel(fullpath: \\\"{{alphaModelPath}}\\\") { id key fullpath code name frameBaseCode seriesCode material description } }\"\n}"
             },
             "url": {
-              "raw": "{{graphqlUrl}}?apikey={{apikey}}",
+              "raw": "https://theo.digital-transformers.it/pimcore-graphql-webservices/ExampleProductHierarchyGraphQL?apikey={{apikey}}",
+              "protocol": "https",
+              "host": [
+                "theo",
+                "digital-transformers",
+                "it"
+              ],
+              "path": [
+                "pimcore-graphql-webservices",
+                "ExampleProductHierarchyGraphQL"
+              ],
               "query": [
                 {
                   "key": "apikey",
@@ -118,7 +142,17 @@
               "raw": "{\n  \"query\": \"query GetAlphaFrame { getFrame(fullpath: \\\"{{alphaFramePath}}\\\") { id key fullpath code name mainColorCode seriesCode ecomFileName exchangeCode artBase { ... on object_model { id key fullpath code name } } } }\"\n}"
             },
             "url": {
-              "raw": "{{graphqlUrl}}?apikey={{apikey}}",
+              "raw": "https://theo.digital-transformers.it/pimcore-graphql-webservices/ExampleProductHierarchyGraphQL?apikey={{apikey}}",
+              "protocol": "https",
+              "host": [
+                "theo",
+                "digital-transformers",
+                "it"
+              ],
+              "path": [
+                "pimcore-graphql-webservices",
+                "ExampleProductHierarchyGraphQL"
+              ],
               "query": [
                 {
                   "key": "apikey",
@@ -144,7 +178,17 @@
               "raw": "{\n  \"query\": \"query ListFamilies { getFamilyListing(first: 10) { edges { node { id key fullpath code name launchYear launchPeriod } } } }\"\n}"
             },
             "url": {
-              "raw": "{{graphqlUrl}}?apikey={{apikey}}",
+              "raw": "https://theo.digital-transformers.it/pimcore-graphql-webservices/ExampleProductHierarchyGraphQL?apikey={{apikey}}",
+              "protocol": "https",
+              "host": [
+                "theo",
+                "digital-transformers",
+                "it"
+              ],
+              "path": [
+                "pimcore-graphql-webservices",
+                "ExampleProductHierarchyGraphQL"
+              ],
               "query": [
                 {
                   "key": "apikey",
@@ -172,10 +216,20 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"query\": \"mutation CreateFamily { createFamily(path: \\\"/Imports/ProductHierarchy/Families\\\", key: \\\"TA-OMEGA\\\", published: true, input: { code: \\\"TA-OMEGA\\\", name: \\\"Omega\\\", launchYear: 2027, launchPeriod: \\\"sep\\\", workingTitle: \\\"Omega Working Title\\\", description: \\\"Example family created through GraphQL\\\" }) { success message output { id fullpath code name } } }\"\n}"
+              "raw": "{\n  \"query\": \"mutation CreateFamily { createFamily(path: \\\"{{familyParentPath}}\\\", key: \\\"TA-OMEGA\\\", published: true, input: { code: \\\"TA-OMEGA\\\", name: \\\"Omega\\\", launchYear: 2027, launchPeriod: \\\"sep\\\", workingTitle: \\\"Omega Working Title\\\", description: \\\"Sample family created through GraphQL\\\" }) { success message output { id fullpath code name } } }\"\n}"
             },
             "url": {
-              "raw": "{{graphqlUrl}}?apikey={{apikey}}",
+              "raw": "https://theo.digital-transformers.it/pimcore-graphql-webservices/ExampleProductHierarchyGraphQL?apikey={{apikey}}",
+              "protocol": "https",
+              "host": [
+                "theo",
+                "digital-transformers",
+                "it"
+              ],
+              "path": [
+                "pimcore-graphql-webservices",
+                "ExampleProductHierarchyGraphQL"
+              ],
               "query": [
                 {
                   "key": "apikey",
@@ -197,10 +251,20 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"query\": \"mutation CreateModel { createModel(path: \\\"{{omegaFamilyPath}}\\\", key: \\\"OME-OPT-01\\\", published: true, input: { code: \\\"OME-OPT-01\\\", name: \\\"Omega Optical 01\\\", frameBaseCode: \\\"OME-OPT\\\", seriesCode: \\\"OMEGA-2027\\\", material: \\\"Beta titanium\\\", description: \\\"Example model created through GraphQL\\\" }) { success message output { id fullpath code name } } }\"\n}"
+              "raw": "{\n  \"query\": \"mutation CreateModel { createModel(path: \\\"{{omegaFamilyPath}}\\\", key: \\\"OME-OPT-01\\\", published: true, input: { code: \\\"OME-OPT-01\\\", name: \\\"Omega Optical 01\\\", frameBaseCode: \\\"OME-OPT\\\", seriesCode: \\\"OMEGA-2027\\\", material: \\\"Beta titanium\\\", description: \\\"Sample model created through GraphQL\\\" }) { success message output { id fullpath code name } } }\"\n}"
             },
             "url": {
-              "raw": "{{graphqlUrl}}?apikey={{apikey}}",
+              "raw": "https://theo.digital-transformers.it/pimcore-graphql-webservices/ExampleProductHierarchyGraphQL?apikey={{apikey}}",
+              "protocol": "https",
+              "host": [
+                "theo",
+                "digital-transformers",
+                "it"
+              ],
+              "path": [
+                "pimcore-graphql-webservices",
+                "ExampleProductHierarchyGraphQL"
+              ],
               "query": [
                 {
                   "key": "apikey",
@@ -222,10 +286,20 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"query\": \"mutation CreateFrame { createFrame(path: \\\"{{omegaModelPath}}\\\", key: \\\"OME-OPT-01-450\\\", published: true, input: { code: \\\"OME-OPT-01-450\\\", name: \\\"Omega Optical Forest\\\", mainColorCode: \\\"450\\\", seriesCode: \\\"OMEGA-2027\\\", ecomFileName: \\\"ome-opt-01-450.jpg\\\", exchangeCode: \\\"EX-OME-450\\\", artBase: { fullpath: \\\"{{omegaModelPath}}\\\" } }) { success message output { id fullpath code name artBase { code fullpath } } } }\"\n}"
+              "raw": "{\n  \"query\": \"mutation CreateFrame { createFrame(path: \\\"{{omegaModelPath}}\\\", key: \\\"OME-OPT-01-450\\\", published: true, input: { code: \\\"OME-OPT-01-450\\\", name: \\\"Omega Optical Forest\\\", mainColorCode: \\\"450\\\", seriesCode: \\\"OMEGA-2027\\\", ecomFileName: \\\"ome-opt-01-450.jpg\\\", exchangeCode: \\\"EX-OME-450\\\", artBase: { type: \\\"object\\\", fullpath: \\\"{{omegaModelPath}}\\\" } }) { success message output { id fullpath code name } } }\"\n}"
             },
             "url": {
-              "raw": "{{graphqlUrl}}?apikey={{apikey}}",
+              "raw": "https://theo.digital-transformers.it/pimcore-graphql-webservices/ExampleProductHierarchyGraphQL?apikey={{apikey}}",
+              "protocol": "https",
+              "host": [
+                "theo",
+                "digital-transformers",
+                "it"
+              ],
+              "path": [
+                "pimcore-graphql-webservices",
+                "ExampleProductHierarchyGraphQL"
+              ],
               "query": [
                 {
                   "key": "apikey",
@@ -236,7 +310,7 @@
           }
         },
         {
-          "name": "Update Alpha Frame",
+          "name": "Update Omega Frame",
           "request": {
             "method": "POST",
             "header": [
@@ -247,10 +321,20 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"query\": \"mutation UpdateFrame { updateFrame(fullpath: \\\"{{alphaFramePath}}\\\", input: { name: \\\"Alpha Optical Black Gold Updated\\\", ecomFileName: \\\"alp-opt-01-101-v2.jpg\\\" }) { success message output { id fullpath name ecomFileName } } }\"\n}"
+              "raw": "{\n  \"query\": \"mutation UpdateFrame { updateFrame(fullpath: \\\"{{omegaFramePath}}\\\", input: { name: \\\"Omega Optical Forest Updated\\\", ecomFileName: \\\"ome-opt-01-450-v2.jpg\\\" }) { success message output { id fullpath name ecomFileName } } }\"\n}"
             },
             "url": {
-              "raw": "{{graphqlUrl}}?apikey={{apikey}}",
+              "raw": "https://theo.digital-transformers.it/pimcore-graphql-webservices/ExampleProductHierarchyGraphQL?apikey={{apikey}}",
+              "protocol": "https",
+              "host": [
+                "theo",
+                "digital-transformers",
+                "it"
+              ],
+              "path": [
+                "pimcore-graphql-webservices",
+                "ExampleProductHierarchyGraphQL"
+              ],
               "query": [
                 {
                   "key": "apikey",
@@ -275,7 +359,87 @@
               "raw": "{\n  \"query\": \"mutation DeleteFrame { deleteFrame(fullpath: \\\"{{omegaFramePath}}\\\") { success message } }\"\n}"
             },
             "url": {
-              "raw": "{{graphqlUrl}}?apikey={{apikey}}",
+              "raw": "https://theo.digital-transformers.it/pimcore-graphql-webservices/ExampleProductHierarchyGraphQL?apikey={{apikey}}",
+              "protocol": "https",
+              "host": [
+                "theo",
+                "digital-transformers",
+                "it"
+              ],
+              "path": [
+                "pimcore-graphql-webservices",
+                "ExampleProductHierarchyGraphQL"
+              ],
+              "query": [
+                {
+                  "key": "apikey",
+                  "value": "{{apikey}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Omega Model",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation DeleteModel { deleteModel(fullpath: \\\"{{omegaModelPath}}\\\") { success message } }\"\n}"
+            },
+            "url": {
+              "raw": "https://theo.digital-transformers.it/pimcore-graphql-webservices/ExampleProductHierarchyGraphQL?apikey={{apikey}}",
+              "protocol": "https",
+              "host": [
+                "theo",
+                "digital-transformers",
+                "it"
+              ],
+              "path": [
+                "pimcore-graphql-webservices",
+                "ExampleProductHierarchyGraphQL"
+              ],
+              "query": [
+                {
+                  "key": "apikey",
+                  "value": "{{apikey}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Omega Family",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation DeleteFamily { deleteFamily(fullpath: \\\"{{omegaFamilyPath}}\\\") { success message } }\"\n}"
+            },
+            "url": {
+              "raw": "https://theo.digital-transformers.it/pimcore-graphql-webservices/ExampleProductHierarchyGraphQL?apikey={{apikey}}",
+              "protocol": "https",
+              "host": [
+                "theo",
+                "digital-transformers",
+                "it"
+              ],
+              "path": [
+                "pimcore-graphql-webservices",
+                "ExampleProductHierarchyGraphQL"
+              ],
               "query": [
                 {
                   "key": "apikey",
