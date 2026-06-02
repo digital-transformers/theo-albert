@@ -20,7 +20,11 @@ final class Version20260602120000SetupTheoPermissions extends AbstractMigration
         'family_launch_update',
         'supplier_projects_only',
         'model_frame_generate',
+        'quality_control_only',
+        'marketing_only',
     ];
+
+    private const PICTURES_UPLOAD_FOLDER_PATH = '/Upload Frame Pictures';
 
     private const PRODUCT_CLASSES = [
         'family',
@@ -130,6 +134,7 @@ final class Version20260602120000SetupTheoPermissions extends AbstractMigration
                 'objects',
                 'assets',
                 'quality_control',
+                'quality_control_only',
             ],
             [$this->objectRootWorkspace(create: false, save: true, publish: true)],
             [$this->assetRootWorkspace(create: true, publish: true)],
@@ -172,7 +177,7 @@ final class Version20260602120000SetupTheoPermissions extends AbstractMigration
                 'assets',
             ],
             [],
-            [$this->assetRootWorkspace(create: true, publish: true)],
+            [$this->assetWorkspace(self::PICTURES_UPLOAD_FOLDER_PATH, create: true, publish: false)],
             []
         );
 
@@ -181,6 +186,7 @@ final class Version20260602120000SetupTheoPermissions extends AbstractMigration
             [
                 'objects',
                 'assets',
+                'marketing_only',
             ],
             [$this->objectRootWorkspace(create: false, save: true, publish: true)],
             [$this->assetRootWorkspace(create: true, publish: true)],
@@ -270,6 +276,48 @@ final class Version20260602120000SetupTheoPermissions extends AbstractMigration
             'versions' => $versions,
             'properties' => $properties,
         ]);
+    }
+
+    private function assetWorkspace(
+        string $path,
+        bool $create,
+        bool $publish,
+        bool $delete = false,
+        bool $rename = false,
+        bool $settings = false,
+        bool $versions = true,
+        bool $properties = false
+    ): AssetWorkspace {
+        $folder = $this->getOrCreateAssetFolder($path);
+
+        return (new AssetWorkspace())->setValues([
+            'cId' => (int) $folder->getId(),
+            'cPath' => $folder->getRealFullPath(),
+            'list' => true,
+            'view' => true,
+            'create' => $create,
+            'publish' => $publish,
+            'delete' => $delete,
+            'rename' => $rename,
+            'settings' => $settings,
+            'versions' => $versions,
+            'properties' => $properties,
+        ]);
+    }
+
+    private function getOrCreateAssetFolder(string $path): Asset\Folder
+    {
+        $folder = Asset::getByPath($path);
+        if ($folder instanceof Asset\Folder) {
+            return $folder;
+        }
+
+        $folder = Asset\Service::createFolderByPath($path);
+        if (!$folder instanceof Asset\Folder) {
+            throw new \RuntimeException(sprintf('Unable to create asset folder "%s".', $path));
+        }
+
+        return $folder;
     }
 
     /**

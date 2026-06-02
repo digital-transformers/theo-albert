@@ -5,6 +5,7 @@ namespace App\EventSubscriber;
 
 use Pimcore\Event\AssetEvents;
 use Pimcore\Event\Model\AssetEvent;
+use Pimcore\Model\Asset;
 use Pimcore\Model\Asset\Folder;
 use Pimcore\Model\User;
 use Pimcore\Model\User\Role;
@@ -14,7 +15,8 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 final class PhotographerAssetPermissionSubscriber implements EventSubscriberInterface
 {
-    private const ROLE_NAME = 'Photographer';
+    private const ROLE_NAMES = ['Photographer', 'Pictures'];
+    private const ALLOWED_EXTENSIONS = ['gif', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'webp', 'zip'];
 
     public function __construct(
         private readonly TokenStorageUserResolver $userResolver,
@@ -30,22 +32,35 @@ final class PhotographerAssetPermissionSubscriber implements EventSubscriberInte
 
     public function onPreAdd(AssetEvent $event): void
     {
-        if (!$event->getAsset() instanceof Folder) {
+        $asset = $event->getAsset();
+        if (!$asset instanceof Asset) {
             return;
         }
 
         $user = $this->userResolver->getUser();
-        if (!$user instanceof User || $user->isAdmin() || !$this->hasPhotographerRole($user)) {
+        if (!$user instanceof User || $user->isAdmin() || !$this->hasPicturesRole($user)) {
             return;
         }
 
-        throw new AccessDeniedHttpException('Photographer users may upload files, but cannot create asset folders.');
+        if ($asset instanceof Folder) {
+            throw new AccessDeniedHttpException('Pictures users may upload files, but cannot create asset folders.');
+        }
+
+        $extension = strtolower(pathinfo((string) $asset->getFilename(), PATHINFO_EXTENSION));
+        if (!in_array($extension, self::ALLOWED_EXTENSIONS, true)) {
+            throw new AccessDeniedHttpException('Pictures users may only upload images or ZIP files.');
+        }
     }
 
-    private function hasPhotographerRole(User $user): bool
+    private function hasPicturesRole(User $user): bool
     {
-        $role = Role::getByName(self::ROLE_NAME);
+        foreach (self::ROLE_NAMES as $roleName) {
+            $role = Role::getByName($roleName);
+            if ($role instanceof Role && in_array((int) $role->getId(), $user->getRoles(), true)) {
+                return true;
+            }
+        }
 
-        return $role instanceof Role && in_array((int) $role->getId(), $user->getRoles(), true);
+        return false;
     }
 }

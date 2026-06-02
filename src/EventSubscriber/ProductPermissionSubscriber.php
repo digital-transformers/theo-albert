@@ -21,12 +21,34 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
     public const PERMISSION_FAMILY_LAUNCH_UPDATE = 'family_launch_update';
     public const PERMISSION_SUPPLIER_PROJECTS_ONLY = 'supplier_projects_only';
     public const PERMISSION_MODEL_FRAME_GENERATE = 'model_frame_generate';
+    public const PERMISSION_QUALITY_CONTROL_ONLY = 'quality_control_only';
+    public const PERMISSION_MARKETING_ONLY = 'marketing_only';
 
     private const FAMILY_CLASS_NAME = 'family';
     private const SUPPLIER_CLASS_NAME = 'supplier';
     private const PRODUCT_CLASS_NAMES = ['family', 'model', 'frame'];
     private const PHASE_FIELDS = ['phase'];
     private const LAUNCH_FIELDS = ['launchPeriod', 'launchYear'];
+    private const QUALITY_CONTROL_FIELDS = [
+        'qualityControlTargetFolder',
+        'qualityControlDocuments',
+        'qualityControlImages',
+        'qualityControlRemarks',
+    ];
+    private const MARKETING_FIELDS = [
+        'imageGallery',
+        'facebookImageGallery',
+        'instagramImageGallery',
+        'video',
+        'attachments',
+        'publicationChannels',
+        'workingTitle',
+        'internalFollowupDesigner',
+        'magicMechanismScore',
+        'localizedfields',
+        'storytellingShortText',
+        'storytellingLongText',
+    ];
 
     private bool $collectingSupplierObjects = false;
 
@@ -57,9 +79,7 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
         }
 
         $object = $event->getObject();
-        if (!$object instanceof Concrete || strtolower((string) $object->getClassName()) !== self::FAMILY_CLASS_NAME) {
-            $this->denyUnauthorizedSupplierSave($object);
-
+        if (!$object instanceof Concrete) {
             return;
         }
 
@@ -67,6 +87,22 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
 
         $user = $this->userResolver->getUser();
         if (!$user instanceof User || $user->isAdmin()) {
+            return;
+        }
+
+        if ($this->isSupportedProductObject($object) && $user->isAllowed(self::PERMISSION_QUALITY_CONTROL_ONLY)) {
+            $this->restoreFieldsExcept($object, self::QUALITY_CONTROL_FIELDS);
+
+            return;
+        }
+
+        if ($this->isSupportedProductObject($object) && $user->isAllowed(self::PERMISSION_MARKETING_ONLY)) {
+            $this->restoreFieldsExcept($object, self::MARKETING_FIELDS);
+
+            return;
+        }
+
+        if (strtolower((string) $object->getClassName()) !== self::FAMILY_CLASS_NAME) {
             return;
         }
 
@@ -131,7 +167,7 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if (strtolower((string) $object->getClassName()) !== self::FAMILY_CLASS_NAME) {
+        if (!$this->isSupportedProductObject($object)) {
             return;
         }
 
@@ -140,15 +176,40 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if (!$user->isAllowed(self::PERMISSION_FAMILY_PHASE_UPDATE)) {
-            $this->makeFieldsNotEditable($data['layout'], self::PHASE_FIELDS);
-        }
+        if ($user->isAllowed(self::PERMISSION_QUALITY_CONTROL_ONLY)) {
+            $this->makeFieldsEditableOnly($data['layout'], self::QUALITY_CONTROL_FIELDS);
+        } elseif ($user->isAllowed(self::PERMISSION_MARKETING_ONLY)) {
+            $this->makeFieldsEditableOnly($data['layout'], self::MARKETING_FIELDS);
+        } elseif (strtolower((string) $object->getClassName()) === self::FAMILY_CLASS_NAME) {
+            if (!$user->isAllowed(self::PERMISSION_FAMILY_PHASE_UPDATE)) {
+                $this->makeFieldsNotEditable($data['layout'], self::PHASE_FIELDS);
+            }
 
-        if (!$user->isAllowed(self::PERMISSION_FAMILY_LAUNCH_UPDATE)) {
-            $this->makeFieldsNotEditable($data['layout'], self::LAUNCH_FIELDS);
+            if (!$user->isAllowed(self::PERMISSION_FAMILY_LAUNCH_UPDATE)) {
+                $this->makeFieldsNotEditable($data['layout'], self::LAUNCH_FIELDS);
+            }
         }
 
         $event->setArgument('data', $data);
+    }
+
+    /**
+     * @param list<string> $editableFieldNames
+     */
+    private function restoreFieldsExcept(Concrete $object, array $editableFieldNames): void
+    {
+        $persisted = $object->getId() > 0 ? Concrete::getById((int) $object->getId(), ['force' => true]) : null;
+        if (!$persisted instanceof Concrete) {
+            return;
+        }
+
+        foreach (array_keys($object->getClass()->getFieldDefinitions()) as $fieldName) {
+            if (in_array($fieldName, $editableFieldNames, true)) {
+                continue;
+            }
+
+            $this->writeFieldValue($object, $fieldName, $this->readFieldValue($persisted, $fieldName));
+        }
     }
 
     /**
@@ -191,6 +252,39 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
         foreach ($children as $child) {
             $this->makeFieldsNotEditable($child, $fieldNames);
         }
+    }
+
+    /**
+     * @param list<string> $editableFieldNames
+     */
+    private function makeFieldsEditableOnly(mixed $layout, array $editableFieldNames): void
+    {
+        if (!is_object($layout)) {
+            return;
+        }
+
+        $name = method_exists($layout, 'getName') ? (string) $layout->getName() : '';
+        if ($name !== '' && !in_array($name, $editableFieldNames, true) && method_exists($layout, 'setNoteditable')) {
+            $layout->setNoteditable(true);
+        }
+
+        if (!method_exists($layout, 'getChildren')) {
+            return;
+        }
+
+        $children = $layout->getChildren();
+        if (!is_array($children)) {
+            return;
+        }
+
+        foreach ($children as $child) {
+            $this->makeFieldsEditableOnly($child, $editableFieldNames);
+        }
+    }
+
+    private function isSupportedProductObject(Concrete $object): bool
+    {
+        return in_array(strtolower((string) $object->getClassName()), self::PRODUCT_CLASS_NAMES, true);
     }
 
     private function shouldLimitToSupplierProjects(User $user): bool
