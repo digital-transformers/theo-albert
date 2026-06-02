@@ -63,12 +63,12 @@ final class Version20260602120000SetupTheoPermissions extends AbstractMigration
     public function down(Schema $schema): void
     {
         foreach ([
-            'Designer Internal',
-            'Designer External',
+            'Designer-Internal',
+            'Designer-External',
             'Supplier',
-            'Quality Control user',
-            'Key User',
-            'Key Readonly',
+            'Quality-Control-user',
+            'Key-User',
+            'Key-Readonly',
             'Pictures',
             'Marketing',
         ] as $roleName) {
@@ -91,7 +91,7 @@ final class Version20260602120000SetupTheoPermissions extends AbstractMigration
         $qcClassIds = $this->resolveClassIds(['family', 'model', 'frame']);
 
         $this->saveRole(
-            'Designer Internal',
+            'Designer-Internal',
             [
                 'objects',
                 'assets',
@@ -105,7 +105,7 @@ final class Version20260602120000SetupTheoPermissions extends AbstractMigration
         );
 
         $this->saveRole(
-            'Designer External',
+            'Designer-External',
             [
                 'objects',
                 'assets',
@@ -129,7 +129,7 @@ final class Version20260602120000SetupTheoPermissions extends AbstractMigration
         );
 
         $this->saveRole(
-            'Quality Control user',
+            'Quality-Control-user',
             [
                 'objects',
                 'assets',
@@ -142,7 +142,7 @@ final class Version20260602120000SetupTheoPermissions extends AbstractMigration
         );
 
         $this->saveRole(
-            'Key User',
+            'Key-User',
             [
                 'objects',
                 'assets',
@@ -160,7 +160,7 @@ final class Version20260602120000SetupTheoPermissions extends AbstractMigration
         );
 
         $this->saveRole(
-            'Key Readonly',
+            'Key-Readonly',
             [
                 'objects',
                 'assets',
