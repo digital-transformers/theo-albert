@@ -132,6 +132,10 @@ services:
       tags:
         - { name: kernel.event_subscriber }
 
+    App\EventSubscriber\ProductPermissionSubscriber:
+      tags:
+        - { name: kernel.event_subscriber }
+
     App\EventSubscriber\DashboardDefaultsSubscriber:
       tags:
         - { name: kernel.event_subscriber }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Service\ModelFrameGenerator;
+use App\EventSubscriber\ProductPermissionSubscriber;
 use Pimcore\Model\DataObject;
 use Pimcore\Model\DataObject\ClassDefinition;
 use Pimcore\Model\DataObject\Model as ModelObject;
@@ -42,7 +43,11 @@ final class ModelFrameGeneratorController extends AbstractController
         }
 
         $frameClass = ClassDefinition::getByName('frame');
-        if ($frameClass !== null && !$user->isAdmin() && !$user->isAllowed($frameClass->getId(), 'class')) {
+        $canGenerateFrames = $user->isAdmin()
+            || $user->isAllowed(ProductPermissionSubscriber::PERMISSION_MODEL_FRAME_GENERATE)
+            || ($frameClass !== null && $user->isAllowed($frameClass->getId(), 'class'));
+
+        if (!$canGenerateFrames) {
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Missing permission to create frame objects',
