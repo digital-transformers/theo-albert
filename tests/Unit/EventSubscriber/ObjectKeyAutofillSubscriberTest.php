@@ -43,6 +43,19 @@ final class ObjectKeyAutofillSubscriberTest extends Unit
         self::assertSame('Test Model', $object->getName());
     }
 
+    public function testFamilyKeyIsSyncedFromCodeAndNameOnUpdate(): void
+    {
+        $object = new ObjectKeyAutofillTestObject();
+        $object->setClassName('family');
+        $object->setKey('FAM-12345');
+        $object->setCode('FAM-12345');
+        $object->setName('Test Family');
+
+        $this->subscriber->onPreUpdate(new DataObjectEvent($object));
+
+        self::assertSame('FAM-12345 - Test Family', $object->getKey());
+    }
+
     public function testFrameCodeIsFilledFromKey(): void
     {
         $object = new ObjectKeyAutofillTestObject();

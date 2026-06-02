@@ -235,7 +235,7 @@ final class AutomaticImageLinker
     {
         $parsed = $this->parseFilename($asset->getFilename());
         foreach ($parsed['codeCandidates'] as $codeCandidate) {
-            foreach ([Frame::class, ModelObject::class, Family::class] as $className) {
+            foreach ($parsed['targetClasses'] as $className) {
                 $object = $this->findObjectByCode($className, $codeCandidate);
                 if (!$object instanceof Concrete) {
                     continue;
@@ -258,7 +258,7 @@ final class AutomaticImageLinker
     }
 
     /**
-     * @return array{field: string, codeCandidates: list<string>}
+     * @return array{field: string, codeCandidates: list<string>, targetClasses: list<class-string>}
      */
     private function parseFilename(string $filename): array
     {
@@ -266,6 +266,7 @@ final class AutomaticImageLinker
         $tokens = array_values(array_filter(preg_split('/[-_\s]+/', $basename) ?: []));
         $field = 'imageGallery';
         $codeTokens = [];
+        $targetClasses = [Frame::class, ModelObject::class, Family::class];
 
         foreach ($tokens as $token) {
             $normalized = strtolower($token);
@@ -275,6 +276,11 @@ final class AutomaticImageLinker
             }
 
             $codeTokens[] = $token;
+        }
+
+        if (strtolower($codeTokens[0] ?? '') === 'f' && count($codeTokens) > 1) {
+            $targetClasses = [ModelObject::class];
+            $codeTokens = array_slice($codeTokens, 1);
         }
 
         $candidates = [];
@@ -291,6 +297,7 @@ final class AutomaticImageLinker
         return [
             'field' => $field,
             'codeCandidates' => array_values(array_unique($candidates)),
+            'targetClasses' => $targetClasses,
         ];
     }
 

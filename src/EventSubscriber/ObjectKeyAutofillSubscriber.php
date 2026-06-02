@@ -13,13 +13,22 @@ final class ObjectKeyAutofillSubscriber implements EventSubscriberInterface
     {
         return [
             DataObjectEvents::PRE_ADD => 'onPreAdd',
+            DataObjectEvents::PRE_UPDATE => 'onPreUpdate',
         ];
     }
 
     public function onPreAdd(DataObjectEvent $event): void
     {
-        $object = $event->getObject();
+        $this->normalizeObject($event->getObject(), true);
+    }
 
+    public function onPreUpdate(DataObjectEvent $event): void
+    {
+        $this->normalizeObject($event->getObject(), false);
+    }
+
+    private function normalizeObject(object $object, bool $autofillFromKey): void
+    {
         if (!method_exists($object, 'getClassName') || !method_exists($object, 'getKey')) {
             return;
         }
@@ -30,10 +39,19 @@ final class ObjectKeyAutofillSubscriber implements EventSubscriberInterface
         }
 
         match (strtolower((string) $object->getClassName())) {
-            'family', 'model' => $this->autofillCodeAndName($object, $key),
+            'family', 'model' => $this->normalizeFamilyOrModel($object, $key, $autofillFromKey),
             'frame' => $this->setIfEmpty($object, 'Code', $key),
             default => null,
         };
+    }
+
+    private function normalizeFamilyOrModel(object $object, string $key, bool $autofillFromKey): void
+    {
+        if ($autofillFromKey) {
+            $this->autofillCodeAndName($object, $key);
+        }
+
+        $this->syncKeyFromCodeAndName($object);
     }
 
     private function autofillCodeAndName(object $object, string $key): void
@@ -44,6 +62,31 @@ final class ObjectKeyAutofillSubscriber implements EventSubscriberInterface
 
         $this->setIfEmpty($object, 'Code', $matches[1]);
         $this->setIfEmpty($object, 'Name', $matches[2]);
+    }
+
+    private function syncKeyFromCodeAndName(object $object): void
+    {
+        if (
+            !method_exists($object, 'getCode')
+            || !method_exists($object, 'getName')
+            || !method_exists($object, 'getKey')
+            || !method_exists($object, 'setKey')
+        ) {
+            return;
+        }
+
+        $code = trim((string) ($object->getCode() ?? ''));
+        $name = trim((string) ($object->getName() ?? ''));
+        if ($code === '' || $name === '') {
+            return;
+        }
+
+        $key = $code . ' - ' . $name;
+        if (trim((string) $object->getKey()) === $key) {
+            return;
+        }
+
+        $object->setKey($key);
     }
 
     private function setIfEmpty(object $object, string $fieldName, string $value): void
