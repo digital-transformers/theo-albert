@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Service\PrestaShopImportJobStore;
+use App\Service\PrestaShopImportLauncher;
 use Pimcore\Tool\Console as PimcoreConsole;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Process\Process;
@@ -15,7 +18,12 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 #[Route('/admin/datahub-supervisor')]
 final class DataHubSupervisorController extends AbstractController
 {
-    public function __construct(private TokenStorageInterface $tokenStorage) {}
+    public function __construct(
+        private TokenStorageInterface $tokenStorage,
+        private readonly PrestaShopImportJobStore $prestaShopJobStore,
+        private readonly PrestaShopImportLauncher $prestaShopLauncher,
+    ) {
+    }
 
     // ====== Config/paths ======
     private const CACHE_NS = 'datahub_single';
@@ -226,4 +234,56 @@ final class DataHubSupervisorController extends AbstractController
         return new JsonResponse(['ok' => true]);
     }
 
+    #[Route('/prestashop/jobs', name: 'datahub_supervisor_prestashop_jobs', methods: ['GET'])]
+    public function prestaShopJobs(Request $request): JsonResponse
+    {
+        $this->assertAdminOrAllowed();
+
+        return new JsonResponse([
+            'success' => true,
+            'jobs' => $this->prestaShopJobStore->listJobs((int) $request->query->get('limit', 100)),
+        ]);
+    }
+
+    #[Route('/prestashop/jobs/{jobId}', name: 'datahub_supervisor_prestashop_job', methods: ['GET'])]
+    public function prestaShopJob(string $jobId): JsonResponse
+    {
+        $this->assertAdminOrAllowed();
+
+        try {
+            $status = $this->prestaShopJobStore->readStatus($jobId);
+            $report = $this->prestaShopJobStore->readReport($jobId);
+        } catch (\Throwable) {
+            $status = null;
+            $report = null;
+        }
+        if ($status === null) {
+            return new JsonResponse(['success' => false, 'message' => 'Import job not found.'], 404);
+        }
+
+        return new JsonResponse(['success' => true, 'status' => $status, 'report' => $report]);
+    }
+
+    #[Route('/prestashop/import', name: 'datahub_supervisor_prestashop_import', methods: ['POST'])]
+    public function prestaShopImport(Request $request): JsonResponse
+    {
+        $this->assertAdminOrAllowed();
+
+        $file = $request->files->get('file');
+        if (!$file instanceof UploadedFile || !$file->isValid()) {
+            return new JsonResponse(['success' => false, 'message' => 'Select a valid ZIP export.'], 400);
+        }
+        $contents = file_get_contents($file->getPathname());
+        if (!is_string($contents)) {
+            return new JsonResponse(['success' => false, 'message' => 'Unable to read the uploaded ZIP.'], 400);
+        }
+
+        try {
+            $job = $this->prestaShopLauncher->enqueue($contents, $file->getClientOriginalName());
+        } catch (\RuntimeException $exception) {
+            return new JsonResponse(['success' => false, 'message' => $exception->getMessage()], 400);
+        }
+
+        return new JsonResponse(['success' => true, ...$job], 202);
+    }
 }

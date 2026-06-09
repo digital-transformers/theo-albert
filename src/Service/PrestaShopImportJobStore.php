@@ -12,7 +12,7 @@ final class PrestaShopImportJobStore
     {
     }
 
-    public function createJob(string $jobId, string $zipContents): string
+    public function createJob(string $jobId, string $zipContents, string $filename = 'export.zip'): string
     {
         $directory = $this->jobDirectory($jobId);
         if (!mkdir($directory, 0770, true) && !is_dir($directory)) {
@@ -23,7 +23,11 @@ final class PrestaShopImportJobStore
             throw new RuntimeException('Unable to store import ZIP.');
         }
 
-        $this->writeStatus($jobId, ['status' => 'queued', 'created_at' => gmdate(DATE_ATOM)]);
+        $this->writeStatus($jobId, [
+            'status' => 'queued',
+            'filename' => basename($filename) ?: 'export.zip',
+            'created_at' => gmdate(DATE_ATOM),
+        ]);
 
         return $inputPath;
     }
@@ -33,9 +37,14 @@ final class PrestaShopImportJobStore
      */
     public function writeStatus(string $jobId, array $status): void
     {
-        $status['job_id'] = $jobId;
-        $status['updated_at'] = gmdate(DATE_ATOM);
-        $this->writeJson($this->jobDirectory($jobId) . '/status.json', $status);
+        $path = $this->jobDirectory($jobId) . '/status.json';
+        $status = [
+            ...($this->readJson($path) ?? []),
+            ...$status,
+            'job_id' => $jobId,
+            'updated_at' => gmdate(DATE_ATOM),
+        ];
+        $this->writeJson($path, $status);
     }
 
     /**
@@ -52,6 +61,39 @@ final class PrestaShopImportJobStore
     public function readReport(string $jobId): ?array
     {
         return $this->readJson($this->jobDirectory($jobId) . '/report.json');
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    public function listJobs(int $limit = 100): array
+    {
+        if (!is_dir($this->jobsDirectory)) {
+            return [];
+        }
+
+        $jobs = [];
+        foreach (scandir($this->jobsDirectory, SCANDIR_SORT_DESCENDING) ?: [] as $jobId) {
+            if (!preg_match('/^[a-f0-9-]{36}$/', $jobId)) {
+                continue;
+            }
+
+            $status = $this->readStatus($jobId);
+            if ($status !== null) {
+                $jobs[] = $status;
+            }
+            if (count($jobs) >= max(1, min(500, $limit))) {
+                break;
+            }
+        }
+
+        usort(
+            $jobs,
+            static fn (array $left, array $right): int =>
+                strcmp((string) ($right['created_at'] ?? ''), (string) ($left['created_at'] ?? ''))
+        );
+
+        return $jobs;
     }
 
     /**

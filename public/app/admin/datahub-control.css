@@ -1,0 +1,43 @@
+.prestashop-import-detail {
+    color: #2f3437;
+    font-size: 13px;
+}
+
+.prestashop-import-detail table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.prestashop-import-detail th,
+.prestashop-import-detail td {
+    border-bottom: 1px solid #e3e6e8;
+    padding: 6px 10px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.prestashop-import-detail th {
+    color: #555d62;
+    font-weight: 600;
+    width: 150px;
+}
+
+.prestashop-import-detail h3 {
+    font-size: 13px;
+    margin: 14px 10px 6px;
+}
+
+.prestashop-import-errors {
+    background: #fff4f2;
+    border-left: 3px solid #b3261e;
+    margin: 0 10px 10px;
+    padding: 8px 10px;
+}
+
+.prestashop-import-errors > div {
+    margin: 3px 0;
+}
+
+.prestashop-import-empty {
+    color: #687076;
+}

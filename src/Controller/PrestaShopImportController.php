@@ -4,22 +4,19 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Service\PrestaShopImportJobStore;
-use Pimcore\Tool\Console as PimcoreConsole;
+use App\Service\PrestaShopImportLauncher;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Uid\Uuid;
 
 #[Route('/api/integrations/prestashop')]
 final class PrestaShopImportController extends AbstractController
 {
-    private const MAX_UPLOAD_BYTES = 50 * 1024 * 1024;
-
     public function __construct(
         private readonly PrestaShopImportJobStore $jobStore,
+        private readonly PrestaShopImportLauncher $launcher,
         private readonly string $importToken,
     ) {
     }
@@ -31,39 +28,22 @@ final class PrestaShopImportController extends AbstractController
             return new JsonResponse(['success' => false, 'message' => 'Unauthorized.'], 401);
         }
 
-        $contents = $this->readZipContents($request);
-        if ($contents === null || !str_starts_with($contents, "PK")) {
+        [$contents, $filename] = $this->readZipContents($request);
+        if ($contents === null) {
             return new JsonResponse(['success' => false, 'message' => 'A valid ZIP export is required.'], 400);
         }
-        if (strlen($contents) > self::MAX_UPLOAD_BYTES) {
-            return new JsonResponse(['success' => false, 'message' => 'The ZIP export exceeds the 50 MB limit.'], 413);
-        }
 
-        $jobId = Uuid::v7()->toRfc4122();
-        $inputPath = $this->jobStore->createJob($jobId, $contents);
-        $logPath = $this->jobStore->jobDirectory($jobId) . '/worker.log';
-        $command = [
-            PimcoreConsole::getPhpCli() ?: '/usr/bin/php',
-            \PIMCORE_PROJECT_ROOT . '/bin/console',
-            'app:prestashop-export:sync',
-            $inputPath,
-            '--job-id=' . $jobId,
-            '--no-interaction',
-            '--no-ansi',
-        ];
-        $shell = sprintf(
-            'nohup %s > %s 2>&1 & echo $!',
-            implode(' ', array_map('escapeshellarg', $command)),
-            escapeshellarg($logPath)
-        );
-        $process = Process::fromShellCommandline($shell, \PIMCORE_PROJECT_ROOT);
-        $process->run();
-        $pid = (int) trim($process->getOutput());
-        if (!$process->isSuccessful() || $pid <= 0) {
-            $this->jobStore->writeStatus($jobId, ['status' => 'failed', 'error' => 'Unable to start import worker.']);
+        try {
+            $job = $this->launcher->enqueue($contents, $filename);
+        } catch (\RuntimeException $exception) {
+            $status = str_contains($exception->getMessage(), '50 MB') ? 413 : 400;
+            if (str_contains($exception->getMessage(), 'worker')) {
+                $status = 500;
+            }
 
-            return new JsonResponse(['success' => false, 'job_id' => $jobId, 'message' => 'Unable to start import worker.'], 500);
+            return new JsonResponse(['success' => false, 'message' => $exception->getMessage()], $status);
         }
+        $jobId = $job['job_id'];
         return new JsonResponse([
             'success' => true,
             'job_id' => $jobId,
@@ -122,17 +102,20 @@ final class PrestaShopImportController extends AbstractController
         return $this->importToken !== '' && $provided !== '' && hash_equals($this->importToken, $provided);
     }
 
-    private function readZipContents(Request $request): ?string
+    /**
+     * @return array{0: string|null, 1: string}
+     */
+    private function readZipContents(Request $request): array
     {
         $file = $request->files->get('file');
         if ($file instanceof UploadedFile && $file->isValid()) {
             $contents = file_get_contents($file->getPathname());
 
-            return is_string($contents) ? $contents : null;
+            return [is_string($contents) ? $contents : null, $file->getClientOriginalName()];
         }
 
         $contents = $request->getContent();
 
-        return $contents !== '' ? $contents : null;
+        return [$contents !== '' ? $contents : null, 'export.zip'];
     }
 }

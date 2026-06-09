@@ -34,6 +34,7 @@ final class PimcoreAdminListener implements EventSubscriberInterface
     public function addCSSFiles(PathsEvent $event): void
     {
         $event->addPaths([
+            '/app/admin/datahub-control.css',
             '/app/admin/quality-control-tree.css',
         ]);
     }

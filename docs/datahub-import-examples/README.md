@@ -244,6 +244,17 @@ curl -H "X-PrestaShop-Token: $PRESTASHOP_IMPORT_TOKEN" \
 The endpoint also accepts the ZIP as the raw request body with `Content-Type: application/zip`.
 Imports are serialized so that only one ProductHierarchy synchronization runs at a time.
 
+The Pimcore admin `DataHub Import Control` panel includes a dedicated `PrestaShop` tab for:
+
+- uploading export ZIP files;
+- monitoring queued, converting, and syncing jobs;
+- reviewing created, updated, and failed family/model/frame totals;
+- opening the complete conversion and synchronization summary.
+
+The matching Postman collection is:
+
+- `postman/PrestaShopProductHierarchyImport.postman_collection.json`
+
 ## GraphQL examples
 
 Concrete query and mutation examples are included here:

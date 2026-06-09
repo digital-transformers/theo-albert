@@ -1,0 +1,165 @@
+{
+  "info": {
+    "_postman_id": "a5c693cb-d382-4fea-bf1a-31c69af831af",
+    "name": "PrestaShop ProductHierarchy Import",
+    "description": "Upload a PrestaShop export ZIP, monitor its asynchronous ProductHierarchy synchronization, and retrieve the final audit report.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://theo.digital-transformers.it"
+    },
+    {
+      "key": "prestashopToken",
+      "value": ""
+    },
+    {
+      "key": "jobId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Start Import - Multipart ZIP",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const body = pm.response.json();",
+              "pm.test('Import accepted', () => pm.expect(pm.response.code).to.eql(202));",
+              "if (body.job_id) pm.collectionVariables.set('jobId', body.job_id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-PrestaShop-Token",
+            "value": "{{prestashopToken}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "description": "Select the PrestaShop export ZIP.",
+              "type": "file",
+              "src": []
+            }
+          ]
+        },
+        "url": "{{baseUrl}}/api/integrations/prestashop/import"
+      }
+    },
+    {
+      "name": "Start Import - Raw ZIP Body",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const body = pm.response.json();",
+              "pm.test('Import accepted', () => pm.expect(pm.response.code).to.eql(202));",
+              "if (body.job_id) pm.collectionVariables.set('jobId', body.job_id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-PrestaShop-Token",
+            "value": "{{prestashopToken}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/zip",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "file",
+          "file": {
+            "src": []
+          }
+        },
+        "url": "{{baseUrl}}/api/integrations/prestashop/import"
+      }
+    },
+    {
+      "name": "Get Import Status",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is available', () => pm.expect(pm.response.code).to.eql(200));",
+              "const body = pm.response.json();",
+              "pm.test('Job ID matches', () => pm.expect(body.job_id).to.eql(pm.collectionVariables.get('jobId')));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-PrestaShop-Token",
+            "value": "{{prestashopToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/integrations/prestashop/import/{{jobId}}"
+      }
+    },
+    {
+      "name": "Get Import Report",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Report is available after completion', () => pm.expect(pm.response.code).to.eql(200));",
+              "const body = pm.response.json();",
+              "pm.test('Report contains conversion and sync sections', () => {",
+              "  pm.expect(body.report).to.have.property('conversion');",
+              "  pm.expect(body.report).to.have.property('sync');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-PrestaShop-Token",
+            "value": "{{prestashopToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/integrations/prestashop/import/{{jobId}}/report"
+      }
+    },
+    {
+      "name": "Verify Unauthorized Request",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/integrations/prestashop/import/{{jobId}}"
+      }
+    }
+  ]
+}
