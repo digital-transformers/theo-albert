@@ -28,6 +28,36 @@ The included sample records are linked together:
 Because the sources are JSON, multi-relations are represented as JSON arrays directly. The example
 configs do not need CSV-style delimiters for many-to-many mappings.
 
+## Converting the PrestaShop export
+
+The application includes a converter for the `config/` and `products/` export structure:
+
+```bash
+bin/console app:prestashop-export:convert \
+  /path/to/export.zip \
+  /path/to/converted-output
+```
+
+It accepts either the ZIP file or an extracted export directory and produces:
+
+- `families.json` for `ExampleFamilyJsonImport`
+- `models.json` for `ExampleModelJsonImport`
+- `frames.json` for `ExampleFrameJsonImport`
+- `report.json` with counts, skipped records, duplicate product codes, and model/family conflicts
+
+The converter processes the product chunk files in bounded passes so the full export can be handled
+without loading every source product into memory at once. It excludes `manual_products.json`,
+because those records do not represent family/model frames.
+
+Model-to-family relationships are inferred from frame references. When one model appears under
+multiple families, the family with the most frame references is selected and frames using a
+different family are skipped and listed in `report.json`.
+
+`main_color_code` is intentionally left empty. The source `CombiCode` remains available as
+`source.combi_code`, while individual `ColorCode` values populate `composed_color_codes`. This
+preserves the original `ProductCode`; setting `mainColorCode` currently causes the frame save
+subscriber to rewrite it.
+
 ## Datahub configs included
 
 - `var/config/data_hub/ExampleFamilyJsonImport.yaml`
