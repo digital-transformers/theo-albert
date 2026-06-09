@@ -1,5 +1,6 @@
 parameters:
     secret: HDrOmrrKIRRZCD2V9VtAJA35nMpxPBt9KwcXWGEQEic=
+    prestashop_import_jobs_directory: '%kernel.project_dir%/var/prestashop-import/jobs'
 
     # customize the full path to external executables
     # normally they are auto-detected by `which program` or auto-discovered in the configured path in
@@ -61,6 +62,19 @@ services:
 
     App\Service\:
         resource: '../src/Service'
+
+    App\Service\ProductHierarchyGraphqlClient:
+      arguments:
+        $endpointUrl: '%env(PRODUCT_HIERARCHY_GRAPHQL_URL)%'
+        $apiKey: '%env(PRODUCT_HIERARCHY_API_KEY)%'
+
+    App\Service\PrestaShopImportJobStore:
+      arguments:
+        $jobsDirectory: '%prestashop_import_jobs_directory%'
+
+    App\Controller\PrestaShopImportController:
+      arguments:
+        $importToken: '%env(PRESTASHOP_IMPORT_TOKEN)%'
 
     App\Model\DataObject\ClassDefinition\Data\ColorOptionsProvider:
       tags:

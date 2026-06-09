@@ -219,6 +219,31 @@ That gives you operations such as:
 - `updateFamily`, `updateModel`, `updateFrame`
 - `deleteFamily`, `deleteModel`, `deleteFrame`
 
+## Automated PrestaShop import endpoint
+
+The dedicated endpoint accepts the original PrestaShop export ZIP, converts it, and asynchronously
+upserts families, models, and frames through the `ProductHierarchy` GraphQL mutations:
+
+```bash
+curl -X POST \
+  -H "X-PrestaShop-Token: $PRESTASHOP_IMPORT_TOKEN" \
+  -F "file=@export.zip" \
+  https://theo.digital-transformers.it/api/integrations/prestashop/import
+```
+
+The response is HTTP `202` with a job ID. Use that ID to inspect progress and the final report:
+
+```bash
+curl -H "X-PrestaShop-Token: $PRESTASHOP_IMPORT_TOKEN" \
+  https://theo.digital-transformers.it/api/integrations/prestashop/import/JOB_ID
+
+curl -H "X-PrestaShop-Token: $PRESTASHOP_IMPORT_TOKEN" \
+  https://theo.digital-transformers.it/api/integrations/prestashop/import/JOB_ID/report
+```
+
+The endpoint also accepts the ZIP as the raw request body with `Content-Type: application/zip`.
+Imports are serialized so that only one ProductHierarchy synchronization runs at a time.
+
 ## GraphQL examples
 
 Concrete query and mutation examples are included here:

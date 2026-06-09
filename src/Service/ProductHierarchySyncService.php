@@ -1,0 +1,344 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Service;
+
+use RuntimeException;
+
+final class ProductHierarchySyncService
+{
+    private const PAGE_SIZE = 500;
+
+    public function __construct(private readonly ProductHierarchyGraphqlClient $client)
+    {
+    }
+
+    /**
+     * @param array{
+     *     families: list<array<string, mixed>>,
+     *     models: list<array<string, mixed>>,
+     *     frames: list<array<string, mixed>>,
+     *     report: array<string, mixed>
+     * } $converted
+     * @param callable(array<string, mixed>): void|null $progress
+     *
+     * @return array<string, mixed>
+     */
+    public function sync(array $converted, ?callable $progress = null): array
+    {
+        $result = [
+            'families' => ['created' => 0, 'updated' => 0, 'failed' => 0],
+            'models' => ['created' => 0, 'updated' => 0, 'failed' => 0],
+            'frames' => ['created' => 0, 'updated' => 0, 'failed' => 0],
+            'errors' => [],
+        ];
+
+        $familyIndex = $this->loadIndex('Family');
+        $modelIndex = $this->loadIndex('Model');
+        $frameIndex = $this->loadIndex('Frame');
+
+        $this->syncFamilies($converted['families'], $familyIndex, $result, $progress);
+        $this->syncModels($converted['models'], $familyIndex, $modelIndex, $result, $progress);
+        $this->syncFrames($converted['frames'], $modelIndex, $frameIndex, $result, $progress);
+
+        return $result;
+    }
+
+    /**
+     * @return array<string, array{id: int, fullpath: string}>
+     */
+    private function loadIndex(string $entity): array
+    {
+        $index = [];
+        $offset = 0;
+        $field = 'get' . $entity . 'Listing';
+
+        do {
+            $query = sprintf(
+                'query Existing($first: Int!, $after: Int!) {
+                    %s(first: $first, after: $after, published: false) {
+                        edges { node { id fullpath code } }
+                    }
+                }',
+                $field
+            );
+            $data = $this->client->execute($query, ['first' => self::PAGE_SIZE, 'after' => $offset]);
+            $edges = $data[$field]['edges'] ?? [];
+            if (!is_array($edges)) {
+                throw new RuntimeException(sprintf('Invalid %s listing response.', $entity));
+            }
+
+            foreach ($edges as $edge) {
+                $node = is_array($edge) && is_array($edge['node'] ?? null) ? $edge['node'] : [];
+                $code = $this->stringValue($node['code'] ?? null);
+                if ($code !== '' && !isset($index[$code])) {
+                    $index[$code] = [
+                        'id' => (int) ($node['id'] ?? 0),
+                        'fullpath' => $this->stringValue($node['fullpath'] ?? null),
+                    ];
+                }
+            }
+
+            $count = count($edges);
+            $offset += $count;
+        } while ($count === self::PAGE_SIZE);
+
+        return $index;
+    }
+
+    /**
+     * @param list<array<string, mixed>> $families
+     * @param array<string, array{id: int, fullpath: string}> $familyIndex
+     * @param array<string, mixed> $result
+     * @param callable(array<string, mixed>): void|null $progress
+     */
+    private function syncFamilies(array $families, array &$familyIndex, array &$result, ?callable $progress): void
+    {
+        $total = count($families);
+        foreach ($families as $position => $family) {
+            $code = $this->stringValue($family['family_code'] ?? null);
+            $input = [
+                'code' => $code,
+                'name' => $this->stringValue($family['family_name'] ?? null) ?: $code,
+                'published' => true,
+            ];
+
+            try {
+                if (isset($familyIndex[$code])) {
+                    $output = $this->mutate('updateFamily', ['id' => $familyIndex[$code]['id'], 'input' => $input]);
+                    ++$result['families']['updated'];
+                } else {
+                    $output = $this->mutate('createFamily', [
+                        'path' => $this->stringValue($family['import_parent_path'] ?? null),
+                        'key' => $code,
+                        'published' => true,
+                        'input' => $input,
+                    ]);
+                    ++$result['families']['created'];
+                }
+                $familyIndex[$code] = $output;
+            } catch (\Throwable $exception) {
+                ++$result['families']['failed'];
+                $result['errors'][] = $this->error('family', $code, $exception);
+            }
+
+            $this->reportProgress($progress, 'families', $position + 1, $total, $result);
+        }
+    }
+
+    /**
+     * @param list<array<string, mixed>> $models
+     * @param array<string, array{id: int, fullpath: string}> $familyIndex
+     * @param array<string, array{id: int, fullpath: string}> $modelIndex
+     * @param array<string, mixed> $result
+     * @param callable(array<string, mixed>): void|null $progress
+     */
+    private function syncModels(
+        array $models,
+        array $familyIndex,
+        array &$modelIndex,
+        array &$result,
+        ?callable $progress,
+    ): void {
+        $total = count($models);
+        foreach ($models as $position => $model) {
+            $code = $this->stringValue($model['model_code'] ?? null);
+            $familyCode = $this->stringValue($model['parent_family_code'] ?? null);
+            $parent = $familyIndex[$familyCode] ?? null;
+            if ($parent === null) {
+                ++$result['models']['failed'];
+                $result['errors'][] = ['entity' => 'model', 'code' => $code, 'message' => 'Parent family is unavailable.'];
+                $this->reportProgress($progress, 'models', $position + 1, $total, $result);
+                continue;
+            }
+
+            $input = array_filter([
+                'code' => $code,
+                'name' => $this->stringValue($model['model_name'] ?? null) ?: $code,
+                'frameBaseCode' => $this->stringValue($model['frame_base_code'] ?? null),
+                'seriesCode' => $this->stringValue($model['series_code'] ?? null),
+                'material' => $this->stringValue($model['material'] ?? null),
+                'description' => $this->nullableString($model['description'] ?? null),
+                'published' => true,
+            ], static fn (mixed $value): bool => $value !== null);
+
+            try {
+                if (isset($modelIndex[$code])) {
+                    $output = $this->mutate('updateModel', [
+                        'id' => $modelIndex[$code]['id'],
+                        'parentId' => $parent['id'],
+                        'input' => $input,
+                    ]);
+                    ++$result['models']['updated'];
+                } else {
+                    $output = $this->mutate('createModel', [
+                        'parentId' => $parent['id'],
+                        'key' => $code,
+                        'published' => true,
+                        'input' => $input,
+                    ]);
+                    ++$result['models']['created'];
+                }
+                $modelIndex[$code] = $output;
+            } catch (\Throwable $exception) {
+                ++$result['models']['failed'];
+                $result['errors'][] = $this->error('model', $code, $exception);
+            }
+
+            $this->reportProgress($progress, 'models', $position + 1, $total, $result);
+        }
+    }
+
+    /**
+     * @param list<array<string, mixed>> $frames
+     * @param array<string, array{id: int, fullpath: string}> $modelIndex
+     * @param array<string, array{id: int, fullpath: string}> $frameIndex
+     * @param array<string, mixed> $result
+     * @param callable(array<string, mixed>): void|null $progress
+     */
+    private function syncFrames(
+        array $frames,
+        array $modelIndex,
+        array &$frameIndex,
+        array &$result,
+        ?callable $progress,
+    ): void {
+        $total = count($frames);
+        foreach ($frames as $position => $frame) {
+            $code = $this->stringValue($frame['frame_code'] ?? null);
+            $modelCode = $this->stringValue($frame['parent_model_code'] ?? null);
+            $parent = $modelIndex[$modelCode] ?? null;
+            if ($parent === null) {
+                ++$result['frames']['failed'];
+                $result['errors'][] = ['entity' => 'frame', 'code' => $code, 'message' => 'Parent model is unavailable.'];
+                $this->reportProgress($progress, 'frames', $position + 1, $total, $result);
+                continue;
+            }
+
+            $input = [
+                'code' => $code,
+                'name' => $this->stringValue($frame['frame_name'] ?? null) ?: $code,
+                'mainColorCode' => $this->stringValue($frame['main_color_code'] ?? null),
+                'seriesCode' => $this->stringValue($frame['series_code'] ?? null),
+                'ecomFileName' => $this->stringValue($frame['ecom_file_name'] ?? null),
+                'exchangeCode' => $this->stringValue($frame['exchange_code'] ?? null),
+                'artBase' => ['type' => 'object', 'fullpath' => $parent['fullpath']],
+                'published' => true,
+            ];
+
+            try {
+                if (isset($frameIndex[$code])) {
+                    $output = $this->mutate('updateFrame', [
+                        'id' => $frameIndex[$code]['id'],
+                        'parentId' => $parent['id'],
+                        'input' => $input,
+                    ]);
+                    ++$result['frames']['updated'];
+                } else {
+                    $output = $this->mutate('createFrame', [
+                        'parentId' => $parent['id'],
+                        'key' => $code,
+                        'published' => true,
+                        'input' => $input,
+                    ]);
+                    ++$result['frames']['created'];
+                }
+                $frameIndex[$code] = $output;
+            } catch (\Throwable $exception) {
+                ++$result['frames']['failed'];
+                $result['errors'][] = $this->error('frame', $code, $exception);
+            }
+
+            $this->reportProgress($progress, 'frames', $position + 1, $total, $result);
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $variables
+     *
+     * @return array{id: int, fullpath: string}
+     */
+    private function mutate(string $mutation, array $variables): array
+    {
+        $arguments = [];
+        $definitions = [];
+        foreach ($variables as $name => $value) {
+            $type = match ($name) {
+                'id', 'parentId' => 'Int',
+                'published' => 'Boolean',
+                'input' => match ($mutation) {
+                    'createFamily', 'updateFamily' => 'UpdateFamilyInput',
+                    'createModel', 'updateModel' => 'UpdateModelInput',
+                    default => 'UpdateFrameInput',
+                },
+                default => 'String',
+            };
+            $definitions[] = '$' . $name . ': ' . $type . ($name === 'key' ? '!' : '');
+            $arguments[] = $name . ': $' . $name;
+        }
+
+        $query = sprintf(
+            'mutation Sync(%s) {
+                %s(%s) {
+                    success
+                    message
+                    output { id fullpath }
+                }
+            }',
+            implode(', ', $definitions),
+            $mutation,
+            implode(', ', $arguments)
+        );
+        $data = $this->client->execute($query, $variables);
+        $payload = is_array($data[$mutation] ?? null) ? $data[$mutation] : [];
+        if (($payload['success'] ?? false) !== true || !is_array($payload['output'] ?? null)) {
+            throw new RuntimeException((string) ($payload['message'] ?? $mutation . ' failed.'));
+        }
+
+        return [
+            'id' => (int) ($payload['output']['id'] ?? 0),
+            'fullpath' => $this->stringValue($payload['output']['fullpath'] ?? null),
+        ];
+    }
+
+    /**
+     * @param callable(array<string, mixed>): void|null $progress
+     * @param array<string, mixed> $result
+     */
+    private function reportProgress(?callable $progress, string $stage, int $current, int $total, array $result): void
+    {
+        if ($progress !== null && ($current === $total || $current % 25 === 0)) {
+            $progress([
+                'stage' => $stage,
+                'current' => $current,
+                'total' => $total,
+                'result' => [
+                    'families' => $result['families'],
+                    'models' => $result['models'],
+                    'frames' => $result['frames'],
+                    'error_count' => count($result['errors']),
+                ],
+            ]);
+        }
+    }
+
+    /**
+     * @return array{entity: string, code: string, message: string}
+     */
+    private function error(string $entity, string $code, \Throwable $exception): array
+    {
+        return ['entity' => $entity, 'code' => $code, 'message' => $exception->getMessage()];
+    }
+
+    private function stringValue(mixed $value): string
+    {
+        return is_scalar($value) ? trim((string) $value) : '';
+    }
+
+    private function nullableString(mixed $value): ?string
+    {
+        $value = $this->stringValue($value);
+
+        return $value === '' ? null : $value;
+    }
+}
