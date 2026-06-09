@@ -202,6 +202,11 @@ app.datahub.createPrestaShopPanel = function () {
         layout: 'hbox',
         items: [
           {
+            xtype: 'hiddenfield',
+            name: 'csrfToken',
+            value: pimcore.settings.csrfToken
+          },
+          {
             xtype: 'filefield',
             name: 'file',
             id: 'prestashop-import-file',
@@ -222,6 +227,7 @@ app.datahub.createPrestaShopPanel = function () {
               if (!form.isValid()) return;
               form.submit({
                 url: '/admin/datahub-supervisor/prestashop/import',
+                params: { csrfToken: pimcore.settings.csrfToken },
                 waitMsg: 'Uploading PrestaShop export...',
                 success: function () {
                   form.reset();

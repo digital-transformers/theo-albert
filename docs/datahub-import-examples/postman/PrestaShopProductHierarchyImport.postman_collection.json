@@ -51,7 +51,7 @@
               "key": "file",
               "description": "Select the PrestaShop export ZIP.",
               "type": "file",
-              "src": []
+              "src": null
             }
           ]
         },
@@ -90,7 +90,7 @@
         "body": {
           "mode": "file",
           "file": {
-            "src": []
+            "src": null
           }
         },
         "url": "{{baseUrl}}/api/integrations/prestashop/import"
