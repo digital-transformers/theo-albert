@@ -5,10 +5,6 @@
 # to each configured DirectoryIndex file (e.g. index.php, index.html, index.pl).
 DirectoryIndex index.php
 
-# Production runtime settings for Apache/mod_php.
-SetEnv APP_ENV prod
-SetEnv APP_DEBUG 0
-
 <IfModule mod_php.c>
     php_value memory_limit 512M
     php_value max_execution_time 120
