@@ -2,34 +2,38 @@
 
 namespace App\Model\DataObject\ClassDefinition\Data;
 
+use Pimcore\Db;
 use Pimcore\Model\DataObject\ClassDefinition\Data;
 use Pimcore\Model\DataObject\ClassDefinition\DynamicOptionsProvider\SelectOptionsProviderInterface;
-use Pimcore\Model\DataObject\Color;
-use Pimcore\Model\DataObject\Color\Listing as ColorListing;
 
 class ColorOptionsProvider implements SelectOptionsProviderInterface
 {
+    private static ?array $options = null;
+
     /**
      * Each option: ['key' => 'CODE - Name', 'value' => <objectId>]
      */
     public function getOptions(array $context, Data $fieldDefinition): array
     {
-        $list = new ColorListing();
-        $list->setOrderKey('name');
-        $list->setOrder('asc');
-
-        $options = [];
-        foreach ($list as $color) {
-            /** @var Color $color */
-            $label = trim(($color->getCode() ?? '') . ' - ' . ($color->getName() ?? ''));
-            $options[] = [
-                'key'   => $label,
-                'value' => $color->getId(), // object ID
-            ];
+        if (self::$options !== null) {
+            return self::$options;
         }
 
-        usort($options, static fn($a, $b) => strcmp($a['key'], $b['key']));
-        return $options;
+        $rows = Db::get()->fetchAllAssociative(
+            'SELECT `oo_id`, `code`, `name`
+             FROM `object_query_color`
+             ORDER BY `code` ASC, `name` ASC'
+        );
+
+        self::$options = array_map(
+            static fn (array $row): array => [
+                'key' => trim((string) ($row['code'] ?? '') . ' - ' . (string) ($row['name'] ?? '')),
+                'value' => (int) $row['oo_id'],
+            ],
+            $rows
+        );
+
+        return self::$options;
     }
 
     public function hasStaticOptions(array $context, Data $fieldDefinition): bool
@@ -59,4 +63,3 @@ class ColorOptionsProvider implements SelectOptionsProviderInterface
         return array_column($this->getOptions([], new Data()), 'value', 'key');
     }
 }
-
