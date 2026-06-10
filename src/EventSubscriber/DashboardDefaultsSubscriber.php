@@ -16,6 +16,11 @@ final class DashboardDefaultsSubscriber implements EventSubscriberInterface
         'type' => self::QUALITY_REMARKS_PORTLET_TYPE,
         'config' => null,
     ];
+    private const EXPENSIVE_PORTLET_TYPES = [
+        'pimcore.layout.portlets.modifiedObjects',
+        'pimcore.layout.portlets.modifiedAssets',
+        'pimcore.layout.portlets.modificationStatistic',
+    ];
 
     private const DEFAULT_DASHBOARD = [
         'positions' => [
@@ -27,23 +32,7 @@ final class DashboardDefaultsSubscriber implements EventSubscriberInterface
                 ],
                 self::QUALITY_REMARKS_PORTLET,
             ],
-            [
-                [
-                    'id' => 2,
-                    'type' => 'pimcore.layout.portlets.modifiedObjects',
-                    'config' => null,
-                ],
-                [
-                    'id' => 4,
-                    'type' => 'pimcore.layout.portlets.modifiedAssets',
-                    'config' => null,
-                ],
-                [
-                    'id' => 5,
-                    'type' => 'pimcore.layout.portlets.modificationStatistic',
-                    'config' => null,
-                ],
-            ],
+            [],
         ],
     ];
 
@@ -71,6 +60,10 @@ final class DashboardDefaultsSubscriber implements EventSubscriberInterface
         }
 
         $dashboard = $result['dashboards']['predefined'][self::DEFAULT_DASHBOARD_KEY] ?? self::DEFAULT_DASHBOARD;
+        foreach (self::EXPENSIVE_PORTLET_TYPES as $portletType) {
+            $dashboard = $this->removePortlet($dashboard, $portletType);
+        }
+
         if ($this->currentUserCanAccessQualityControl()) {
             $dashboard = $this->ensurePortlet($dashboard, self::QUALITY_REMARKS_PORTLET, 0);
         } else {
@@ -84,7 +77,12 @@ final class DashboardDefaultsSubscriber implements EventSubscriberInterface
 
     private function currentUserCanAccessQualityControl(): bool
     {
-        $user = Admin::getCurrentUser();
+        try {
+            $user = Admin::getCurrentUser();
+        } catch (\Throwable) {
+            return false;
+        }
+
         $isAdmin = $user && (
             (method_exists($user, 'isAdmin') && $user->isAdmin())
             || (method_exists($user, 'getAdmin') && $user->getAdmin())
