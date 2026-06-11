@@ -1,0 +1,6 @@
+doctrine:
+    dbal:
+        connections:
+            default:
+                url: '%env(resolve:DATABASE_URL)%'
+                server_version: '8.0'

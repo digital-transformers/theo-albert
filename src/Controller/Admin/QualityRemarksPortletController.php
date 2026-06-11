@@ -17,20 +17,23 @@ final class QualityRemarksPortletController extends AdminAbstractController
     private const MAX_LIMIT = 2000;
 
     /**
-     * @var array<string, array{label: string, listingClass: class-string}>
+     * @var array<string, array{label: string, listingClass: class-string, queryTable: string}>
      */
     private const OBJECT_TYPES = [
         'family' => [
             'label' => 'Family',
             'listingClass' => '\\Pimcore\\Model\\DataObject\\Family\\Listing',
+            'queryTable' => 'object_query_family',
         ],
         'model' => [
             'label' => 'Model',
             'listingClass' => '\\Pimcore\\Model\\DataObject\\Model\\Listing',
+            'queryTable' => 'object_query_baseProduct',
         ],
         'frame' => [
             'label' => 'Frame',
             'listingClass' => '\\Pimcore\\Model\\DataObject\\Frame\\Listing',
+            'queryTable' => 'object_query_finishedProduct',
         ],
     ];
 
@@ -96,7 +99,7 @@ final class QualityRemarksPortletController extends AdminAbstractController
     /**
      * @param array{objectType: string, code: string, type: string, status: string, createdBy: string, remark: string, limit: int} $filters
      * @param array<int, string> $warnings
-     * @param array{label: string, listingClass: class-string} $definition
+     * @param array{label: string, listingClass: class-string, queryTable: string} $definition
      *
      * @return array<int, array<string, mixed>>
      */
@@ -111,8 +114,10 @@ final class QualityRemarksPortletController extends AdminAbstractController
 
         $listing = new $listingClass();
         $listing->setUnpublished(true);
-        $listing->setOrderKey('oo_id');
-        $listing->setOrder('DESC');
+        $listing->setCondition(sprintf(
+            'oo_id IN (SELECT oo_id FROM %s WHERE qualityControlRemarksPresent = 1)',
+            $definition['queryTable']
+        ));
 
         try {
             $objects = $listing->load();

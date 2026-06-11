@@ -1,0 +1,93 @@
+name: theo
+
+services:
+    redis:
+        image: redis:7-alpine
+        restart: unless-stopped
+        command: [redis-server, --maxmemory, 256mb, --maxmemory-policy, volatile-lru, --save, ""]
+
+    rabbitmq:
+        image: rabbitmq:4-alpine
+        restart: unless-stopped
+        volumes:
+            - rabbitmq-data:/var/lib/rabbitmq
+
+    db:
+        image: mysql:8.0
+        restart: unless-stopped
+        command:
+            - mysqld
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_0900_ai_ci
+            - --innodb-file-per-table=1
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: db
+            MYSQL_USER: db
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        volumes:
+            - database-data:/var/lib/mysql
+        healthcheck:
+            test: [CMD-SHELL, "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
+            interval: 10s
+            timeout: 5s
+            retries: 12
+            start_period: 30s
+
+    nginx:
+        image: nginx:stable-alpine
+        restart: unless-stopped
+        ports:
+            - "127.0.0.1:8888:80"
+        volumes:
+            - .:/var/www/html:ro
+            - ./.docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+        depends_on:
+            - php
+
+    php:
+        image: pimcore/pimcore:php8.3-latest
+        restart: unless-stopped
+        environment:
+            APP_ENV: prod
+            APP_DEBUG: "0"
+            PIMCORE_ENVIRONMENT: prod
+            PIMCORE_DEBUG: "0"
+            DATABASE_URL: ${DATABASE_URL}
+        depends_on:
+            db:
+                condition: service_healthy
+            redis:
+                condition: service_started
+            rabbitmq:
+                condition: service_started
+        volumes:
+            - .:/var/www/html
+            - ./.docker/database.production.yaml:/var/www/html/config/local/database.yaml:ro
+            - ./.docker/messenger.yaml:/var/www/html/config/packages/messenger.yaml:ro
+            - ./.docker/php-production.ini:/usr/local/etc/php/conf.d/zz-production.ini:ro
+
+    supervisord:
+        image: pimcore/pimcore:php8.3-supervisord-latest
+        restart: unless-stopped
+        environment:
+            APP_ENV: prod
+            APP_DEBUG: "0"
+            PIMCORE_ENVIRONMENT: prod
+            PIMCORE_DEBUG: "0"
+            DATABASE_URL: ${DATABASE_URL}
+        depends_on:
+            db:
+                condition: service_healthy
+            rabbitmq:
+                condition: service_started
+        volumes:
+            - .:/var/www/html
+            - ./.docker/database.production.yaml:/var/www/html/config/local/database.yaml:ro
+            - ./.docker/messenger.yaml:/var/www/html/config/packages/messenger.yaml:ro
+            - ./.docker/supervisord.conf:/etc/supervisor/conf.d/pimcore.conf:ro
+            - ./.docker/php-production.ini:/usr/local/etc/php/conf.d/zz-production.ini:ro
+
+volumes:
+    database-data:
+    rabbitmq-data:
