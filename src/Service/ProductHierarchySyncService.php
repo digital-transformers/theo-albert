@@ -3,6 +3,15 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use Pimcore\Model\DataObject\Color;
+use Pimcore\Model\DataObject\Color\Listing as ColorListing;
+use Pimcore\Model\DataObject\Data\ObjectMetadata;
+use Pimcore\Model\DataObject\Fieldcollection;
+use Pimcore\Model\DataObject\Fieldcollection\Data\FinalProductProcess;
+use Pimcore\Model\DataObject\Frame;
+use Pimcore\Model\DataObject\Model as ModelObject;
+use Pimcore\Model\DataObject\SAPItemGroup;
+use Pimcore\Model\DataObject\SAPItemGroup\Listing as SAPItemGroupListing;
 use RuntimeException;
 
 final class ProductHierarchySyncService
@@ -99,7 +108,7 @@ final class ProductHierarchySyncService
             $code = $this->stringValue($family['family_code'] ?? null);
             $input = [
                 'code' => $code,
-                'name' => $this->stringValue($family['family_name'] ?? null) ?: $code,
+                'name' => $this->objectSafeString($family['family_name'] ?? null) ?: $code,
                 'published' => true,
             ];
 
@@ -154,7 +163,7 @@ final class ProductHierarchySyncService
 
             $input = array_filter([
                 'code' => $code,
-                'name' => $this->stringValue($model['model_name'] ?? null) ?: $code,
+                'name' => $this->objectSafeString($model['model_name'] ?? null) ?: $code,
                 'frameBaseCode' => $this->stringValue($model['frame_base_code'] ?? null),
                 'seriesCode' => $this->stringValue($model['series_code'] ?? null),
                 'material' => $this->stringValue($model['material'] ?? null),
@@ -169,7 +178,7 @@ final class ProductHierarchySyncService
                         'parentId' => $parent['id'],
                         'input' => $input,
                     ]);
-                    ++$result['models']['updated'];
+                    $status = 'updated';
                 } else {
                     $output = $this->mutate('createModel', [
                         'parentId' => $parent['id'],
@@ -177,9 +186,11 @@ final class ProductHierarchySyncService
                         'published' => true,
                         'input' => $input,
                     ]);
-                    ++$result['models']['created'];
+                    $status = 'created';
                 }
                 $modelIndex[$code] = $output;
+                $this->enrichModel($output['id'], $model);
+                ++$result['models'][$status];
             } catch (\Throwable $exception) {
                 ++$result['models']['failed'];
                 $result['errors'][] = $this->error('model', $code, $exception);
@@ -217,7 +228,7 @@ final class ProductHierarchySyncService
 
             $input = [
                 'code' => $code,
-                'name' => $this->stringValue($frame['frame_name'] ?? null) ?: $code,
+                'name' => $this->objectSafeString($frame['frame_name'] ?? null) ?: $code,
                 'mainColorCode' => $this->stringValue($frame['main_color_code'] ?? null),
                 'seriesCode' => $this->stringValue($frame['series_code'] ?? null),
                 'ecomFileName' => $this->stringValue($frame['ecom_file_name'] ?? null),
@@ -233,7 +244,7 @@ final class ProductHierarchySyncService
                         'parentId' => $parent['id'],
                         'input' => $input,
                     ]);
-                    ++$result['frames']['updated'];
+                    $status = 'updated';
                 } else {
                     $output = $this->mutate('createFrame', [
                         'parentId' => $parent['id'],
@@ -241,9 +252,11 @@ final class ProductHierarchySyncService
                         'published' => true,
                         'input' => $input,
                     ]);
-                    ++$result['frames']['created'];
+                    $status = 'created';
                 }
                 $frameIndex[$code] = $output;
+                $this->enrichFrame($output['id'], $frame);
+                ++$result['frames'][$status];
             } catch (\Throwable $exception) {
                 ++$result['frames']['failed'];
                 $result['errors'][] = $this->error('frame', $code, $exception);
@@ -330,6 +343,195 @@ final class ProductHierarchySyncService
         return ['entity' => $entity, 'code' => $code, 'message' => $exception->getMessage()];
     }
 
+    /**
+     * @param array<string, mixed> $model
+     */
+    private function enrichModel(int $id, array $model): void
+    {
+        $details = is_array($model['final_product_details'] ?? null) ? $model['final_product_details'] : [];
+        if ($details === []) {
+            return;
+        }
+
+        $object = ModelObject::getById($id, ['force' => true]);
+        if (!$object instanceof ModelObject) {
+            return;
+        }
+
+        $items = [];
+        foreach ($details as $detail) {
+            if (!is_array($detail)) {
+                continue;
+            }
+
+            $mainColorCode = $this->stringValue($detail['main_color_code'] ?? null);
+            $colorIds = $this->resolveColorIds($detail['color_codes'] ?? []);
+            if ($mainColorCode === '' || $colorIds === []) {
+                continue;
+            }
+
+            $item = new FinalProductProcess();
+            $item->setMainColorCode($mainColorCode);
+            $item->setColors($colorIds);
+            $items[] = $item;
+        }
+
+        if ($items === []) {
+            return;
+        }
+
+        $object->setFinalProductDetails(new Fieldcollection($items, 'finalProductDetails'));
+        $object->save();
+    }
+
+    /**
+     * @param array<string, mixed> $frame
+     */
+    private function enrichFrame(int $id, array $frame): void
+    {
+        $hasItemGroups = $this->nonEmptyStrings($frame['item_group_numbers'] ?? []) !== [];
+        $hasColors = $this->nonEmptyStrings($frame['composed_color_codes'] ?? []) !== [];
+        if (!$hasItemGroups && !$hasColors) {
+            return;
+        }
+
+        $object = Frame::getById($id, ['force' => true]);
+        if (!$object instanceof Frame) {
+            return;
+        }
+
+        if ($hasItemGroups) {
+            $object->setItemGroup($this->resolveItemGroups($frame['item_group_numbers'] ?? []));
+        }
+
+        if ($hasColors) {
+            $object->setComposedColors($this->resolveComposedColors($frame['composed_color_codes'] ?? []));
+        }
+
+        $object->save();
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function resolveColorIds(mixed $codes): array
+    {
+        $ids = [];
+        foreach ($this->nonEmptyStrings($codes) as $code) {
+            $color = $this->findColorByCode($code);
+            if (!$color instanceof Color) {
+                continue;
+            }
+
+            $id = (string) $color->getId();
+            if ($id !== '' && !in_array($id, $ids, true)) {
+                $ids[] = $id;
+            }
+        }
+
+        return $ids;
+    }
+
+    /**
+     * @return list<ObjectMetadata>
+     */
+    private function resolveComposedColors(mixed $codes): array
+    {
+        $metadata = [];
+        $seen = [];
+        foreach ($this->nonEmptyStrings($codes) as $code) {
+            $color = $this->findColorByCode($code);
+            if (!$color instanceof Color) {
+                continue;
+            }
+
+            $id = (int) $color->getId();
+            if ($id < 1 || isset($seen[$id])) {
+                continue;
+            }
+
+            $item = new ObjectMetadata('composedColors', ['name', 'relevant'], $color);
+            $item->setName($this->stringValue($color->getName()));
+            $item->setRelevant(true);
+            $metadata[] = $item;
+            $seen[$id] = true;
+        }
+
+        return $metadata;
+    }
+
+    /**
+     * @return list<SAPItemGroup>
+     */
+    private function resolveItemGroups(mixed $groupNumbers): array
+    {
+        $groups = [];
+        $seen = [];
+        foreach ($this->nonEmptyStrings($groupNumbers) as $groupNumber) {
+            $group = $this->findSAPItemGroupByNumber($groupNumber);
+            if (!$group instanceof SAPItemGroup) {
+                continue;
+            }
+
+            $id = (int) $group->getId();
+            if ($id < 1 || isset($seen[$id])) {
+                continue;
+            }
+
+            $groups[] = $group;
+            $seen[$id] = true;
+        }
+
+        return $groups;
+    }
+
+    private function findColorByCode(string $code): ?Color
+    {
+        $listing = new ColorListing();
+        $listing->setUnpublished(true);
+        $listing->setLimit(1);
+        $listing->setCondition('code = ?', [$code]);
+        $items = $listing->load();
+        $color = $items[0] ?? null;
+
+        return $color instanceof Color ? $color : null;
+    }
+
+    private function findSAPItemGroupByNumber(string $groupNumber): ?SAPItemGroup
+    {
+        $listing = new SAPItemGroupListing();
+        $listing->setUnpublished(true);
+        $listing->setLimit(1);
+        $listing->setCondition('groupNum = ?', [$groupNumber]);
+        $items = $listing->load();
+        $group = $items[0] ?? null;
+
+        return $group instanceof SAPItemGroup ? $group : null;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function nonEmptyStrings(mixed $value): array
+    {
+        if (is_string($value)) {
+            $value = $value === '' ? [] : [$value];
+        }
+        if (!is_array($value)) {
+            return [];
+        }
+
+        $strings = [];
+        foreach ($value as $item) {
+            $string = $this->stringValue($item);
+            if ($string !== '' && !in_array($string, $strings, true)) {
+                $strings[] = $string;
+            }
+        }
+
+        return $strings;
+    }
+
     private function stringValue(mixed $value): string
     {
         return is_scalar($value) ? trim((string) $value) : '';
@@ -340,5 +542,10 @@ final class ProductHierarchySyncService
         $value = $this->stringValue($value);
 
         return $value === '' ? null : $value;
+    }
+
+    private function objectSafeString(mixed $value): string
+    {
+        return trim(str_replace(['/', '\\'], '-', $this->stringValue($value)));
     }
 }

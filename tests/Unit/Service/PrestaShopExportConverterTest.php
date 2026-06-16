@@ -31,6 +31,25 @@ final class PrestaShopExportConverterTest extends Unit
         $this->writeJson('config/CfgModels.json', [
             ['Code' => 'MODEL', 'Name' => 'Model'],
         ]);
+        $this->writeJson('config/CfgProductArticleGroup.json', [
+            ['Code' => '111', 'Name' => 'Optische brillen'],
+        ]);
+        $this->writeJson('config/CfgProductCategories.json', [
+            ['Code' => 'OO', 'Name' => 'Old and over'],
+        ]);
+        $this->writeJson('config/CfgProductLines.json', [
+            ['Code' => 'E', 'Name' => 'EYE WITNESS'],
+        ]);
+        $this->writeJson('config/CfgProductMaterials.json', [
+            ['Code' => 'MATERIAL', 'Name' => 'Material Name'],
+        ]);
+        $this->writeJson('config/CfgProductThickness.json', [
+            ['Code' => 'E', 'Name' => 'EYE WITNESS'],
+        ]);
+        $this->writeJson('config/TheoColors.json', [
+            ['ColorCode' => 'BLACK', 'ColorName' => 'black matte', 'GenericColor' => 'black'],
+            ['ColorCode' => 'RED', 'ColorName' => 'fluo red', 'GenericColor' => 'red'],
+        ]);
         $this->writeJson('products/Product_TransactionStep_1.json', [
             $this->product('MODEL-1', 'family-a', 'MODEL', '1', 'BLACK'),
             $this->product('MODEL-2', 'family-a', 'MODEL', '2', 'RED'),
@@ -44,6 +63,18 @@ final class PrestaShopExportConverterTest extends Unit
         self::assertCount(2, $result['frames']);
         self::assertSame(['BLACK'], $result['frames'][0]['composed_color_codes']);
         self::assertSame('', $result['frames'][0]['main_color_code']);
+        self::assertSame('Optische brillen', $result['frames'][0]['article_group_name']);
+        self::assertSame('Old and over', $result['frames'][0]['category_name']);
+        self::assertSame('Material Name', $result['frames'][0]['material_name']);
+        self::assertSame('black matte', $result['frames'][0]['colors'][0]['color_name']);
+        self::assertSame('black', $result['frames'][0]['colors'][0]['generic_color']);
+        self::assertSame([[
+            'main_color_code' => '1',
+            'color_codes' => ['BLACK'],
+        ], [
+            'main_color_code' => '2',
+            'color_codes' => ['RED'],
+        ]], $result['models'][0]['final_product_details']);
         self::assertSame('1', $result['frames'][0]['source']['combi_code']);
         self::assertSame('family-b', $result['report']['skipped_frames']['family_mismatch'][0]['source_family_code']);
         self::assertSame('family-a', $result['report']['model_family_conflicts'][0]['selected_family_code']);
@@ -98,6 +129,9 @@ final class PrestaShopExportConverterTest extends Unit
                 'Collection' => 'COLLECTION',
                 'Material' => 'MATERIAL',
                 'ArticleGroup' => '111',
+                'Category' => 'OO',
+                'Line' => 'E',
+                'Thickness' => 'E',
                 'GTIN' => '123',
             ],
         ];

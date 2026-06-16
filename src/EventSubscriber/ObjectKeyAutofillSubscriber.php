@@ -81,7 +81,11 @@ final class ObjectKeyAutofillSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $key = $code . ' - ' . $name;
+        $key = trim(str_replace(['/', '\\'], '-', $code . ' - ' . $name));
+        if ($key === '') {
+            return;
+        }
+
         if (trim((string) $object->getKey()) === $key) {
             return;
         }

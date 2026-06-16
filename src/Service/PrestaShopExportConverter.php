@@ -24,6 +24,12 @@ final class PrestaShopExportConverter
         try {
             $familyConfig = $source->readJson('config/CfgProductFamilies.json');
             $modelConfig = $source->readJson('config/CfgModels.json');
+            $articleGroupsByCode = $this->indexByCode($source->readOptionalJson('config/CfgProductArticleGroup.json'));
+            $categoriesByCode = $this->indexByCode($source->readOptionalJson('config/CfgProductCategories.json'));
+            $linesByCode = $this->indexByCode($source->readOptionalJson('config/CfgProductLines.json'));
+            $materialsByCode = $this->indexByCode($source->readOptionalJson('config/CfgProductMaterials.json'));
+            $thicknessByCode = $this->indexByCode($source->readOptionalJson('config/CfgProductThickness.json'));
+            $colorsByCode = $this->indexColorsByCode($source->readOptionalJson('config/TheoColors.json'));
             $productFiles = $source->listProductFiles();
             $productCodeCounts = [];
             $sourceProductCount = 0;
@@ -90,6 +96,33 @@ final class PrestaShopExportConverter
 
             $models = [];
             $modelsWithoutFamily = [];
+            $finalProductDetailsByModel = [];
+            foreach ($productFiles as $productFile) {
+                foreach ($source->readJson($productFile) as $product) {
+                    $productCode = $this->stringValue($product['ProductCode'] ?? null);
+                    $familyCode = $this->stringValue($product['UDFs']['Family'] ?? null);
+                    $modelCode = $this->stringValue($product['UDFs']['Model'] ?? null);
+                    if (isset($duplicateProductCodes[$productCode]) || $modelCode === '') {
+                        continue;
+                    }
+                    if (!isset($selectedFamilyByModel[$modelCode]) || (string) $selectedFamilyByModel[$modelCode] !== $familyCode) {
+                        continue;
+                    }
+
+                    $colors = $this->normalizeColors($product['Colors'] ?? [], $colorsByCode);
+                    $combiCode = $colors[0]['combi_code'] ?? '';
+                    $colorCodes = array_values(array_unique(array_column($colors, 'color_code')));
+                    if ($combiCode === '' || $colorCodes === []) {
+                        continue;
+                    }
+
+                    $finalProductDetailsByModel[$modelCode][$combiCode] = [
+                        'main_color_code' => $combiCode,
+                        'color_codes' => $colorCodes,
+                    ];
+                }
+            }
+
             foreach ($modelsByCode as $code => $model) {
                 $code = (string) $code;
                 $familyCode = $selectedFamilyByModel[$code] ?? null;
@@ -98,14 +131,20 @@ final class PrestaShopExportConverter
                     continue;
                 }
 
+                $materialCode = $this->mostCommonValue($modelValueCounts[$code]['Material'] ?? []);
+                $material = $materialsByCode[$materialCode] ?? [];
+
                 $models[] = [
                     'model_code' => $code,
                     'model_name' => $this->stringValue($model['Name'] ?? null) ?: $code,
                     'parent_family_code' => $familyCode,
                     'frame_base_code' => $code,
                     'series_code' => $this->mostCommonValue($modelValueCounts[$code]['Collection'] ?? []),
-                    'material' => $this->mostCommonValue($modelValueCounts[$code]['Material'] ?? []),
+                    'material_code' => $materialCode,
+                    'material_name' => $this->stringValue($material['Name'] ?? null) ?: $materialCode,
+                    'material' => $this->stringValue($material['Name'] ?? null) ?: $materialCode,
                     'description' => null,
+                    'final_product_details' => array_values($finalProductDetailsByModel[$code] ?? []),
                 ];
             }
 
@@ -150,19 +189,44 @@ final class PrestaShopExportConverter
                         continue;
                     }
 
-                    $colors = $this->normalizeColors($product['Colors'] ?? []);
+                    $udfs = is_array($product['UDFs'] ?? null) ? $product['UDFs'] : [];
+                    $colors = $this->normalizeColors($product['Colors'] ?? [], $colorsByCode);
+                    $articleGroupCode = $this->stringValue($udfs['ArticleGroup'] ?? null);
+                    $categoryCode = $this->stringValue($udfs['Category'] ?? null);
+                    $lineCode = $this->stringValue($udfs['Line'] ?? null);
+                    $materialCode = $this->stringValue($udfs['Material'] ?? null);
+                    $thicknessCode = $this->stringValue($udfs['Thickness'] ?? null);
+
                     $frames[] = [
                         'frame_code' => $productCode,
                         'frame_name' => $this->productName($product),
+                        'frame_names' => $this->productNames($product),
                         'parent_model_code' => $modelCode,
+                        'family_code' => $familyCode,
+                        'model_code' => $modelCode,
+                        'gtin' => $this->stringValue($udfs['GTIN'] ?? null),
+                        'collection' => $this->stringValue($udfs['Collection'] ?? null),
+                        'article_group_code' => $articleGroupCode,
+                        'article_group_name' => $this->lookupName($articleGroupsByCode, $articleGroupCode),
+                        'category_code' => $categoryCode,
+                        'category_name' => $this->lookupName($categoriesByCode, $categoryCode),
+                        'line_code' => $lineCode,
+                        'line_name' => $this->lookupName($linesByCode, $lineCode),
+                        'thickness_code' => $thicknessCode,
+                        'thickness_name' => $this->lookupName($thicknessByCode, $thicknessCode),
+                        'material_code' => $materialCode,
+                        'material_name' => $this->lookupName($materialsByCode, $materialCode),
+                        'is_active' => (bool) ($product['IsActive'] ?? false),
+                        'can_be_sold' => filter_var($product['CanBeSold'] ?? false, FILTER_VALIDATE_BOOL),
+                        'colors' => $colors,
                         'art_base_code' => $modelCode,
                         // Keep this empty until the Pimcore main-color convention is confirmed. Setting it
                         // to CombiCode currently makes the frame save subscriber rewrite ProductCode.
                         'main_color_code' => '',
-                        'series_code' => $this->stringValue($product['UDFs']['Collection'] ?? null),
-                        'ecom_file_name' => $this->stringValue($product['UDFs']['Image'] ?? null),
+                        'series_code' => $this->stringValue($udfs['Collection'] ?? null),
+                        'ecom_file_name' => $this->stringValue($udfs['Image'] ?? null),
                         'exchange_code' => '',
-                        'item_group_numbers' => $this->nonEmptyList($product['UDFs']['ArticleGroup'] ?? null),
+                        'item_group_numbers' => $this->nonEmptyList($articleGroupCode),
                         'supplier_code' => '',
                         'composed_color_codes' => array_values(array_unique(array_column($colors, 'color_code'))),
                         'component_item_codes' => [],
@@ -172,14 +236,14 @@ final class PrestaShopExportConverter
                         'image_gallery_asset_paths' => [],
                         'attachment_asset_paths' => [],
                         'source' => [
-                            'gtin' => $this->stringValue($product['UDFs']['GTIN'] ?? null),
+                            'gtin' => $this->stringValue($udfs['GTIN'] ?? null),
                             'family_code' => $familyCode,
-                            'material' => $this->stringValue($product['UDFs']['Material'] ?? null),
-                            'shape' => $this->stringValue($product['UDFs']['Shape'] ?? null),
-                            'line' => $this->stringValue($product['UDFs']['Line'] ?? null),
-                            'thickness' => $this->stringValue($product['UDFs']['Thickness'] ?? null),
-                            'category' => $this->stringValue($product['UDFs']['Category'] ?? null),
-                            'tariff_code' => $this->stringValue($product['UDFs']['TarifCode'] ?? null),
+                            'material' => $materialCode,
+                            'shape' => $this->stringValue($udfs['Shape'] ?? null),
+                            'line' => $lineCode,
+                            'thickness' => $thicknessCode,
+                            'category' => $categoryCode,
+                            'tariff_code' => $this->stringValue($udfs['TarifCode'] ?? null),
                             'is_active' => (bool) ($product['IsActive'] ?? false),
                             'can_be_sold' => filter_var($product['CanBeSold'] ?? false, FILTER_VALIDATE_BOOL),
                             'combi_code' => $colors[0]['combi_code'] ?? '',
@@ -287,9 +351,11 @@ final class PrestaShopExportConverter
     }
 
     /**
-     * @return list<array{combi_code: string, color_code: string, order_nr: int}>
+     * @param array<string, array<string, mixed>> $colorsByCode
+     *
+     * @return list<array{combi_code: string, color_code: string, color_name: string, generic_color: string, order_nr: int}>
      */
-    private function normalizeColors(mixed $colors): array
+    private function normalizeColors(mixed $colors, array $colorsByCode = []): array
     {
         if (!is_array($colors)) {
             return [];
@@ -306,9 +372,12 @@ final class PrestaShopExportConverter
                 continue;
             }
 
+            $colorConfig = $colorsByCode[$colorCode] ?? [];
             $normalized[] = [
                 'combi_code' => $this->stringValue($color['CombiCode'] ?? null),
                 'color_code' => $colorCode,
+                'color_name' => $this->stringValue($colorConfig['ColorName'] ?? null),
+                'generic_color' => $this->stringValue($colorConfig['GenericColor'] ?? null),
                 'order_nr' => (int) ($color['OrderNr'] ?? PHP_INT_MAX),
             ];
         }
@@ -319,11 +388,37 @@ final class PrestaShopExportConverter
     }
 
     /**
+     * @param list<array<string, mixed>> $records
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    private function indexColorsByCode(array $records): array
+    {
+        $indexed = [];
+        foreach ($records as $record) {
+            $code = $this->stringValue($record['ColorCode'] ?? null);
+            if ($code !== '') {
+                $indexed[$code] = $record;
+            }
+        }
+
+        return $indexed;
+    }
+
+    /**
+     * @param array<string, array<string, mixed>> $records
+     */
+    private function lookupName(array $records, string $code): string
+    {
+        return $this->stringValue($records[$code]['Name'] ?? null);
+    }
+
+    /**
      * @param array<string, mixed> $product
      */
     private function productName(array $product): string
     {
-        $names = is_array($product['ProductName'] ?? null) ? $product['ProductName'] : [];
+        $names = $this->productNames($product);
 
         foreach (['EN', 'en', 'NL', 'nl', 'FR', 'fr'] as $language) {
             $name = $this->stringValue($names[$language] ?? null);
@@ -333,6 +428,24 @@ final class PrestaShopExportConverter
         }
 
         return $this->stringValue($product['ProductCode'] ?? null);
+    }
+
+    /**
+     * @param array<string, mixed> $product
+     *
+     * @return array<string, string>
+     */
+    private function productNames(array $product): array
+    {
+        $names = is_array($product['ProductName'] ?? null) ? $product['ProductName'] : [];
+        $normalized = [];
+        foreach ($names as $language => $name) {
+            if (is_scalar($language)) {
+                $normalized[strtolower((string) $language)] = $this->stringValue($name);
+            }
+        }
+
+        return $normalized;
     }
 
     /**
@@ -422,6 +535,18 @@ final class PrestaShopExportSource
         }
 
         return $decoded;
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    public function readOptionalJson(string $relativePath): array
+    {
+        $exists = $this->directory !== null
+            ? is_file($this->directory . '/' . $relativePath)
+            : $this->zip?->locateName($this->prefix . $relativePath) !== false;
+
+        return $exists ? $this->readJson($relativePath) : [];
     }
 
     /**

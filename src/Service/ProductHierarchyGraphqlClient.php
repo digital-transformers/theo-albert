@@ -91,6 +91,11 @@ class ProductHierarchyGraphqlClient
             CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_TIMEOUT => 120,
         ]);
+        $host = parse_url($url, PHP_URL_HOST);
+        $scheme = parse_url($url, PHP_URL_SCHEME);
+        if ($host === 'theo.digital-transformers.it' && $scheme === 'https') {
+            curl_setopt($curl, CURLOPT_RESOLVE, [$host . ':443:127.0.0.1']);
+        }
 
         $response = curl_exec($curl);
 

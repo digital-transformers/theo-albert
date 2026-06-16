@@ -56,6 +56,19 @@ final class ObjectKeyAutofillSubscriberTest extends Unit
         self::assertSame('FAM-12345 - Test Family', $object->getKey());
     }
 
+    public function testModelKeyReplacesPathSeparatorsFromName(): void
+    {
+        $object = new ObjectKeyAutofillTestObject();
+        $object->setClassName('model');
+        $object->setKey('PFCA');
+        $object->setCode('PFCA');
+        $object->setName('EW PFC A/black clip');
+
+        $this->subscriber->onPreUpdate(new DataObjectEvent($object));
+
+        self::assertSame('PFCA - EW PFC A-black clip', $object->getKey());
+    }
+
     public function testFrameCodeIsFilledFromKey(): void
     {
         $object = new ObjectKeyAutofillTestObject();
