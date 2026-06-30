@@ -8,8 +8,8 @@ use Pimcore\Model\DataObject\AbstractObject;
 use Pimcore\Model\User;
 use Pimcore\Security\User\TokenStorageUserResolver;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\EventDispatcher\GenericEvent;            // add this
-use Pimcore\Model\DataObject\Listing as ObjectListing;  
+use Symfony\Component\EventDispatcher\GenericEvent;
+use Pimcore\Model\DataObject\Listing as ObjectListing;
 
 final class OwnObjectsOnlySubscriber implements EventSubscriberInterface
 {
@@ -46,13 +46,11 @@ final class OwnObjectsOnlySubscriber implements EventSubscriberInterface
             return;
         }
 
-        $list = $event->getSubject();
+        $list = $event->getArgument('list');
         // Guard: only act on object listings
         if (!$list instanceof ObjectListing) {
             return;
         }
-
-        $list = $event->getListing();
 
         // Optional class-based bypass
         $className = $list->getClassName() ?: null;

@@ -124,11 +124,7 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $list = $event->getSubject();
-        if (!$list instanceof ObjectListing && method_exists($event, 'getListing')) {
-            $list = $event->getListing();
-        }
-
+        $list = $event->getArgument('list');
         if (!is_object($list) || !method_exists($list, 'addConditionParam') || $this->collectingSupplierObjects) {
             return;
         }

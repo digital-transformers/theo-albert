@@ -30,8 +30,8 @@
  * - basicUDI [input]
  * - masterUDI [input]
  * - countryOfOrigin [country]
- * - dsArtCat [input]
- * - dsType [input]
+ * - dsArtCat [select]
+ * - dsType [select]
  * - dsSize [input]
  * - dsTarif [multiselect]
  * - intrastatCode [input]
@@ -1111,7 +1111,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'restrictTo' => '',
               )),
               15 => 
-              \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
                  'name' => 'dsArtCat',
                  'title' => 'DS_ArtCat',
                  'tooltip' => '',
@@ -1129,19 +1129,106 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'blockedVarsForExport' => 
                 array (
                 ),
-                 'defaultValue' => NULL,
-                 'columnLength' => 190,
-                 'regex' => '',
-                 'regexFlags' => 
+                 'options' =>
                 array (
+                  0 =>
+                  array (
+                    'key' => 'Accessories',
+                    'value' => 'A',
+                  ),
+                  1 =>
+                  array (
+                    'key' => 'Christoph Broich',
+                    'value' => 'CB',
+                  ),
+                  2 =>
+                  array (
+                    'key' => 'Diverse',
+                    'value' => 'D',
+                  ),
+                  3 =>
+                  array (
+                    'key' => 'Eye Witness',
+                    'value' => 'E',
+                  ),
+                  4 =>
+                  array (
+                    'key' => 'Eye Witness Clips',
+                    'value' => 'EC',
+                  ),
+                  5 =>
+                  array (
+                    'key' => 'Interior',
+                    'value' => 'I',
+                  ),
+                  6 =>
+                  array (
+                    'key' => 'Oldie',
+                    'value' => 'O',
+                  ),
+                  7 =>
+                  array (
+                    'key' => 'Old Accessories',
+                    'value' => 'OA',
+                  ),
+                  8 =>
+                  array (
+                    'key' => 'Old and over',
+                    'value' => 'OO',
+                  ),
+                  9 =>
+                  array (
+                    'key' => 'Old Publicity',
+                    'value' => 'OP',
+                  ),
+                  10 =>
+                  array (
+                    'key' => 'Publicity',
+                    'value' => 'P',
+                  ),
+                  11 =>
+                  array (
+                    'key' => 'Service',
+                    'value' => 'S',
+                  ),
+                  12 =>
+                  array (
+                    'key' => 'Theo',
+                    'value' => 'T',
+                  ),
+                  13 =>
+                  array (
+                    'key' => 'Theo Clips',
+                    'value' => 'TC',
+                  ),
+                  14 =>
+                  array (
+                    'key' => 'T.O en alles Serge Collectie',
+                    'value' => 'TO',
+                  ),
+                  15 =>
+                  array (
+                    'key' => 'Tim Van Steenbergen',
+                    'value' => 'TVS',
+                  ),
+                  16 =>
+                  array (
+                    'key' => 'Treasury',
+                    'value' => 'X',
+                  ),
                 ),
-                 'unique' => false,
-                 'showCharCount' => false,
-                 'width' => '',
+                 'defaultValue' => '',
+                 'columnLength' => 190,
+                 'dynamicOptions' => false,
+                 'enforceValidation' => false,
                  'defaultValueGenerator' => '',
+                 'width' => '',
+                 'optionsProviderType' => 'configure',
+                 'optionsProviderClass' => '',
+                 'optionsProviderData' => '',
               )),
-              16 => 
-              \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
+              16 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
                  'name' => 'dsType',
                  'title' => 'DS_Type',
                  'tooltip' => '',
@@ -1156,19 +1243,81 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'invisible' => false,
                  'visibleGridView' => false,
                  'visibleSearch' => false,
-                 'blockedVarsForExport' => 
+                 'blockedVarsForExport' =>
                 array (
                 ),
-                 'defaultValue' => NULL,
+                 'options' =>
+                array (
+                  0 =>
+                  array (
+                    'key' => 'THEO',
+                    'value' => 'T',
+                  ),
+                  1 =>
+                  array (
+                    'key' => 'EYE WITNESS',
+                    'value' => 'E',
+                  ),
+                  2 =>
+                  array (
+                    'key' => 'THEO + TVS',
+                    'value' => 'TVS',
+                  ),
+                  3 =>
+                  array (
+                    'key' => 'CHRISTOPH BROICH',
+                    'value' => 'CB',
+                  ),
+                  4 =>
+                  array (
+                    'key' => 'PUBLICITY',
+                    'value' => 'P',
+                  ),
+                  5 =>
+                  array (
+                    'key' => 'ACCESOIRES',
+                    'value' => 'A',
+                  ),
+                  6 =>
+                  array (
+                    'key' => 'VINGT-AGE',
+                    'value' => 'VIN',
+                  ),
+                  7 =>
+                  array (
+                    'key' => 'THEO + JAMES',
+                    'value' => 'JVV',
+                  ),
+                  8 =>
+                  array (
+                    'key' => 'FACTORY 900',
+                    'value' => 'F900',
+                  ),
+                  9 =>
+                  array (
+                    'key' => 'MILLE',
+                    'value' => 'MIL',
+                  ),
+                  10 =>
+                  array (
+                    'key' => 'THEO + MATALI',
+                    'value' => 'MATALI',
+                  ),
+                  11 =>
+                  array (
+                    'key' => 'THEO + KIDS',
+                    'value' => 'KIDS',
+                  ),
+                ),
+                 'defaultValue' => '',
                  'columnLength' => 190,
-                 'regex' => '',
-                 'regexFlags' => 
-                array (
-                ),
-                 'unique' => false,
-                 'showCharCount' => false,
-                 'width' => '',
+                 'dynamicOptions' => false,
+                 'enforceValidation' => false,
                  'defaultValueGenerator' => '',
+                 'width' => '',
+                 'optionsProviderType' => 'configure',
+                 'optionsProviderClass' => '',
+                 'optionsProviderData' => '',
               )),
               17 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
