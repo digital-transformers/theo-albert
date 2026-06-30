@@ -44,6 +44,11 @@ final class Version20260630100000EnforceTheoRolePermissions extends AbstractMigr
         return 'Reapply Theo role permissions according to the product/assets access matrix.';
     }
 
+    public function isTransactional(): bool
+    {
+        return false;
+    }
+
     public function up(Schema $schema): void
     {
         $this->abortIf(
