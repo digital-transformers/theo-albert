@@ -391,7 +391,9 @@ final class ProductHierarchySyncService
     {
         $hasItemGroups = $this->nonEmptyStrings($frame['item_group_numbers'] ?? []) !== [];
         $hasColors = $this->nonEmptyStrings($frame['composed_color_codes'] ?? []) !== [];
-        if (!$hasItemGroups && !$hasColors) {
+        $hasDsArtCat = array_key_exists('category_code', $frame);
+        $hasDsType = array_key_exists('line_code', $frame);
+        if (!$hasItemGroups && !$hasColors && !$hasDsArtCat && !$hasDsType) {
             return;
         }
 
@@ -406,6 +408,14 @@ final class ProductHierarchySyncService
 
         if ($hasColors) {
             $object->setComposedColors($this->resolveComposedColors($frame['composed_color_codes'] ?? []));
+        }
+
+        if ($hasDsArtCat) {
+            $object->setDsArtCat($this->nullableString($frame['category_code'] ?? null));
+        }
+
+        if ($hasDsType) {
+            $object->setDsType($this->nullableString($frame['line_code'] ?? null));
         }
 
         $object->save();
