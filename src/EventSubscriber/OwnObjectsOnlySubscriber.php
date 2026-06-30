@@ -52,10 +52,13 @@ final class OwnObjectsOnlySubscriber implements EventSubscriberInterface
             return;
         }
 
-        // Optional class-based bypass
-        $className = $list->getClassName() ?: null;
-        if ($className && \in_array((new \ReflectionClass($className))->getShortName(), $this->excludedClasses, true)) {
-            return;
+        // Optional class-based bypass. Generic Pimcore object listings used by
+        // the admin tree do not expose getClassName().
+        if (method_exists($list, 'getClassName')) {
+            $className = $list->getClassName() ?: null;
+            if ($className && \in_array((new \ReflectionClass($className))->getShortName(), $this->excludedClasses, true)) {
+                return;
+            }
         }
 
         $allowedRoots = $this->getListableWorkspaceRoots($user);
