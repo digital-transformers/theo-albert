@@ -35,6 +35,12 @@ final class ConvertPrestaShopExportCommand extends Command
                 InputOption::VALUE_REQUIRED,
                 'Pimcore parent folder used by the family importer',
                 '/Imports/ProductHierarchy/Families'
+            )
+            ->addOption(
+                'model-limit',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Limit conversion to the first N resolved models and their child frames'
             );
     }
 
@@ -44,9 +50,10 @@ final class ConvertPrestaShopExportCommand extends Command
         $inputPath = (string) $input->getArgument('input');
         $outputPath = rtrim((string) $input->getArgument('output'), '/');
         $parentPath = (string) $input->getOption('parent-path');
+        $modelLimit = $this->modelLimit($input);
 
         try {
-            $result = $this->converter->convert($inputPath, $parentPath);
+            $result = $this->converter->convert($inputPath, $parentPath, $modelLimit);
             if (!is_dir($outputPath) && !mkdir($outputPath, 0775, true) && !is_dir($outputPath)) {
                 throw new \RuntimeException(sprintf('Unable to create output directory: %s', $outputPath));
             }
@@ -75,6 +82,20 @@ final class ConvertPrestaShopExportCommand extends Command
         ));
 
         return Command::SUCCESS;
+    }
+
+    private function modelLimit(InputInterface $input): ?int
+    {
+        $value = $input->getOption('model-limit');
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        if (!is_scalar($value) || !ctype_digit((string) $value) || (int) $value < 1) {
+            throw new \InvalidArgumentException('--model-limit must be a positive integer.');
+        }
+
+        return (int) $value;
     }
 
     /**

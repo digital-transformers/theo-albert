@@ -17,8 +17,15 @@ final class PrestaShopExportConverter
      *     report: array<string, mixed>
      * }
      */
-    public function convert(string $inputPath, string $parentPath = '/Imports/ProductHierarchy/Families'): array
-    {
+    public function convert(
+        string $inputPath,
+        string $parentPath = '/Imports/ProductHierarchy/Families',
+        ?int $modelLimit = null,
+    ): array {
+        if ($modelLimit !== null && $modelLimit < 1) {
+            throw new RuntimeException('Model limit must be a positive integer.');
+        }
+
         $source = $this->openSource($inputPath);
 
         try {
@@ -148,6 +155,17 @@ final class PrestaShopExportConverter
                 ];
             }
 
+            $limitedModelCodes = null;
+            if ($modelLimit !== null) {
+                $models = array_slice($models, 0, $modelLimit);
+                $limitedModelCodes = array_fill_keys(array_column($models, 'model_code'), true);
+                $limitedFamilyCodes = array_fill_keys(array_column($models, 'parent_family_code'), true);
+                $families = array_values(array_filter(
+                    $families,
+                    static fn (array $family): bool => isset($limitedFamilyCodes[$family['family_code'] ?? null])
+                ));
+            }
+
             $frames = [];
             $skipped = [
                 'duplicate_product_code' => [],
@@ -173,6 +191,9 @@ final class PrestaShopExportConverter
                     }
                     if ($modelCode === '') {
                         $skipped['missing_model'][] = $productCode;
+                        continue;
+                    }
+                    if ($limitedModelCodes !== null && !isset($limitedModelCodes[$modelCode])) {
                         continue;
                     }
                     if (!isset($modelsByCode[$modelCode], $selectedFamilyByModel[$modelCode])) {
@@ -278,6 +299,9 @@ final class PrestaShopExportConverter
                     'unclassified_rule' => 'Products with Family "0", an empty family, or an empty model are skipped.',
                     'main_color_rule' => 'main_color_code is left empty to preserve ProductCode. CombiCode is retained under source.combi_code; ColorCode values populate composed colors.',
                     'manual_products' => 'manual_products.json is intentionally excluded because its records are not family/model frames.',
+                    'model_limit_rule' => $modelLimit === null
+                        ? 'No model limit was applied.'
+                        : sprintf('Only the first %d resolved model(s), their families, and their child frames are included.', $modelLimit),
                 ],
                 'model_family_conflicts' => $modelFamilyConflicts,
                 'models_without_resolved_family' => $modelsWithoutFamily,

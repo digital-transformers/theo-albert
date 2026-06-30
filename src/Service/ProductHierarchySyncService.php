@@ -49,6 +49,7 @@ final class ProductHierarchySyncService
         $this->syncFamilies($converted['families'], $familyIndex, $result, $progress);
         $this->syncModels($converted['models'], $familyIndex, $modelIndex, $result, $progress);
         $this->syncFrames($converted['frames'], $modelIndex, $frameIndex, $result, $progress);
+        $this->enrichModels($converted['models'], $converted['frames'], $modelIndex, $frameIndex, $result);
 
         return $result;
     }
@@ -189,7 +190,6 @@ final class ProductHierarchySyncService
                     $status = 'created';
                 }
                 $modelIndex[$code] = $output;
-                $this->enrichModel($output['id'], $model);
                 ++$result['models'][$status];
             } catch (\Throwable $exception) {
                 ++$result['models']['failed'];
@@ -344,44 +344,122 @@ final class ProductHierarchySyncService
     }
 
     /**
-     * @param array<string, mixed> $model
+     * @param list<array<string, mixed>> $models
+     * @param list<array<string, mixed>> $frames
+     * @param array<string, array{id: int, fullpath: string}> $modelIndex
+     * @param array<string, array{id: int, fullpath: string}> $frameIndex
+     * @param array<string, mixed> $result
      */
-    private function enrichModel(int $id, array $model): void
+    private function enrichModels(
+        array $models,
+        array $frames,
+        array $modelIndex,
+        array $frameIndex,
+        array &$result,
+    ): void {
+        $framesByModel = [];
+        foreach ($frames as $frame) {
+            $modelCode = $this->stringValue($frame['parent_model_code'] ?? null);
+            if ($modelCode !== '') {
+                $framesByModel[$modelCode][] = $frame;
+            }
+        }
+
+        foreach ($models as $model) {
+            $code = $this->stringValue($model['model_code'] ?? null);
+            $id = (int) ($modelIndex[$code]['id'] ?? 0);
+            if ($code === '' || $id < 1) {
+                continue;
+            }
+
+            try {
+                $this->enrichModel($id, $model, $framesByModel[$code] ?? [], $frameIndex);
+            } catch (\Throwable $exception) {
+                $result['errors'][] = $this->error('model_enrichment', $code, $exception);
+            }
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $model
+     * @param list<array<string, mixed>> $frames
+     * @param array<string, array{id: int, fullpath: string}> $frameIndex
+     */
+    private function enrichModel(int $id, array $model, array $frames, array $frameIndex): void
     {
         $details = is_array($model['final_product_details'] ?? null) ? $model['final_product_details'] : [];
-        if ($details === []) {
-            return;
-        }
+        $finalProducts = $this->resolveImportedFrames($frames, $frameIndex);
 
         $object = ModelObject::getById($id, ['force' => true]);
         if (!$object instanceof ModelObject) {
             return;
         }
 
-        $items = [];
-        foreach ($details as $detail) {
-            if (!is_array($detail)) {
-                continue;
+        $changed = false;
+        if ($details !== []) {
+            $items = [];
+            foreach ($details as $detail) {
+                if (!is_array($detail)) {
+                    continue;
+                }
+
+                $mainColorCode = $this->stringValue($detail['main_color_code'] ?? null);
+                $colorIds = $this->resolveColorIds($detail['color_codes'] ?? []);
+                if ($mainColorCode === '' || $colorIds === []) {
+                    continue;
+                }
+
+                $item = new FinalProductProcess();
+                $item->setMainColorCode($mainColorCode);
+                $item->setColors($colorIds);
+                $items[] = $item;
             }
 
-            $mainColorCode = $this->stringValue($detail['main_color_code'] ?? null);
-            $colorIds = $this->resolveColorIds($detail['color_codes'] ?? []);
-            if ($mainColorCode === '' || $colorIds === []) {
-                continue;
+            if ($items !== []) {
+                $object->setFinalProductDetails(new Fieldcollection($items, 'finalProductDetails'));
+                $changed = true;
             }
-
-            $item = new FinalProductProcess();
-            $item->setMainColorCode($mainColorCode);
-            $item->setColors($colorIds);
-            $items[] = $item;
         }
 
-        if ($items === []) {
+        if ($finalProducts !== []) {
+            $object->setFinalProducts($finalProducts);
+            $changed = true;
+        }
+
+        if (!$changed) {
             return;
         }
 
-        $object->setFinalProductDetails(new Fieldcollection($items, 'finalProductDetails'));
         $object->save();
+    }
+
+    /**
+     * @param list<array<string, mixed>> $frames
+     * @param array<string, array{id: int, fullpath: string}> $frameIndex
+     *
+     * @return list<Frame>
+     */
+    private function resolveImportedFrames(array $frames, array $frameIndex): array
+    {
+        $resolved = [];
+        $seen = [];
+        foreach ($frames as $frame) {
+            $code = $this->stringValue($frame['frame_code'] ?? null);
+            $id = (int) ($frameIndex[$code]['id'] ?? 0);
+            if ($code === '' || $id < 1 || isset($seen[$id])) {
+                continue;
+            }
+
+            $object = Frame::getById($id, ['force' => true]);
+            if (!$object instanceof Frame) {
+                continue;
+            }
+
+            $resolved[] = $object;
+            $seen[$id] = true;
+        }
+
+        return $resolved;
     }
 
     /**

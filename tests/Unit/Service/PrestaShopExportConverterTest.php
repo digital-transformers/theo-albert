@@ -102,6 +102,30 @@ final class PrestaShopExportConverterTest extends Unit
         self::assertSame(['NO-FAMILY'], $result['report']['skipped_frames']['unclassified_family']);
     }
 
+    public function testCanLimitConvertedModelsAndTheirChildFrames(): void
+    {
+        $this->writeJson('config/CfgProductFamilies.json', [
+            ['Code' => 'family-a', 'Name' => 'Family A'],
+            ['Code' => 'family-b', 'Name' => 'Family B'],
+        ]);
+        $this->writeJson('config/CfgModels.json', [
+            ['Code' => 'MODEL-A', 'Name' => 'Model A'],
+            ['Code' => 'MODEL-B', 'Name' => 'Model B'],
+        ]);
+        $this->writeJson('products/Product_TransactionStep_1.json', [
+            $this->product('MODEL-A-1', 'family-a', 'MODEL-A', '1', 'BLACK'),
+            $this->product('MODEL-B-1', 'family-b', 'MODEL-B', '2', 'RED'),
+        ]);
+
+        $result = (new PrestaShopExportConverter())->convert($this->exportDirectory, '/Product Data/Families', 1);
+
+        self::assertSame(['MODEL-A'], array_column($result['models'], 'model_code'));
+        self::assertSame(['family-a'], array_column($result['families'], 'family_code'));
+        self::assertSame(['MODEL-A-1'], array_column($result['frames'], 'frame_code'));
+        self::assertSame(1, $result['report']['summary']['output_model_records']);
+        self::assertSame(1, $result['report']['summary']['output_frame_records']);
+    }
+
     /**
      * @return array<string, mixed>
      */

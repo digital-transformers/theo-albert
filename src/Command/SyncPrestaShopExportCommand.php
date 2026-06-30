@@ -33,7 +33,8 @@ final class SyncPrestaShopExportCommand extends Command
         $this
             ->addArgument('input', InputArgument::REQUIRED, 'Path to export ZIP')
             ->addOption('job-id', null, InputOption::VALUE_REQUIRED, 'Import job ID')
-            ->addOption('parent-path', null, InputOption::VALUE_REQUIRED, 'Family root path', '/Product Data/Families');
+            ->addOption('parent-path', null, InputOption::VALUE_REQUIRED, 'Family root path', '/Product Data/Families')
+            ->addOption('model-limit', null, InputOption::VALUE_REQUIRED, 'Limit import to the first N resolved models and their child frames');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -50,7 +51,8 @@ final class SyncPrestaShopExportCommand extends Command
             $this->jobStore->writeStatus($jobId, ['status' => 'converting', 'started_at' => gmdate(DATE_ATOM)]);
             $converted = $this->converter->convert(
                 (string) $input->getArgument('input'),
-                (string) $input->getOption('parent-path')
+                (string) $input->getOption('parent-path'),
+                $this->modelLimit($input)
             );
             $this->jobStore->writeStatus($jobId, [
                 'status' => 'syncing',
@@ -94,5 +96,19 @@ final class SyncPrestaShopExportCommand extends Command
             flock($lock, LOCK_UN);
             fclose($lock);
         }
+    }
+
+    private function modelLimit(InputInterface $input): ?int
+    {
+        $value = $input->getOption('model-limit');
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        if (!is_scalar($value) || !ctype_digit((string) $value) || (int) $value < 1) {
+            throw new \InvalidArgumentException('--model-limit must be a positive integer.');
+        }
+
+        return (int) $value;
     }
 }
