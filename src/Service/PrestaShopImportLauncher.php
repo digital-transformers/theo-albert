@@ -35,6 +35,12 @@ final class PrestaShopImportLauncher
 
         $jobId = Uuid::v7()->toRfc4122();
         $inputPath = $this->jobStore->createJob($jobId, $contents, $filename);
+        $this->jobStore->writeStatus($jobId, [
+            'selection' => [
+                'model_limit' => $modelLimit,
+                'models' => trim($models),
+            ],
+        ]);
         $logPath = $this->jobStore->jobDirectory($jobId) . '/worker.log';
         $command = [
             PimcoreConsole::getPhpCli() ?: '/usr/bin/php',

@@ -108,6 +108,7 @@ app.datahub.prestashopStatus = function (value) {
 };
 
 app.datahub.prestashopEntitySummary = function (value) {
+  if (!value) return '-';
   value = value || {};
   return [
     Number(value.created || 0) + ' new',
@@ -135,6 +136,8 @@ app.datahub.prestashopDetailHtml = function (payload) {
   html += row('Status', String(status.status || '').replaceAll('_', ' '));
   html += row('Created', status.created_at);
   html += row('Completed', status.completed_at);
+  html += row('Model limit', status.selection?.model_limit || '-');
+  html += row('Model filters', status.selection?.models || '-');
   html += row('Source records',
     (summary.source_family_records || 0) + ' families / ' +
     (summary.source_model_records || 0) + ' models / ' +
@@ -172,7 +175,7 @@ app.datahub.createPrestaShopPanel = function () {
     storeId: 'prestashop-import-jobs-store',
     fields: [
       'job_id', 'filename', 'status', 'created_at', 'completed_at',
-      'stage', 'current', 'total', 'conversion_summary', 'sync', 'error'
+      'stage', 'current', 'total', 'conversion_summary', 'sync', 'selection', 'error'
     ],
     data: []
   });
@@ -300,7 +303,14 @@ app.datahub.createPrestaShopPanel = function () {
             renderer: function (_value, _meta, record) {
               const current = Number(record.get('current') || 0);
               const total = Number(record.get('total') || 0);
-              return total ? current + ' / ' + total + ' ' + (record.get('stage') || '') : '-';
+              if (total) return current + ' / ' + total + ' ' + (record.get('stage') || '');
+
+              const status = record.get('status');
+              if (status === 'queued') return 'Waiting';
+              if (status === 'converting') return 'Reading export';
+              if (status === 'syncing') return 'Preparing sync';
+
+              return '-';
             }
           },
           {

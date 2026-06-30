@@ -162,6 +162,12 @@ final class PrestaShopExportConverter
                     $models,
                     fn (array $model): bool => $this->matchesModelFilter($model, $modelFilters)
                 ));
+                if ($models === []) {
+                    throw new RuntimeException(sprintf(
+                        'No models matched the supplied codes or exact names: %s.',
+                        implode(', ', $modelFilters)
+                    ));
+                }
             }
 
             $limitedModelCodes = null;

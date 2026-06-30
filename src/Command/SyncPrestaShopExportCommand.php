@@ -49,7 +49,11 @@ final class SyncPrestaShopExportCommand extends Command
         }
 
         try {
-            $this->jobStore->writeStatus($jobId, ['status' => 'converting', 'started_at' => gmdate(DATE_ATOM)]);
+            $this->jobStore->writeStatus($jobId, [
+                'status' => 'converting',
+                'stage' => 'reading export',
+                'started_at' => gmdate(DATE_ATOM),
+            ]);
             $converted = $this->converter->convert(
                 (string) $input->getArgument('input'),
                 (string) $input->getOption('parent-path'),
@@ -75,6 +79,7 @@ final class SyncPrestaShopExportCommand extends Command
             $failed = (int) $sync['families']['failed'] + (int) $sync['models']['failed'] + (int) $sync['frames']['failed'];
             $this->jobStore->writeStatus($jobId, [
                 'status' => $failed === 0 ? 'completed' : 'completed_with_errors',
+                'stage' => 'completed',
                 'completed_at' => gmdate(DATE_ATOM),
                 'conversion_summary' => $converted['report']['summary'],
                 'sync' => [

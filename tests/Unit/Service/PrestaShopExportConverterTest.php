@@ -154,6 +154,29 @@ final class PrestaShopExportConverterTest extends Unit
         self::assertSame(['MODEL-B 2'], array_column($result['frames'], 'frame_code'));
     }
 
+    public function testFailsWhenNoModelFilterMatches(): void
+    {
+        $this->writeJson('config/CfgProductFamilies.json', [
+            ['Code' => 'family-a', 'Name' => 'Family A'],
+        ]);
+        $this->writeJson('config/CfgModels.json', [
+            ['Code' => 'MODEL-A', 'Name' => 'First Model'],
+        ]);
+        $this->writeJson('products/Product_TransactionStep_1.json', [
+            $this->product('MODEL-A-1', 'family-a', 'MODEL-A', '1', 'BLACK'),
+        ]);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('No models matched the supplied codes or exact names: missing model.');
+
+        (new PrestaShopExportConverter())->convert(
+            $this->exportDirectory,
+            '/Product Data/Families',
+            null,
+            ['Missing Model']
+        );
+    }
+
     /**
      * @return array<string, mixed>
      */
