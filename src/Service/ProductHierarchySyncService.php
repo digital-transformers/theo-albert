@@ -422,7 +422,7 @@ final class ProductHierarchySyncService
         }
 
         if ($finalProducts !== []) {
-            $object->setFinalProducts($finalProducts);
+            $object->setFinalProducts($this->mergeFinalProducts($object, $finalProducts));
             $changed = true;
         }
 
@@ -460,6 +460,44 @@ final class ProductHierarchySyncService
         }
 
         return $resolved;
+    }
+
+    /**
+     * @param list<Frame> $importedFrames
+     *
+     * @return list<Frame>
+     */
+    private function mergeFinalProducts(ModelObject $model, array $importedFrames): array
+    {
+        $merged = [];
+        $seen = [];
+        $currentFrames = $model->getFinalProducts();
+
+        foreach (is_array($currentFrames) ? $currentFrames : [] as $frame) {
+            if (!$frame instanceof Frame) {
+                continue;
+            }
+
+            $id = (int) $frame->getId();
+            if ($id < 1 || isset($seen[$id])) {
+                continue;
+            }
+
+            $merged[] = $frame;
+            $seen[$id] = true;
+        }
+
+        foreach ($importedFrames as $frame) {
+            $id = (int) $frame->getId();
+            if ($id < 1 || isset($seen[$id])) {
+                continue;
+            }
+
+            $merged[] = $frame;
+            $seen[$id] = true;
+        }
+
+        return $merged;
     }
 
     /**

@@ -61,8 +61,9 @@ final class PrestaShopExportConverterTest extends Unit
         self::assertCount(2, $result['families']);
         self::assertSame('family-a', $result['models'][0]['parent_family_code']);
         self::assertCount(2, $result['frames']);
+        self::assertSame('MODEL 1', $result['frames'][0]['frame_code']);
         self::assertSame(['BLACK'], $result['frames'][0]['composed_color_codes']);
-        self::assertSame('', $result['frames'][0]['main_color_code']);
+        self::assertSame('1', $result['frames'][0]['main_color_code']);
         self::assertSame('Optische brillen', $result['frames'][0]['article_group_name']);
         self::assertSame('Old and over', $result['frames'][0]['category_name']);
         self::assertSame('Material Name', $result['frames'][0]['material_name']);
@@ -97,7 +98,7 @@ final class PrestaShopExportConverterTest extends Unit
 
         $result = (new PrestaShopExportConverter())->convert($this->exportDirectory);
 
-        self::assertSame(['VALID'], array_column($result['frames'], 'frame_code'));
+        self::assertSame(['MODEL 3'], array_column($result['frames'], 'frame_code'));
         self::assertSame(['DUPLICATE'], $result['report']['duplicate_product_codes']);
         self::assertSame(['NO-FAMILY'], $result['report']['skipped_frames']['unclassified_family']);
     }
@@ -121,7 +122,7 @@ final class PrestaShopExportConverterTest extends Unit
 
         self::assertSame(['MODEL-A'], array_column($result['models'], 'model_code'));
         self::assertSame(['family-a'], array_column($result['families'], 'family_code'));
-        self::assertSame(['MODEL-A-1'], array_column($result['frames'], 'frame_code'));
+        self::assertSame(['MODEL-A 1'], array_column($result['frames'], 'frame_code'));
         self::assertSame(1, $result['report']['summary']['output_model_records']);
         self::assertSame(1, $result['report']['summary']['output_frame_records']);
     }

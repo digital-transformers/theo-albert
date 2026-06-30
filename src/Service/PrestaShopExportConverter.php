@@ -212,6 +212,7 @@ final class PrestaShopExportConverter
 
                     $udfs = is_array($product['UDFs'] ?? null) ? $product['UDFs'] : [];
                     $colors = $this->normalizeColors($product['Colors'] ?? [], $colorsByCode);
+                    $combiCode = $colors[0]['combi_code'] ?? '';
                     $articleGroupCode = $this->stringValue($udfs['ArticleGroup'] ?? null);
                     $categoryCode = $this->stringValue($udfs['Category'] ?? null);
                     $lineCode = $this->stringValue($udfs['Line'] ?? null);
@@ -219,7 +220,7 @@ final class PrestaShopExportConverter
                     $thicknessCode = $this->stringValue($udfs['Thickness'] ?? null);
 
                     $frames[] = [
-                        'frame_code' => $productCode,
+                        'frame_code' => $this->generatedFrameCode($modelCode, $combiCode, $productCode),
                         'frame_name' => $this->productName($product),
                         'frame_names' => $this->productNames($product),
                         'parent_model_code' => $modelCode,
@@ -241,9 +242,7 @@ final class PrestaShopExportConverter
                         'can_be_sold' => filter_var($product['CanBeSold'] ?? false, FILTER_VALIDATE_BOOL),
                         'colors' => $colors,
                         'art_base_code' => $modelCode,
-                        // Keep this empty until the Pimcore main-color convention is confirmed. Setting it
-                        // to CombiCode currently makes the frame save subscriber rewrite ProductCode.
-                        'main_color_code' => '',
+                        'main_color_code' => $combiCode,
                         'series_code' => $this->stringValue($udfs['Collection'] ?? null),
                         'ecom_file_name' => $this->stringValue($udfs['Image'] ?? null),
                         'exchange_code' => '',
@@ -257,6 +256,7 @@ final class PrestaShopExportConverter
                         'image_gallery_asset_paths' => [],
                         'attachment_asset_paths' => [],
                         'source' => [
+                            'product_code' => $productCode,
                             'gtin' => $this->stringValue($udfs['GTIN'] ?? null),
                             'family_code' => $familyCode,
                             'material' => $materialCode,
@@ -267,7 +267,7 @@ final class PrestaShopExportConverter
                             'tariff_code' => $this->stringValue($udfs['TarifCode'] ?? null),
                             'is_active' => (bool) ($product['IsActive'] ?? false),
                             'can_be_sold' => filter_var($product['CanBeSold'] ?? false, FILTER_VALIDATE_BOOL),
-                            'combi_code' => $colors[0]['combi_code'] ?? '',
+                            'combi_code' => $combiCode,
                             'colors' => $colors,
                         ],
                     ];
@@ -297,7 +297,7 @@ final class PrestaShopExportConverter
                     'family_mismatch_rule' => 'Frames referencing another family for that model are skipped.',
                     'duplicate_product_rule' => 'All records using a duplicated ProductCode are skipped.',
                     'unclassified_rule' => 'Products with Family "0", an empty family, or an empty model are skipped.',
-                    'main_color_rule' => 'main_color_code is left empty to preserve ProductCode. CombiCode is retained under source.combi_code; ColorCode values populate composed colors.',
+                    'main_color_rule' => 'CombiCode populates main_color_code and generated frame codes follow the model frame generator convention: model code plus main color code.',
                     'manual_products' => 'manual_products.json is intentionally excluded because its records are not family/model frames.',
                     'model_limit_rule' => $modelLimit === null
                         ? 'No model limit was applied.'
@@ -480,6 +480,15 @@ final class PrestaShopExportConverter
         $value = $this->stringValue($value);
 
         return $value === '' ? [] : [$value];
+    }
+
+    private function generatedFrameCode(string $modelCode, string $mainColorCode, string $fallbackCode): string
+    {
+        if ($modelCode !== '' && $mainColorCode !== '') {
+            return $modelCode . ' ' . $mainColorCode;
+        }
+
+        return $fallbackCode;
     }
 
     private function stringValue(mixed $value): string
