@@ -251,6 +251,7 @@ app.datahub.createPrestaShopPanel = function () {
               form.submit({
                 url: '/admin/datahub-supervisor/prestashop/import',
                 params: { csrfToken: pimcore.settings.csrfToken },
+                submitEmptyText: false,
                 waitMsg: 'Uploading PrestaShop export...',
                 success: function () {
                   form.reset();
