@@ -16,6 +16,12 @@ console.log('[automatic-image-linking] loaded');
     }
     window.__automaticImageLinkingRegistered = true;
 
+    const currentUserCanLinkImages = function () {
+      const user = pimcore.globalmanager ? pimcore.globalmanager.get('user') : null;
+
+      return !!(user && (user.admin || (user.isAllowed && user.isAllowed('automatic_image_linking'))));
+    };
+
     const encode = function (value) {
       return Ext.util.Format.htmlEncode(String(value || ''));
     };
@@ -46,6 +52,10 @@ console.log('[automatic-image-linking] loaded');
         const assetEditor = event?.detail?.asset || event?.detail?.object;
         const data = assetEditor?.data || {};
         if ((event?.detail?.type || data.type) !== 'folder') {
+          return;
+        }
+
+        if (!currentUserCanLinkImages()) {
           return;
         }
 

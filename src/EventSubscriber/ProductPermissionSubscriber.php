@@ -23,6 +23,7 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
     public const PERMISSION_MODEL_FRAME_GENERATE = 'model_frame_generate';
     public const PERMISSION_QUALITY_CONTROL_ONLY = 'quality_control_only';
     public const PERMISSION_MARKETING_ONLY = 'marketing_only';
+    public const PERMISSION_AUTOMATIC_IMAGE_LINKING = 'automatic_image_linking';
 
     private const FAMILY_CLASS_NAME = 'family';
     private const SUPPLIER_CLASS_NAME = 'supplier';
@@ -165,6 +166,19 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
             }
 
             return;
+        }
+
+        if ($this->shouldLimitToSupplierProjects($user)) {
+            $data = $event->getArgument('data');
+            if (is_array($data)) {
+                $className = strtolower((string) $object->getClassName());
+                if ($className !== 'model') {
+                    $data['permissions']['edit'] = false;
+                    $data['permissions']['publish'] = false;
+                    $data['permissions']['delete'] = false;
+                    $event->setArgument('data', $data);
+                }
+            }
         }
 
         if (!$this->isSupportedProductObject($object)) {

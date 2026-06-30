@@ -9,11 +9,12 @@ use Doctrine\Migrations\AbstractMigration;
 use Pimcore\Model\Asset;
 use Pimcore\Model\DataObject;
 use Pimcore\Model\DataObject\ClassDefinition;
+use Pimcore\Model\User;
 use Pimcore\Model\User\Role;
 use Pimcore\Model\User\Workspace\Asset as AssetWorkspace;
 use Pimcore\Model\User\Workspace\DataObject as ObjectWorkspace;
 
-final class Version20260602120000SetupTheoPermissions extends AbstractMigration
+final class Version20260630100000EnforceTheoRolePermissions extends AbstractMigration
 {
     private const CUSTOM_PERMISSIONS = [
         'family_phase_update',
@@ -40,7 +41,7 @@ final class Version20260602120000SetupTheoPermissions extends AbstractMigration
 
     public function getDescription(): string
     {
-        return 'Create Theo roles and custom permissions for designers, suppliers, QC, pictures, marketing, and key users.';
+        return 'Reapply Theo role permissions according to the product/assets access matrix.';
     }
 
     public function up(Schema $schema): void
@@ -59,29 +60,12 @@ final class Version20260602120000SetupTheoPermissions extends AbstractMigration
         }
 
         $this->configureRoles();
+        $this->assignUserToRole(['Caroline', 'caroline'], 'Key-Readonly');
     }
 
     public function down(Schema $schema): void
     {
-        foreach ([
-            'Designer-Internal',
-            'Designer-External',
-            'Supplier',
-            'Quality-Control-user',
-            'Key-User',
-            'Key-Readonly',
-            'Pictures',
-            'Marketing',
-        ] as $roleName) {
-            $role = Role::getByName($roleName);
-            if ($role instanceof Role) {
-                $role->delete();
-            }
-        }
-
-        foreach (self::CUSTOM_PERMISSIONS as $permission) {
-            $this->addSql(sprintf("DELETE FROM users_permission_definitions WHERE `key` = '%s'", $permission));
-        }
+        $this->addSql("DELETE FROM users_permission_definitions WHERE `key` = 'automatic_image_linking'");
     }
 
     private function configureRoles(): void
@@ -322,6 +306,32 @@ final class Version20260602120000SetupTheoPermissions extends AbstractMigration
         }
 
         return $folder;
+    }
+
+    /**
+     * @param list<string> $usernames
+     */
+    private function assignUserToRole(array $usernames, string $roleName): void
+    {
+        $role = Role::getByName($roleName);
+        if (!$role instanceof Role || !$role->getId()) {
+            return;
+        }
+
+        foreach ($usernames as $username) {
+            $user = User::getByName($username);
+            if (!$user instanceof User) {
+                continue;
+            }
+
+            $roles = array_map('intval', $user->getRoles());
+            $roleId = (int) $role->getId();
+            if (!in_array($roleId, $roles, true)) {
+                $roles[] = $roleId;
+                $user->setRoles($roles);
+                $user->save();
+            }
+        }
     }
 
     /**

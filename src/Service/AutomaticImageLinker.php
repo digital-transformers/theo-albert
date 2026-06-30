@@ -61,7 +61,7 @@ final class AutomaticImageLinker
 
         foreach ($listing->load() as $asset) {
             if ($asset instanceof Asset\Image) {
-                $result = $this->mergeResult($result, $this->processImage($asset));
+                $result = $this->mergeResult($result, $this->processImage($asset, $user));
             } elseif ($this->isZipAsset($asset)) {
                 $result = $this->mergeResult($result, $this->processZip($asset, $user, false));
             }
@@ -80,7 +80,7 @@ final class AutomaticImageLinker
     public function processAsset(Asset $asset, ?User $user = null, bool $notify = true): array
     {
         if ($asset instanceof Asset\Image) {
-            $result = $this->processImage($asset);
+            $result = $this->processImage($asset, $user);
         } elseif ($this->isZipAsset($asset)) {
             $result = $this->processZip($asset, $user, false);
         } else {
@@ -121,7 +121,7 @@ final class AutomaticImageLinker
     /**
      * @return array{processed: list<array<string, mixed>>, linked: list<array<string, mixed>>, orphan: list<array<string, mixed>>, errors: list<string>, extracted: list<string>}
      */
-    private function processImage(Asset\Image $asset): array
+    private function processImage(Asset\Image $asset, ?User $user): array
     {
         $result = $this->emptyResult();
         $result['processed'][] = $this->assetSummary($asset);
@@ -137,6 +137,15 @@ final class AutomaticImageLinker
         }
 
         try {
+            if (!$this->canLinkField($user, $match['field'])) {
+                $result['orphan'][] = [
+                    ...$this->assetSummary($asset),
+                    'reason' => sprintf('Missing permission to link images to %s', $match['field']),
+                ];
+
+                return $result;
+            }
+
             $changed = $this->linkImage($match['object'], $asset, $match['field']);
             $match['object']->save();
             $result['linked'][] = [
@@ -211,7 +220,7 @@ final class AutomaticImageLinker
                 }
 
                 $result['extracted'][] = $image->getRealFullPath();
-                $result = $this->mergeResult($result, $this->processImage($image));
+                $result = $this->mergeResult($result, $this->processImage($image, $user));
             }
         } finally {
             $this->extractingZip = false;
@@ -342,6 +351,19 @@ final class AutomaticImageLinker
             'qualityControlImages' => $this->appendElementMetadata($object, $asset, $field),
             default => $this->appendImageGallery($object, $asset, $field),
         };
+    }
+
+    private function canLinkField(?User $user, string $field): bool
+    {
+        if ($field !== 'qualityControlImages') {
+            return true;
+        }
+
+        if (!$user instanceof User) {
+            return true;
+        }
+
+        return $user->isAdmin() || $user->isAllowed('quality_control');
     }
 
     private function setSingleImage(Concrete $object, Asset\Image $asset, string $field): bool

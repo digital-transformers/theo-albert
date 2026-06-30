@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\EventSubscriber\ProductPermissionSubscriber;
 use App\Service\AutomaticImageLinker;
 use Pimcore\Model\Asset;
 use Pimcore\Security\User\TokenStorageUserResolver;
@@ -31,7 +32,11 @@ final class AutomaticImageLinkingController extends AbstractController
         }
 
         $user = $this->userResolver->getUser();
-        if (!$user || !$folder->isAllowed('view', $user)) {
+        $canProcessFolder = $user
+            && $folder->isAllowed('view', $user)
+            && ($user->isAdmin() || $user->isAllowed(ProductPermissionSubscriber::PERMISSION_AUTOMATIC_IMAGE_LINKING));
+
+        if (!$canProcessFolder) {
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Missing permission to process this asset folder',

@@ -16,6 +16,12 @@ console.log('[model-generate-frames] loaded');
     }
     window.__modelGenerateFramesRegistered = true;
 
+    const currentUserCanGenerateFrames = function () {
+      const user = pimcore.globalmanager ? pimcore.globalmanager.get('user') : null;
+
+      return !!(user && (user.admin || (user.isAllowed && user.isAllowed('model_frame_generate'))));
+    };
+
     const normalizeColorIds = function (value) {
       let items = value;
       if (typeof items === 'string') {
@@ -177,6 +183,10 @@ console.log('[model-generate-frames] loaded');
         }
 
         wrapModelSaveData(objectEditor);
+
+        if (!currentUserCanGenerateFrames()) {
+          return;
+        }
 
         const toolbar = objectEditor?.toolbar;
         if (!toolbar || Ext.getCmp('model-generate-frames-' + data.id)) {
