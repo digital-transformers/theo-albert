@@ -42,7 +42,7 @@ final class OwnObjectsOnlySubscriber implements EventSubscriberInterface
     public function onBeforeListLoad(GenericEvent $event): void
     {
         $user = $this->userResolver->getUser();
-        if (!$user || !$user->isAllowed('see_own_objects_only')) {
+        if (!$user || $user->isAdmin() || !$user->isAllowed('see_own_objects_only')) {
             return;
         }
 
@@ -56,7 +56,7 @@ final class OwnObjectsOnlySubscriber implements EventSubscriberInterface
         // the admin tree do not expose getClassName().
         if (method_exists($list, 'getClassName')) {
             $className = $list->getClassName() ?: null;
-            if ($className && \in_array((new \ReflectionClass($className))->getShortName(), $this->excludedClasses, true)) {
+            if ($className && $this->isExcludedClass((string) $className)) {
                 return;
             }
         }
@@ -103,7 +103,7 @@ final class OwnObjectsOnlySubscriber implements EventSubscriberInterface
     public function onPreSendData(GetPreSendDataEvent $event): void
     {
         $user = $this->userResolver->getUser();
-        if (!$user || !$user->isAllowed('see_own_objects_only')) {
+        if (!$user || $user->isAdmin() || !$user->isAllowed('see_own_objects_only')) {
             return;
         }
 
@@ -134,5 +134,14 @@ final class OwnObjectsOnlySubscriber implements EventSubscriberInterface
             $data['permissions']['delete']  = false;
             $event->setData($data);
         }
+    }
+
+    private function isExcludedClass(string $className): bool
+    {
+        if (class_exists($className)) {
+            $className = (new \ReflectionClass($className))->getShortName();
+        }
+
+        return \in_array($className, $this->excludedClasses, true);
     }
 }
