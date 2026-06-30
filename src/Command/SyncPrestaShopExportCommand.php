@@ -48,6 +48,25 @@ final class SyncPrestaShopExportCommand extends Command
             return Command::FAILURE;
         }
 
+        $finished = false;
+        $memoryReserve = str_repeat('x', 1024 * 1024);
+        register_shutdown_function(function () use ($jobId, &$finished, &$memoryReserve): void {
+            $memoryReserve = '';
+            $error = error_get_last();
+            if ($finished || !is_array($error) || !in_array($error['type'] ?? null, [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) {
+                return;
+            }
+
+            try {
+                $this->jobStore->writeStatus($jobId, [
+                    'status' => 'failed',
+                    'error' => 'Import worker terminated: ' . (string) ($error['message'] ?? 'fatal error'),
+                    'completed_at' => gmdate(DATE_ATOM),
+                ]);
+            } catch (\Throwable) {
+            }
+        });
+
         try {
             $this->jobStore->writeStatus($jobId, [
                 'status' => 'converting',
@@ -89,6 +108,7 @@ final class SyncPrestaShopExportCommand extends Command
                     'error_count' => count($sync['errors']),
                 ],
             ]);
+            $finished = true;
 
             return $failed === 0 ? Command::SUCCESS : Command::FAILURE;
         } catch (\Throwable $exception) {
@@ -96,6 +116,7 @@ final class SyncPrestaShopExportCommand extends Command
                 'status' => 'failed',
                 'error' => $exception->getMessage(),
             ]);
+            $finished = true;
             $output->writeln('<error>' . $exception->getMessage() . '</error>');
 
             return Command::FAILURE;

@@ -12,11 +12,13 @@ use Pimcore\Model\DataObject\Frame;
 use Pimcore\Model\DataObject\Model as ModelObject;
 use Pimcore\Model\DataObject\SAPItemGroup;
 use Pimcore\Model\DataObject\SAPItemGroup\Listing as SAPItemGroupListing;
+use Pimcore\Cache\RuntimeCache;
 use RuntimeException;
 
 final class ProductHierarchySyncService
 {
     private const PAGE_SIZE = 500;
+    private const RUNTIME_CLEANUP_INTERVAL = 100;
 
     public function __construct(private readonly ProductHierarchyGraphqlClient $client)
     {
@@ -49,7 +51,7 @@ final class ProductHierarchySyncService
         $this->syncFamilies($converted['families'], $familyIndex, $result, $progress);
         $this->syncModels($converted['models'], $familyIndex, $modelIndex, $result, $progress);
         $this->syncFrames($converted['frames'], $modelIndex, $frameIndex, $result, $progress);
-        $this->enrichModels($converted['models'], $converted['frames'], $modelIndex, $frameIndex, $result);
+        $this->enrichModels($converted['models'], $converted['frames'], $modelIndex, $frameIndex, $result, $progress);
 
         return $result;
     }
@@ -263,6 +265,7 @@ final class ProductHierarchySyncService
             }
 
             $this->reportProgress($progress, 'frames', $position + 1, $total, $result);
+            $this->cleanUpRuntimeCache($position + 1);
         }
     }
 
@@ -349,6 +352,7 @@ final class ProductHierarchySyncService
      * @param array<string, array{id: int, fullpath: string}> $modelIndex
      * @param array<string, array{id: int, fullpath: string}> $frameIndex
      * @param array<string, mixed> $result
+     * @param callable(array<string, mixed>): void|null $progress
      */
     private function enrichModels(
         array $models,
@@ -356,6 +360,7 @@ final class ProductHierarchySyncService
         array $modelIndex,
         array $frameIndex,
         array &$result,
+        ?callable $progress,
     ): void {
         $framesByModel = [];
         foreach ($frames as $frame) {
@@ -365,10 +370,12 @@ final class ProductHierarchySyncService
             }
         }
 
-        foreach ($models as $model) {
+        $total = count($models);
+        foreach ($models as $position => $model) {
             $code = $this->stringValue($model['model_code'] ?? null);
             $id = (int) ($modelIndex[$code]['id'] ?? 0);
             if ($code === '' || $id < 1) {
+                $this->reportProgress($progress, 'model relations', $position + 1, $total, $result);
                 continue;
             }
 
@@ -377,7 +384,20 @@ final class ProductHierarchySyncService
             } catch (\Throwable $exception) {
                 $result['errors'][] = $this->error('model_enrichment', $code, $exception);
             }
+
+            $this->reportProgress($progress, 'model relations', $position + 1, $total, $result);
+            $this->cleanUpRuntimeCache($position + 1);
         }
+    }
+
+    private function cleanUpRuntimeCache(int $position): void
+    {
+        if ($position % self::RUNTIME_CLEANUP_INTERVAL !== 0 || !\Pimcore::hasContainer()) {
+            return;
+        }
+
+        RuntimeCache::clear();
+        gc_collect_cycles();
     }
 
     /**
