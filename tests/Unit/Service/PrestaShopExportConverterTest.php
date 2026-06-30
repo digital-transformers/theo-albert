@@ -177,6 +177,29 @@ final class PrestaShopExportConverterTest extends Unit
         );
     }
 
+    public function testInfersMainColorFromProductCodeWhenColorsAreEmpty(): void
+    {
+        $this->writeJson('config/CfgProductFamilies.json', [
+            ['Code' => 'family-a', 'Name' => 'Family A'],
+        ]);
+        $this->writeJson('config/CfgModels.json', [
+            ['Code' => 'MODEL', 'Name' => 'Model'],
+        ]);
+        $this->writeJson('products/Product_TransactionStep_1.json', [
+            $this->product('MODEL-6G', 'family-a', 'MODEL', '', ''),
+        ]);
+
+        $result = (new PrestaShopExportConverter())->convert($this->exportDirectory);
+
+        self::assertSame('MODEL 6G', $result['frames'][0]['frame_code']);
+        self::assertSame('6G', $result['frames'][0]['main_color_code']);
+        self::assertSame([], $result['frames'][0]['composed_color_codes']);
+        self::assertSame([[
+            'main_color_code' => '6G',
+            'color_codes' => [],
+        ]], $result['models'][0]['final_product_details']);
+    }
+
     /**
      * @return array<string, mixed>
      */

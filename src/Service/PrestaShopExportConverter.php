@@ -119,9 +119,9 @@ final class PrestaShopExportConverter
                     }
 
                     $colors = $this->normalizeColors($product['Colors'] ?? [], $colorsByCode);
-                    $combiCode = $colors[0]['combi_code'] ?? '';
+                    $combiCode = $colors[0]['combi_code'] ?? $this->inferMainColorCode($modelCode, $productCode);
                     $colorCodes = array_values(array_unique(array_column($colors, 'color_code')));
-                    if ($combiCode === '' || $colorCodes === []) {
+                    if ($combiCode === '') {
                         continue;
                     }
 
@@ -190,6 +190,7 @@ final class PrestaShopExportConverter
                 'missing_model' => [],
                 'unknown_model' => [],
                 'family_mismatch' => [],
+                'missing_main_color' => [],
             ];
 
             foreach ($productFiles as $productFile) {
@@ -229,7 +230,11 @@ final class PrestaShopExportConverter
 
                     $udfs = is_array($product['UDFs'] ?? null) ? $product['UDFs'] : [];
                     $colors = $this->normalizeColors($product['Colors'] ?? [], $colorsByCode);
-                    $combiCode = $colors[0]['combi_code'] ?? '';
+                    $combiCode = $colors[0]['combi_code'] ?? $this->inferMainColorCode($modelCode, $productCode);
+                    if ($combiCode === '') {
+                        $skipped['missing_main_color'][] = $productCode;
+                        continue;
+                    }
                     $articleGroupCode = $this->stringValue($udfs['ArticleGroup'] ?? null);
                     $categoryCode = $this->stringValue($udfs['Category'] ?? null);
                     $lineCode = $this->stringValue($udfs['Line'] ?? null);
@@ -315,6 +320,7 @@ final class PrestaShopExportConverter
                     'duplicate_product_rule' => 'All records using a duplicated ProductCode are skipped.',
                     'unclassified_rule' => 'Products with Family "0", an empty family, or an empty model are skipped.',
                     'main_color_rule' => 'CombiCode populates main_color_code and generated frame codes follow the model frame generator convention: model code plus main color code.',
+                    'missing_color_rule' => 'When Colors is empty, the main color code is inferred from the ProductCode suffix after the model code; products without either value are skipped.',
                     'manual_products' => 'manual_products.json is intentionally excluded because its records are not family/model frames.',
                     'model_limit_rule' => $modelLimit === null
                         ? 'No model limit was applied.'
@@ -509,6 +515,15 @@ final class PrestaShopExportConverter
         }
 
         return $fallbackCode;
+    }
+
+    private function inferMainColorCode(string $modelCode, string $productCode): string
+    {
+        if ($modelCode === '' || $productCode === '' || !str_starts_with($productCode, $modelCode)) {
+            return '';
+        }
+
+        return ltrim(substr($productCode, strlen($modelCode)), " -_");
     }
 
     /**

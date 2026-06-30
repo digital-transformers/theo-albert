@@ -13,6 +13,7 @@ use Pimcore\Model\DataObject\Model as ModelObject;
 use Pimcore\Model\DataObject\SAPItemGroup;
 use Pimcore\Model\DataObject\SAPItemGroup\Listing as SAPItemGroupListing;
 use Pimcore\Cache\RuntimeCache;
+use Pimcore\Model\Element\Service as ElementService;
 use RuntimeException;
 
 final class ProductHierarchySyncService
@@ -240,13 +241,20 @@ final class ProductHierarchySyncService
             ];
 
             try {
-                if (isset($frameIndex[$code])) {
+                $sourceProductCode = $this->stringValue($frame['source']['product_code'] ?? null);
+                $existingCode = isset($frameIndex[$code])
+                    ? $code
+                    : ($sourceProductCode !== $code && isset($frameIndex[$sourceProductCode]) ? $sourceProductCode : null);
+                if ($existingCode !== null) {
                     $output = $this->mutate('updateFrame', [
-                        'id' => $frameIndex[$code]['id'],
+                        'id' => $frameIndex[$existingCode]['id'],
                         'parentId' => $parent['id'],
                         'input' => $input,
                     ]);
                     $status = 'updated';
+                    if ($existingCode !== $code) {
+                        unset($frameIndex[$existingCode]);
+                    }
                 } else {
                     $output = $this->mutate('createFrame', [
                         'parentId' => $parent['id'],
@@ -425,7 +433,7 @@ final class ProductHierarchySyncService
 
                 $mainColorCode = $this->stringValue($detail['main_color_code'] ?? null);
                 $colorIds = $this->resolveColorIds($detail['color_codes'] ?? []);
-                if ($mainColorCode === '' || $colorIds === []) {
+                if ($mainColorCode === '') {
                     continue;
                 }
 
@@ -526,7 +534,7 @@ final class ProductHierarchySyncService
     private function enrichFrame(int $id, array $frame): void
     {
         $hasItemGroups = $this->nonEmptyStrings($frame['item_group_numbers'] ?? []) !== [];
-        $hasColors = $this->nonEmptyStrings($frame['composed_color_codes'] ?? []) !== [];
+        $hasColors = array_key_exists('composed_color_codes', $frame);
         $hasDsArtCat = array_key_exists('category_code', $frame);
         $hasDsType = array_key_exists('line_code', $frame);
         if (!$hasItemGroups && !$hasColors && !$hasDsArtCat && !$hasDsType) {
@@ -536,6 +544,11 @@ final class ProductHierarchySyncService
         $object = Frame::getById($id, ['force' => true]);
         if (!$object instanceof Frame) {
             return;
+        }
+
+        $expectedKey = ElementService::getValidKey($this->stringValue($frame['frame_code'] ?? null), 'object');
+        if ($expectedKey !== '' && $object->getKey() !== $expectedKey) {
+            $object->setKey($expectedKey);
         }
 
         if ($hasItemGroups) {
