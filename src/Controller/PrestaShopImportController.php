@@ -34,7 +34,17 @@ final class PrestaShopImportController extends AbstractController
         }
 
         try {
-            $job = $this->launcher->enqueue($contents, $filename);
+            $modelLimitValue = trim((string) $request->request->get('modelLimit', $request->query->get('modelLimit', '')));
+            $modelLimit = $modelLimitValue === '' ? null : filter_var($modelLimitValue, FILTER_VALIDATE_INT);
+            if ($modelLimitValue !== '' && ($modelLimit === false || $modelLimit < 1)) {
+                return new JsonResponse(['success' => false, 'message' => 'Model limit must be a positive integer.'], 400);
+            }
+            $job = $this->launcher->enqueue(
+                $contents,
+                $filename,
+                $modelLimit,
+                (string) $request->request->get('models', $request->query->get('models', ''))
+            );
         } catch (\RuntimeException $exception) {
             $status = str_contains($exception->getMessage(), '50 MB') ? 413 : 400;
             if (str_contains($exception->getMessage(), 'worker')) {

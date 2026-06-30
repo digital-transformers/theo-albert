@@ -196,7 +196,7 @@ app.datahub.createPrestaShopPanel = function () {
         xtype: 'form',
         id: 'prestashop-import-form',
         region: 'north',
-        height: 58,
+        height: 68,
         border: false,
         bodyPadding: '10 12',
         layout: 'hbox',
@@ -210,12 +210,32 @@ app.datahub.createPrestaShopPanel = function () {
             xtype: 'filefield',
             name: 'file',
             id: 'prestashop-import-file',
-            width: 520,
+            width: 390,
             fieldLabel: 'Export ZIP',
             labelWidth: 76,
             buttonText: 'Choose',
             allowBlank: false,
             accept: '.zip,application/zip'
+          },
+          {
+            xtype: 'numberfield',
+            name: 'modelLimit',
+            width: 145,
+            fieldLabel: 'Limit',
+            labelWidth: 38,
+            minValue: 1,
+            allowDecimals: false,
+            allowBlank: true,
+            margin: '0 0 0 10'
+          },
+          {
+            xtype: 'textfield',
+            name: 'models',
+            width: 310,
+            fieldLabel: 'Models',
+            labelWidth: 48,
+            emptyText: 'codes or exact names, comma-separated',
+            margin: '0 0 0 10'
           },
           {
             xtype: 'button',

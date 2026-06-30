@@ -127,6 +127,33 @@ final class PrestaShopExportConverterTest extends Unit
         self::assertSame(1, $result['report']['summary']['output_frame_records']);
     }
 
+    public function testCanFilterModelsByCodeOrExactName(): void
+    {
+        $this->writeJson('config/CfgProductFamilies.json', [
+            ['Code' => 'family-a', 'Name' => 'Family A'],
+            ['Code' => 'family-b', 'Name' => 'Family B'],
+        ]);
+        $this->writeJson('config/CfgModels.json', [
+            ['Code' => 'MODEL-A', 'Name' => 'First Model'],
+            ['Code' => 'MODEL-B', 'Name' => 'Second Model'],
+        ]);
+        $this->writeJson('products/Product_TransactionStep_1.json', [
+            $this->product('MODEL-A-1', 'family-a', 'MODEL-A', '1', 'BLACK'),
+            $this->product('MODEL-B-1', 'family-b', 'MODEL-B', '2', 'RED'),
+        ]);
+
+        $result = (new PrestaShopExportConverter())->convert(
+            $this->exportDirectory,
+            '/Product Data/Families',
+            null,
+            ['second model']
+        );
+
+        self::assertSame(['MODEL-B'], array_column($result['models'], 'model_code'));
+        self::assertSame(['family-b'], array_column($result['families'], 'family_code'));
+        self::assertSame(['MODEL-B 2'], array_column($result['frames'], 'frame_code'));
+    }
+
     /**
      * @return array<string, mixed>
      */

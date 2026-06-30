@@ -21,10 +21,12 @@ final class PrestaShopExportConverter
         string $inputPath,
         string $parentPath = '/Imports/ProductHierarchy/Families',
         ?int $modelLimit = null,
+        array $modelFilters = [],
     ): array {
         if ($modelLimit !== null && $modelLimit < 1) {
             throw new RuntimeException('Model limit must be a positive integer.');
         }
+        $modelFilters = $this->normalizeModelFilters($modelFilters);
 
         $source = $this->openSource($inputPath);
 
@@ -155,9 +157,18 @@ final class PrestaShopExportConverter
                 ];
             }
 
+            if ($modelFilters !== []) {
+                $models = array_values(array_filter(
+                    $models,
+                    fn (array $model): bool => $this->matchesModelFilter($model, $modelFilters)
+                ));
+            }
+
             $limitedModelCodes = null;
-            if ($modelLimit !== null) {
-                $models = array_slice($models, 0, $modelLimit);
+            if ($modelLimit !== null || $modelFilters !== []) {
+                if ($modelLimit !== null) {
+                    $models = array_slice($models, 0, $modelLimit);
+                }
                 $limitedModelCodes = array_fill_keys(array_column($models, 'model_code'), true);
                 $limitedFamilyCodes = array_fill_keys(array_column($models, 'parent_family_code'), true);
                 $families = array_values(array_filter(
@@ -302,6 +313,9 @@ final class PrestaShopExportConverter
                     'model_limit_rule' => $modelLimit === null
                         ? 'No model limit was applied.'
                         : sprintf('Only the first %d resolved model(s), their families, and their child frames are included.', $modelLimit),
+                    'model_filter_rule' => $modelFilters === []
+                        ? 'No model code/name filter was applied.'
+                        : sprintf('Only model codes or names matching these values are included: %s.', implode(', ', $modelFilters)),
                 ],
                 'model_family_conflicts' => $modelFamilyConflicts,
                 'models_without_resolved_family' => $modelsWithoutFamily,
@@ -489,6 +503,36 @@ final class PrestaShopExportConverter
         }
 
         return $fallbackCode;
+    }
+
+    /**
+     * @param list<string> $filters
+     *
+     * @return list<string>
+     */
+    private function normalizeModelFilters(array $filters): array
+    {
+        $normalized = [];
+        foreach ($filters as $filter) {
+            $value = mb_strtolower($this->stringValue($filter));
+            if ($value !== '' && !in_array($value, $normalized, true)) {
+                $normalized[] = $value;
+            }
+        }
+
+        return $normalized;
+    }
+
+    /**
+     * @param array<string, mixed> $model
+     * @param list<string> $filters
+     */
+    private function matchesModelFilter(array $model, array $filters): bool
+    {
+        $code = mb_strtolower($this->stringValue($model['model_code'] ?? null));
+        $name = mb_strtolower($this->stringValue($model['model_name'] ?? null));
+
+        return in_array($code, $filters, true) || in_array($name, $filters, true);
     }
 
     private function stringValue(mixed $value): string

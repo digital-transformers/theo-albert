@@ -34,7 +34,8 @@ final class SyncPrestaShopExportCommand extends Command
             ->addArgument('input', InputArgument::REQUIRED, 'Path to export ZIP')
             ->addOption('job-id', null, InputOption::VALUE_REQUIRED, 'Import job ID')
             ->addOption('parent-path', null, InputOption::VALUE_REQUIRED, 'Family root path', '/Product Data/Families')
-            ->addOption('model-limit', null, InputOption::VALUE_REQUIRED, 'Limit import to the first N resolved models and their child frames');
+            ->addOption('model-limit', null, InputOption::VALUE_REQUIRED, 'Limit import to the first N resolved models and their child frames')
+            ->addOption('models', null, InputOption::VALUE_REQUIRED, 'Comma-separated model codes or exact names to import');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -52,7 +53,8 @@ final class SyncPrestaShopExportCommand extends Command
             $converted = $this->converter->convert(
                 (string) $input->getArgument('input'),
                 (string) $input->getOption('parent-path'),
-                $this->modelLimit($input)
+                $this->modelLimit($input),
+                $this->modelFilters($input)
             );
             $this->jobStore->writeStatus($jobId, [
                 'status' => 'syncing',
@@ -110,5 +112,16 @@ final class SyncPrestaShopExportCommand extends Command
         }
 
         return (int) $value;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function modelFilters(InputInterface $input): array
+    {
+        return array_values(array_filter(
+            array_map('trim', explode(',', (string) $input->getOption('models'))),
+            static fn (string $value): bool => $value !== ''
+        ));
     }
 }

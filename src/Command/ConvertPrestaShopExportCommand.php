@@ -41,6 +41,12 @@ final class ConvertPrestaShopExportCommand extends Command
                 null,
                 InputOption::VALUE_REQUIRED,
                 'Limit conversion to the first N resolved models and their child frames'
+            )
+            ->addOption(
+                'models',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Comma-separated model codes or exact names to convert'
             );
     }
 
@@ -51,9 +57,10 @@ final class ConvertPrestaShopExportCommand extends Command
         $outputPath = rtrim((string) $input->getArgument('output'), '/');
         $parentPath = (string) $input->getOption('parent-path');
         $modelLimit = $this->modelLimit($input);
+        $modelFilters = $this->modelFilters($input);
 
         try {
-            $result = $this->converter->convert($inputPath, $parentPath, $modelLimit);
+            $result = $this->converter->convert($inputPath, $parentPath, $modelLimit, $modelFilters);
             if (!is_dir($outputPath) && !mkdir($outputPath, 0775, true) && !is_dir($outputPath)) {
                 throw new \RuntimeException(sprintf('Unable to create output directory: %s', $outputPath));
             }
@@ -96,6 +103,17 @@ final class ConvertPrestaShopExportCommand extends Command
         }
 
         return (int) $value;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function modelFilters(InputInterface $input): array
+    {
+        return array_values(array_filter(
+            array_map('trim', explode(',', (string) $input->getOption('models'))),
+            static fn (string $value): bool => $value !== ''
+        ));
     }
 
     /**

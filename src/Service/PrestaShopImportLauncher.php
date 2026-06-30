@@ -19,7 +19,12 @@ final class PrestaShopImportLauncher
     /**
      * @return array{job_id: string, pid: int}
      */
-    public function enqueue(string $contents, string $filename = 'export.zip'): array
+    public function enqueue(
+        string $contents,
+        string $filename = 'export.zip',
+        ?int $modelLimit = null,
+        string $models = '',
+    ): array
     {
         if (!str_starts_with($contents, "PK")) {
             throw new RuntimeException('A valid ZIP export is required.');
@@ -40,6 +45,15 @@ final class PrestaShopImportLauncher
             '--no-interaction',
             '--no-ansi',
         ];
+        if ($modelLimit !== null) {
+            if ($modelLimit < 1) {
+                throw new RuntimeException('Model limit must be a positive integer.');
+            }
+            $command[] = '--model-limit=' . $modelLimit;
+        }
+        if (trim($models) !== '') {
+            $command[] = '--models=' . trim($models);
+        }
         $shell = sprintf(
             'nohup %s > %s 2>&1 & echo $!',
             implode(' ', array_map('escapeshellarg', $command)),

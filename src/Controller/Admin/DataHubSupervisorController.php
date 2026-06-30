@@ -279,7 +279,17 @@ final class DataHubSupervisorController extends AbstractController
         }
 
         try {
-            $job = $this->prestaShopLauncher->enqueue($contents, $file->getClientOriginalName());
+            $modelLimitValue = trim((string) $request->request->get('modelLimit', ''));
+            $modelLimit = $modelLimitValue === '' ? null : filter_var($modelLimitValue, FILTER_VALIDATE_INT);
+            if ($modelLimitValue !== '' && ($modelLimit === false || $modelLimit < 1)) {
+                return new JsonResponse(['success' => false, 'message' => 'Model limit must be a positive integer.'], 400);
+            }
+            $job = $this->prestaShopLauncher->enqueue(
+                $contents,
+                $file->getClientOriginalName(),
+                $modelLimit,
+                (string) $request->request->get('models', '')
+            );
         } catch (\RuntimeException $exception) {
             return new JsonResponse(['success' => false, 'message' => $exception->getMessage()], 400);
         }
