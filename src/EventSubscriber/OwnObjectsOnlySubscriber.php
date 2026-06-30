@@ -63,13 +63,16 @@ final class OwnObjectsOnlySubscriber implements EventSubscriberInterface
 
         $allowedRoots = $this->getListableWorkspaceRoots($user);
 
-        // If browsing a subtree that is in allowed roots, allow full visibility there
-        $parent = $list->getParent();
-        if ($parent instanceof AbstractObject) {
-            $parentPath = rtrim($parent->getRealFullPath(), '/');
-            foreach ($allowedRoots as $root) {
-                if ($root === '/' || str_starts_with($parentPath, $root)) {
-                    return;
+        // If browsing a subtree that is in allowed roots, allow full visibility there.
+        // Generic Pimcore object listings used by the admin tree do not expose getParent().
+        if (method_exists($list, 'getParent')) {
+            $parent = $list->getParent();
+            if ($parent instanceof AbstractObject) {
+                $parentPath = rtrim($parent->getRealFullPath(), '/');
+                foreach ($allowedRoots as $root) {
+                    if ($root === '/' || str_starts_with($parentPath, $root)) {
+                        return;
+                    }
                 }
             }
         }
