@@ -60,6 +60,7 @@ final class PrestaShopExportConverter
             );
             $familyCountsByModel = [];
             $modelValueCounts = [];
+            $frameBaseCountsByModel = [];
 
             foreach ($productFiles as $productFile) {
                 foreach ($source->readJson($productFile) as $product) {
@@ -78,6 +79,16 @@ final class PrestaShopExportConverter
                         }
                     }
 
+                    $colors = $this->normalizeColors($product['Colors'] ?? [], $colorsByCode);
+                    $combiCode = $colors[0]['combi_code'] ?? '';
+                    $frameBaseCode = $combiCode !== ''
+                        ? $this->extractFrameBaseCode($productCode, $combiCode)
+                        : $this->extractDelimitedFrameBaseCode($productCode);
+                    if ($frameBaseCode !== '') {
+                        $frameBaseCountsByModel[$modelCode][$frameBaseCode] =
+                            ($frameBaseCountsByModel[$modelCode][$frameBaseCode] ?? 0) + 1;
+                    }
+
                     if ($familyCode !== '' && $familyCode !== '0') {
                         $familyCountsByModel[$modelCode][$familyCode] =
                             ($familyCountsByModel[$modelCode][$familyCode] ?? 0) + 1;
@@ -88,6 +99,10 @@ final class PrestaShopExportConverter
             $familiesByCode = $this->indexByCode($familyConfig);
             $modelsByCode = $this->indexByCode($modelConfig);
             [$selectedFamilyByModel, $modelFamilyConflicts] = $this->selectFamiliesForModels($familyCountsByModel);
+            $frameBaseByModel = [];
+            foreach ($frameBaseCountsByModel as $modelCode => $counts) {
+                $frameBaseByModel[$modelCode] = $this->mostCommonValue($counts);
+            }
 
             $families = [];
             foreach ($familiesByCode as $code => $family) {
@@ -119,7 +134,8 @@ final class PrestaShopExportConverter
                     }
 
                     $colors = $this->normalizeColors($product['Colors'] ?? [], $colorsByCode);
-                    $combiCode = $colors[0]['combi_code'] ?? $this->inferMainColorCode($modelCode, $productCode);
+                    $frameBaseCode = $frameBaseByModel[$modelCode] ?? $modelCode;
+                    $combiCode = $colors[0]['combi_code'] ?? $this->inferMainColorCode($frameBaseCode, $productCode);
                     $colorCodes = array_values(array_unique(array_column($colors, 'color_code')));
                     if ($combiCode === '') {
                         continue;
@@ -147,7 +163,7 @@ final class PrestaShopExportConverter
                     'model_code' => $code,
                     'model_name' => $this->stringValue($model['Name'] ?? null) ?: $code,
                     'parent_family_code' => $familyCode,
-                    'frame_base_code' => $code,
+                    'frame_base_code' => $frameBaseByModel[$code] ?? $code,
                     'series_code' => $this->mostCommonValue($modelValueCounts[$code]['Collection'] ?? []),
                     'material_code' => $materialCode,
                     'material_name' => $this->stringValue($material['Name'] ?? null) ?: $materialCode,
@@ -230,7 +246,8 @@ final class PrestaShopExportConverter
 
                     $udfs = is_array($product['UDFs'] ?? null) ? $product['UDFs'] : [];
                     $colors = $this->normalizeColors($product['Colors'] ?? [], $colorsByCode);
-                    $combiCode = $colors[0]['combi_code'] ?? $this->inferMainColorCode($modelCode, $productCode);
+                    $frameBaseCode = $frameBaseByModel[$modelCode] ?? $modelCode;
+                    $combiCode = $colors[0]['combi_code'] ?? $this->inferMainColorCode($frameBaseCode, $productCode);
                     if ($combiCode === '') {
                         $skipped['missing_main_color'][] = $productCode;
                         continue;
@@ -242,7 +259,7 @@ final class PrestaShopExportConverter
                     $thicknessCode = $this->stringValue($udfs['Thickness'] ?? null);
 
                     $frames[] = [
-                        'frame_code' => $this->generatedFrameCode($modelCode, $combiCode, $productCode),
+                        'frame_code' => $this->generatedFrameCode($frameBaseCode, $combiCode, $productCode),
                         'frame_name' => $this->productName($product),
                         'frame_names' => $this->productNames($product),
                         'parent_model_code' => $modelCode,
@@ -319,8 +336,9 @@ final class PrestaShopExportConverter
                     'family_mismatch_rule' => 'Frames referencing another family for that model are skipped.',
                     'duplicate_product_rule' => 'All records using a duplicated ProductCode are skipped.',
                     'unclassified_rule' => 'Products with Family "0", an empty family, or an empty model are skipped.',
-                    'main_color_rule' => 'CombiCode populates main_color_code and generated frame codes follow the model frame generator convention: model code plus main color code.',
-                    'missing_color_rule' => 'When Colors is empty, the main color code is inferred from the ProductCode suffix after the model code; products without either value are skipped.',
+                    'frame_base_rule' => 'frame_base_code is derived from the source ProductCode prefix and generated frame codes use frame base code plus main color code.',
+                    'main_color_rule' => 'CombiCode populates main_color_code and generated frame codes follow the model frame generator convention.',
+                    'missing_color_rule' => 'When Colors is empty, the main color code is inferred from the ProductCode suffix after the frame base code; products without either value are skipped.',
                     'manual_products' => 'manual_products.json is intentionally excluded because its records are not family/model frames.',
                     'model_limit_rule' => $modelLimit === null
                         ? 'No model limit was applied.'
@@ -508,22 +526,42 @@ final class PrestaShopExportConverter
         return $value === '' ? [] : [$value];
     }
 
-    private function generatedFrameCode(string $modelCode, string $mainColorCode, string $fallbackCode): string
+    private function generatedFrameCode(string $frameBaseCode, string $mainColorCode, string $fallbackCode): string
     {
-        if ($modelCode !== '' && $mainColorCode !== '') {
-            return $modelCode . ' ' . $mainColorCode;
+        if ($frameBaseCode !== '' && $mainColorCode !== '') {
+            return $frameBaseCode . ' ' . $mainColorCode;
         }
 
         return $fallbackCode;
     }
 
-    private function inferMainColorCode(string $modelCode, string $productCode): string
+    private function inferMainColorCode(string $frameBaseCode, string $productCode): string
     {
-        if ($modelCode === '' || $productCode === '' || !str_starts_with($productCode, $modelCode)) {
+        if ($frameBaseCode === '' || $productCode === '' || strncasecmp($productCode, $frameBaseCode, strlen($frameBaseCode)) !== 0) {
             return '';
         }
 
-        return ltrim(substr($productCode, strlen($modelCode)), " -_");
+        return ltrim(substr($productCode, strlen($frameBaseCode)), " -_");
+    }
+
+    private function extractFrameBaseCode(string $productCode, string $mainColorCode): string
+    {
+        if ($productCode === '' || $mainColorCode === '') {
+            return '';
+        }
+
+        $base = preg_replace('/(?:[-_\s]+)?' . preg_quote($mainColorCode, '/') . '$/i', '', $productCode, 1, $count);
+
+        return $count > 0 ? rtrim((string) $base, " -_") : '';
+    }
+
+    private function extractDelimitedFrameBaseCode(string $productCode): string
+    {
+        if (preg_match('/^(.+?)[-_\s]+[^-_\s]+$/', $productCode, $matches) !== 1) {
+            return '';
+        }
+
+        return rtrim($matches[1], " -_");
     }
 
     /**

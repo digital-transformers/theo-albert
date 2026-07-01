@@ -327,7 +327,11 @@ final class AutomaticImageLinker
         }
 
         $listing->setUnpublished(true);
-        $listing->setCondition('code = ?', [$code]);
+        if ($className === ModelObject::class) {
+            $listing->setCondition('(code = ? OR frameBaseCode = ?)', [$code, $code]);
+        } else {
+            $listing->setCondition('code = ?', [$code]);
+        }
         $listing->setLimit(1);
         $objects = $listing->load();
 

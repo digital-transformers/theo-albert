@@ -242,9 +242,15 @@ final class ProductHierarchySyncService
 
             try {
                 $sourceProductCode = $this->stringValue($frame['source']['product_code'] ?? null);
-                $existingCode = isset($frameIndex[$code])
-                    ? $code
-                    : ($sourceProductCode !== $code && isset($frameIndex[$sourceProductCode]) ? $sourceProductCode : null);
+                $legacyGeneratedCode = $this->stringValue($frame['parent_model_code'] ?? null)
+                    . ' ' . $this->stringValue($frame['main_color_code'] ?? null);
+                $existingCode = null;
+                foreach (array_unique([$code, $sourceProductCode, trim($legacyGeneratedCode)]) as $candidate) {
+                    if ($candidate !== '' && isset($frameIndex[$candidate])) {
+                        $existingCode = $candidate;
+                        break;
+                    }
+                }
                 if ($existingCode !== null) {
                     $output = $this->mutate('updateFrame', [
                         'id' => $frameIndex[$existingCode]['id'],

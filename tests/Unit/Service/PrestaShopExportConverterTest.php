@@ -200,6 +200,25 @@ final class PrestaShopExportConverterTest extends Unit
         ]], $result['models'][0]['final_product_details']);
     }
 
+    public function testDerivesFrameBaseCodeWhenItDiffersFromModelCode(): void
+    {
+        $this->writeJson('config/CfgProductFamilies.json', [
+            ['Code' => 'family-a', 'Name' => 'Family A'],
+        ]);
+        $this->writeJson('config/CfgModels.json', [
+            ['Code' => '245G', 'Name' => 'CRAYON'],
+        ]);
+        $this->writeJson('products/Product_TransactionStep_1.json', [
+            $this->product('CRAY-36', 'family-a', '245G', '36', 'BLACK'),
+            $this->product('CRAY-122', 'family-a', '245G', '122', 'RED'),
+        ]);
+
+        $result = (new PrestaShopExportConverter())->convert($this->exportDirectory);
+
+        self::assertSame('CRAY', $result['models'][0]['frame_base_code']);
+        self::assertSame(['CRAY 36', 'CRAY 122'], array_column($result['frames'], 'frame_code'));
+    }
+
     /**
      * @return array<string, mixed>
      */
