@@ -52,6 +52,26 @@ final class ProductPermissionSubscriberTest extends Unit
         self::assertTrue($qualityControlField->getNoteditable());
     }
 
+    public function testQualityControlUserOnlyEditsQualityControlFields(): void
+    {
+        $subscriber = new ProductPermissionSubscriber($this->qualityControlUserResolver());
+        $baseField = (new Input())->setName('name');
+        $qualityControlField = (new Input())->setName('qualityControlRemarks');
+        $layout = (new Panel())->setName('root')->setChildren([
+            (new Panel())->setName('Base data')->setChildren([$baseField]),
+            (new Panel())->setName('Quality Control')->setChildren([$qualityControlField]),
+        ]);
+        $event = new GenericEvent(null, [
+            'object' => (new ProductPermissionTestObject())->setClassName('frame'),
+            'data' => ['layout' => $layout, 'permissions' => ['edit' => true]],
+        ]);
+
+        $subscriber->onPreSendData($event);
+
+        self::assertTrue($baseField->getNoteditable());
+        self::assertFalse($qualityControlField->getNoteditable());
+    }
+
     public function testSubscriberUsesCurrentPimcoreAdminObjectEvent(): void
     {
         self::assertArrayHasKey(
@@ -120,6 +140,16 @@ final class ProductPermissionSubscriberTest extends Unit
         ));
     }
 
+    public function testQualityControlUserSaveOfUnsupportedObjectIsDenied(): void
+    {
+        $subscriber = new ProductPermissionSubscriber($this->qualityControlUserResolver());
+
+        $this->expectException(AccessDeniedHttpException::class);
+        $subscriber->onPreSave(new DataObjectEvent(
+            (new ProductPermissionTestObject())->setClassName('supplier')
+        ));
+    }
+
     private function marketingUserResolver(): TokenStorageUserResolver
     {
         $resolver = $this->createMock(TokenStorageUserResolver::class);
@@ -140,6 +170,19 @@ final class ProductPermissionSubscriberTest extends Unit
             (new User())
                 ->setUsername('key-readonly-user')
                 ->setPermissions([ProductPermissionSubscriber::PERMISSION_KEY_READONLY])
+                ->setAdmin(false)
+        );
+
+        return $resolver;
+    }
+
+    private function qualityControlUserResolver(): TokenStorageUserResolver
+    {
+        $resolver = $this->createMock(TokenStorageUserResolver::class);
+        $resolver->method('getUser')->willReturn(
+            (new User())
+                ->setUsername('quality-control-user')
+                ->setPermissions([ProductPermissionSubscriber::PERMISSION_QUALITY_CONTROL_ONLY])
                 ->setAdmin(false)
         );
 

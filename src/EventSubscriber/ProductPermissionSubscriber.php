@@ -114,7 +114,11 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($this->isSupportedProductObject($object) && $user->isAllowed(self::PERMISSION_QUALITY_CONTROL_ONLY)) {
+        if ($user->isAllowed(self::PERMISSION_QUALITY_CONTROL_ONLY)) {
+            if (!$this->isSupportedProductObject($object)) {
+                throw new AccessDeniedHttpException('Quality Control users may only update Family, Model, and Frame objects.');
+            }
+
             $this->restoreFieldsExcept($object, self::QUALITY_CONTROL_FIELDS);
 
             return;
@@ -189,12 +193,13 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($user->isAllowed(self::PERMISSION_MARKETING_ONLY) && !$this->isSupportedProductObject($object)) {
+        if (
+            ($user->isAllowed(self::PERMISSION_MARKETING_ONLY) || $user->isAllowed(self::PERMISSION_QUALITY_CONTROL_ONLY))
+            && !$this->isSupportedProductObject($object)
+        ) {
             $data = $event->getArgument('data');
             if (is_array($data)) {
-                foreach (['edit', 'save', 'publish', 'unpublish', 'delete', 'rename', 'settings', 'properties'] as $permission) {
-                    $data['permissions'][$permission] = false;
-                }
+                $this->disableWritePermissions($data);
                 $event->setArgument('data', $data);
             }
 
