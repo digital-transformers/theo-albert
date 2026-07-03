@@ -46,10 +46,27 @@ final class ProductPermissionSubscriberTest extends Unit
             static fn (Panel $panel): string => $panel->getName(),
             $layout->getChildren()
         ));
-        self::assertTrue($baseField->getNoteditable());
+        self::assertFalse($baseField->getNoteditable());
         self::assertFalse($marketing->getChildren()[0]->getNoteditable());
         self::assertTrue($marketing->getChildren()[1]->getNoteditable());
         self::assertTrue($qualityControlField->getNoteditable());
+    }
+
+    public function testMarketingUserCannotEditFrameName(): void
+    {
+        $subscriber = new ProductPermissionSubscriber($this->marketingUserResolver());
+        $name = (new Input())->setName('name');
+        $event = new GenericEvent(null, [
+            'object' => (new ProductPermissionTestObject())->setClassName('frame'),
+            'data' => [
+                'layout' => (new Panel())->setName('root')->setChildren([$name]),
+                'permissions' => ['edit' => true],
+            ],
+        ]);
+
+        $subscriber->onPreSendData($event);
+
+        self::assertTrue($name->getNoteditable());
     }
 
     public function testQualityControlUserOnlyEditsQualityControlFields(): void

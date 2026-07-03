@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
+use Pimcore\Bundle\AdminBundle\Event\AdminEvents;
 use Pimcore\Event\DataObjectEvents;
 use Pimcore\Event\Model\DataObjectEvent;
 use Pimcore\Model\Asset;
@@ -65,7 +66,7 @@ final class QualityControlSubscriber implements EventSubscriberInterface
         return [
             DataObjectEvents::PRE_ADD => ['onPreSave', -10],
             DataObjectEvents::PRE_UPDATE => ['onPreSave', -10],
-            'pimcore.dataobject.get.preSendData' => 'onPreSendData',
+            AdminEvents::OBJECT_GET_PRE_SEND_DATA => 'onPreSendData',
         ];
     }
 

@@ -33,6 +33,14 @@ final class QualityControlSubscriberTest extends Unit
         Pimcore::setKernel($kernel);
     }
 
+    public function testSubscriberUsesCurrentPimcoreAdminObjectEvent(): void
+    {
+        self::assertArrayHasKey(
+            'pimcore.admin.dataobject.get.preSendData',
+            QualityControlSubscriber::getSubscribedEvents()
+        );
+    }
+
     public function testOnPreSendDataRemovesQualityControlTabAndFieldsWithoutPermission(): void
     {
         $resolver = $this->createMock(TokenStorageUserResolver::class);

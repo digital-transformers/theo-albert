@@ -109,7 +109,7 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
                 throw new AccessDeniedHttpException('Marketing users may only update Family, Model, and Frame objects.');
             }
 
-            $this->restoreFieldsExcept($object, self::MARKETING_FIELDS);
+            $this->restoreFieldsExcept($object, $this->marketingEditableFields($object));
 
             return;
         }
@@ -244,7 +244,7 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
         if ($user->isAllowed(self::PERMISSION_QUALITY_CONTROL_ONLY)) {
             $this->makeFieldsEditableOnly($data['layout'], self::QUALITY_CONTROL_FIELDS);
         } elseif ($user->isAllowed(self::PERMISSION_MARKETING_ONLY)) {
-            $this->makeFieldsEditableOnly($data['layout'], self::MARKETING_FIELDS);
+            $this->makeFieldsEditableOnly($data['layout'], $this->marketingEditableFields($object));
         } elseif (strtolower((string) $object->getClassName()) === self::FAMILY_CLASS_NAME) {
             if (!$user->isAllowed(self::PERMISSION_FAMILY_PHASE_UPDATE)) {
                 $this->makeFieldsNotEditable($data['layout'], self::PHASE_FIELDS);
@@ -287,6 +287,17 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
         foreach (['edit', 'save', 'publish', 'unpublish', 'delete', 'rename', 'create', 'settings', 'properties'] as $permission) {
             $data['permissions'][$permission] = false;
         }
+    }
+
+    /** @return list<string> */
+    private function marketingEditableFields(Concrete $object): array
+    {
+        $fields = self::MARKETING_FIELDS;
+        if (in_array(strtolower((string) $object->getClassName()), [self::FAMILY_CLASS_NAME, 'model'], true)) {
+            $fields[] = 'name';
+        }
+
+        return $fields;
     }
 
     /**
