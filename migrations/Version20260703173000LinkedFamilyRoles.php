@@ -62,6 +62,10 @@ final class Version20260703173000LinkedFamilyRoles extends AbstractMigration
             throw new \RuntimeException(sprintf('Class "%s" was not found.', $className));
         }
         if (($definition->getFieldDefinitions()['pimcoreUser'] ?? null) instanceof UserField) {
+            // A previous attempt may have persisted the field before generated-file writing failed.
+            $definition->setLayoutDefinitions($definition->getLayoutDefinitions());
+            $definition->save();
+
             return;
         }
 
@@ -77,6 +81,7 @@ final class Version20260703173000LinkedFamilyRoles extends AbstractMigration
             throw new \RuntimeException(sprintf('Class "%s" has no panel for the user field.', $className));
         }
         $panel->addChild($field);
+        $definition->setLayoutDefinitions($definition->getLayoutDefinitions());
         $definition->save();
     }
 
