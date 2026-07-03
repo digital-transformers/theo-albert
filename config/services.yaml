@@ -150,6 +150,10 @@ services:
       tags:
         - { name: kernel.event_subscriber }
 
+    App\EventSubscriber\LinkedFamilyPermissionSubscriber:
+      tags:
+        - { name: kernel.event_subscriber }
+
     App\EventSubscriber\DashboardDefaultsSubscriber:
       tags:
         - { name: kernel.event_subscriber }
