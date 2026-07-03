@@ -43,7 +43,10 @@ final class Version20260703173000LinkedFamilyRoles extends AbstractMigration
         $this->addUserField('supplier');
         $this->configureDesignerRole('Designer-Internal');
         $this->configureDesignerRole('Designer-External');
-        $this->configureSupplierRole();
+        $this->configureSupplierRole('Supplier');
+        if (Role::getByName('SupplierRole1') instanceof Role) {
+            $this->configureSupplierRole('SupplierRole1');
+        }
     }
 
     public function down(Schema $schema): void
@@ -121,9 +124,9 @@ final class Version20260703173000LinkedFamilyRoles extends AbstractMigration
         $role->save();
     }
 
-    private function configureSupplierRole(): void
+    private function configureSupplierRole(string $name): void
     {
-        $role = $this->role('Supplier');
+        $role = $this->role($name);
         $role->setPermissions(['objects', 'assets', self::SUPPLIER_PERMISSION]);
         $role->setClasses($this->resolveClassIds(['family', 'model', 'frame']));
         $role->setWorkspacesObject([$this->objectWorkspace(false, false, false)]);
