@@ -14,6 +14,7 @@ use Pimcore\Model\DataObject\SAPItemGroup;
 use Pimcore\Model\DataObject\SAPItemGroup\Listing as SAPItemGroupListing;
 use Pimcore\Cache\RuntimeCache;
 use Pimcore\Model\Element\Service as ElementService;
+use Closure;
 use RuntimeException;
 
 final class ProductHierarchySyncService
@@ -21,8 +22,16 @@ final class ProductHierarchySyncService
     private const PAGE_SIZE = 500;
     private const RUNTIME_CLEANUP_INTERVAL = 100;
 
-    public function __construct(private readonly ProductHierarchyGraphqlClient $client)
-    {
+    private readonly ?Closure $colorResolver;
+
+    /** @var array<string, Color|null> */
+    private array $colorCache = [];
+
+    public function __construct(
+        private readonly ProductHierarchyGraphqlClient $client,
+        ?callable $colorResolver = null,
+    ) {
+        $this->colorResolver = $colorResolver === null ? null : Closure::fromCallable($colorResolver);
     }
 
     /**
@@ -43,7 +52,10 @@ final class ProductHierarchySyncService
             'models' => ['created' => 0, 'updated' => 0, 'failed' => 0],
             'frames' => ['created' => 0, 'updated' => 0, 'failed' => 0],
             'errors' => [],
+            'warnings' => [],
         ];
+
+        $this->collectUnmatchedColorWarnings($converted['frames'], $result);
 
         $familyIndex = $this->loadIndex('Family');
         $modelIndex = $this->loadIndex('Model');
@@ -347,6 +359,7 @@ final class ProductHierarchySyncService
                     'models' => $result['models'],
                     'frames' => $result['frames'],
                     'error_count' => count($result['errors']),
+                    'warning_count' => count($result['warnings']),
                 ],
             ]);
         }
@@ -652,6 +665,16 @@ final class ProductHierarchySyncService
 
     private function findColorByCode(string $code): ?Color
     {
+        if (array_key_exists($code, $this->colorCache)) {
+            return $this->colorCache[$code];
+        }
+
+        if ($this->colorResolver !== null) {
+            $color = ($this->colorResolver)($code);
+
+            return $this->colorCache[$code] = $color instanceof Color ? $color : null;
+        }
+
         $listing = new ColorListing();
         $listing->setUnpublished(true);
         $listing->setLimit(1);
@@ -659,7 +682,43 @@ final class ProductHierarchySyncService
         $items = $listing->load();
         $color = $items[0] ?? null;
 
-        return $color instanceof Color ? $color : null;
+        return $this->colorCache[$code] = $color instanceof Color ? $color : null;
+    }
+
+    /**
+     * @param list<array<string, mixed>> $frames
+     * @param array<string, mixed> $result
+     */
+    private function collectUnmatchedColorWarnings(array $frames, array &$result): void
+    {
+        foreach ($frames as $frame) {
+            $source = is_array($frame['source'] ?? null) ? $frame['source'] : [];
+            $sourceColors = is_array($source['source_colors'] ?? null)
+                ? $source['source_colors']
+                : (is_array($source['colors'] ?? null) ? $source['colors'] : []);
+
+            foreach ($sourceColors as $sourceColor) {
+                if (!is_array($sourceColor)) {
+                    continue;
+                }
+
+                $colorCode = $this->stringValue($sourceColor['ColorCode'] ?? $sourceColor['color_code'] ?? null);
+                if ($colorCode === '' || $this->findColorByCode($colorCode) instanceof Color) {
+                    continue;
+                }
+
+                $result['warnings'][] = [
+                    'type' => 'unmatched_color',
+                    'entity' => 'frame',
+                    'code' => $this->stringValue($frame['frame_code'] ?? null),
+                    'model_code' => $this->stringValue($frame['parent_model_code'] ?? null),
+                    'source_product_code' => $this->stringValue($source['product_code'] ?? null),
+                    'color_code' => $colorCode,
+                    'message' => sprintf('Source color "%s" was not found in Pimcore.', $colorCode),
+                    'source_color' => $sourceColor,
+                ];
+            }
+        }
     }
 
     private function findSAPItemGroupByNumber(string $groupNumber): ?SAPItemGroup

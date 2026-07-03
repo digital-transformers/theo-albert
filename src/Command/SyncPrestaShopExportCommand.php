@@ -106,6 +106,7 @@ final class SyncPrestaShopExportCommand extends Command
                     'models' => $sync['models'],
                     'frames' => $sync['frames'],
                     'error_count' => count($sync['errors']),
+                    'warning_count' => count($sync['warnings']),
                 ],
             ]);
             $finished = true;

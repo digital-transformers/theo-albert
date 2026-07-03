@@ -77,6 +77,12 @@ final class PrestaShopExportConverterTest extends Unit
             'color_codes' => ['RED'],
         ]], $result['models'][0]['final_product_details']);
         self::assertSame('1', $result['frames'][0]['source']['combi_code']);
+        self::assertSame([[
+            'CombiCode' => '1',
+            'ColorCode' => 'BLACK',
+            'OrderNr' => 1,
+            'IsRelevant' => 'Y',
+        ]], $result['frames'][0]['source']['source_colors']);
         self::assertSame('family-b', $result['report']['skipped_frames']['family_mismatch'][0]['source_family_code']);
         self::assertSame('family-a', $result['report']['model_family_conflicts'][0]['selected_family_code']);
     }

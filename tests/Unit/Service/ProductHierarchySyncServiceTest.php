@@ -52,6 +52,45 @@ final class ProductHierarchySyncServiceTest extends Unit
             $client->mutations[2]['variables']['input']['artBase']['fullpath']
         );
     }
+
+    public function testReportsEveryUnmatchedColorWithItsSourceData(): void
+    {
+        $client = new RecordingProductHierarchyClient();
+        $service = new ProductHierarchySyncService($client, static fn (string $code): null => null);
+        $sourceColor = [
+            'CombiCode' => '18',
+            'IsRelevant' => 'Y',
+            'OrderNr' => 1,
+            'ColorCode' => 'ELMT 1256 40-60-80/10 PVT',
+        ];
+
+        $result = $service->sync([
+            'families' => [],
+            'models' => [],
+            'frames' => [[
+                'frame_code' => 'ANDY 18',
+                'parent_model_code' => 'ANDY',
+                'source' => [
+                    'product_code' => 'ANDY -18',
+                    'source_colors' => [$sourceColor],
+                ],
+            ], [
+                'frame_code' => 'OTHER 18',
+                'parent_model_code' => 'OTHER',
+                'source' => [
+                    'product_code' => 'OTHER-18',
+                    'source_colors' => [$sourceColor],
+                ],
+            ]],
+            'report' => [],
+        ]);
+
+        self::assertCount(2, $result['warnings']);
+        self::assertSame('unmatched_color', $result['warnings'][0]['type']);
+        self::assertSame('ANDY -18', $result['warnings'][0]['source_product_code']);
+        self::assertSame($sourceColor, $result['warnings'][0]['source_color']);
+        self::assertSame('OTHER-18', $result['warnings'][1]['source_product_code']);
+    }
 }
 
 final class RecordingProductHierarchyClient extends ProductHierarchyGraphqlClient

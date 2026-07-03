@@ -124,6 +124,7 @@ app.datahub.prestashopDetailHtml = function (payload) {
   const summary = conversion.summary || status.conversion_summary || {};
   const sync = report.sync || status.sync || {};
   const errors = sync.errors || [];
+  const warnings = sync.warnings || [];
   const encode = Ext.util.Format.htmlEncode;
   const row = function (label, value) {
     return '<tr><th>' + encode(label) + '</th><td>' + encode(String(value ?? '-')) + '</td></tr>';
@@ -152,6 +153,7 @@ app.datahub.prestashopDetailHtml = function (payload) {
   html += row('Models', app.datahub.prestashopEntitySummary(sync.models));
   html += row('Frames', app.datahub.prestashopEntitySummary(sync.frames));
   html += row('Errors', errors.length || sync.error_count || 0);
+  html += row('Warnings', warnings.length || sync.warning_count || 0);
   if (status.error) html += row('Failure', status.error);
   html += '</table>';
 
@@ -164,6 +166,18 @@ app.datahub.prestashopDetailHtml = function (payload) {
     if (errors.length > 100) {
       html += '<div>Only the first 100 errors are shown.</div>';
     }
+    html += '</div>';
+  }
+
+  if (warnings.length) {
+    html += '<h3>Warnings</h3><div class="prestashop-import-errors">';
+    warnings.forEach(function (warning) {
+      const sourceColor = warning.source_color ? JSON.stringify(warning.source_color) : '-';
+      html += '<div><strong>' + encode(warning.entity || 'import') + ' ' +
+        encode(warning.code || '') + '</strong>: ' + encode(warning.message || '') +
+        '<br><span>Source product: ' + encode(warning.source_product_code || '-') +
+        ' | Source color: ' + encode(sourceColor) + '</span></div>';
+    });
     html += '</div>';
   }
 
@@ -333,6 +347,14 @@ app.datahub.createPrestaShopPanel = function () {
             width: 190,
             renderer: function (_value, _meta, record) {
               return app.datahub.prestashopEntitySummary(record.get('sync')?.frames);
+            }
+          },
+          {
+            text: 'Warnings',
+            width: 85,
+            align: 'right',
+            renderer: function (_value, _meta, record) {
+              return Number(record.get('sync')?.warning_count || 0);
             }
           },
           {

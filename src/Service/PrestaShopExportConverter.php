@@ -308,6 +308,7 @@ final class PrestaShopExportConverter
                             'can_be_sold' => filter_var($product['CanBeSold'] ?? false, FILTER_VALIDATE_BOOL),
                             'combi_code' => $combiCode,
                             'colors' => $colors,
+                            'source_colors' => $this->relevantSourceColors($product['Colors'] ?? []),
                         ],
                     ];
                 }
@@ -453,6 +454,23 @@ final class PrestaShopExportConverter
         usort($normalized, static fn (array $left, array $right): int => $left['order_nr'] <=> $right['order_nr']);
 
         return $normalized;
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    private function relevantSourceColors(mixed $colors): array
+    {
+        if (!is_array($colors)) {
+            return [];
+        }
+
+        return array_values(array_filter(
+            $colors,
+            fn (mixed $color): bool => is_array($color)
+                && strtoupper($this->stringValue($color['IsRelevant'] ?? 'Y')) !== 'N'
+                && $this->stringValue($color['ColorCode'] ?? null) !== ''
+        ));
     }
 
     /**
