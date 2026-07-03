@@ -4,8 +4,11 @@ declare(strict_types=1);
 namespace App\EventSubscriber;
 
 use Pimcore\Bundle\AdminBundle\Event\AdminEvents;
+use Pimcore\Event\AssetEvents;
 use Pimcore\Event\DataObjectEvents;
+use Pimcore\Event\Model\AssetEvent;
 use Pimcore\Event\Model\DataObjectEvent;
+use Pimcore\Model\Asset;
 use Pimcore\Model\DataObject\AbstractObject;
 use Pimcore\Model\DataObject\ClassDefinition\Data as DataDefinition;
 use Pimcore\Model\DataObject\Concrete;
@@ -25,6 +28,7 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
     public const PERMISSION_MODEL_FRAME_GENERATE = 'model_frame_generate';
     public const PERMISSION_QUALITY_CONTROL_ONLY = 'quality_control_only';
     public const PERMISSION_MARKETING_ONLY = 'marketing_only';
+    public const PERMISSION_KEY_READONLY = 'key_readonly';
     public const PERMISSION_AUTOMATIC_IMAGE_LINKING = 'automatic_image_linking';
 
     private const FAMILY_CLASS_NAME = 'family';
@@ -70,8 +74,11 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
         return [
             DataObjectEvents::PRE_ADD => ['onPreSave', -20],
             DataObjectEvents::PRE_UPDATE => ['onPreSave', -20],
+            AssetEvents::PRE_ADD => ['onPreSaveAsset', -20],
+            AssetEvents::PRE_UPDATE => ['onPreSaveAsset', -20],
             'pimcore.admin.object.list.beforeListLoad' => 'onBeforeListLoad',
             AdminEvents::OBJECT_GET_PRE_SEND_DATA => 'onPreSendData',
+            AdminEvents::ASSET_GET_PRE_SEND_DATA => 'onPreSendAssetData',
         ];
     }
 
@@ -91,6 +98,10 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
         $user = $this->userResolver->getUser();
         if (!$user instanceof User || $user->isAdmin()) {
             return;
+        }
+
+        if ($user->isAllowed(self::PERMISSION_KEY_READONLY)) {
+            throw new AccessDeniedHttpException('Key read-only users cannot update data objects.');
         }
 
         if ($user->isAllowed(self::PERMISSION_MARKETING_ONLY)) {
@@ -120,6 +131,14 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
 
         if (!$user->isAllowed(self::PERMISSION_FAMILY_LAUNCH_UPDATE)) {
             $this->restoreFields($object, $persisted, self::LAUNCH_FIELDS);
+        }
+    }
+
+    public function onPreSaveAsset(AssetEvent $event): void
+    {
+        $user = $this->userResolver->getUser();
+        if ($user instanceof User && !$user->isAdmin() && $user->isAllowed(self::PERMISSION_KEY_READONLY)) {
+            throw new AccessDeniedHttpException('Key read-only users cannot update assets.');
         }
     }
 
@@ -154,6 +173,19 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
 
         $object = $event->getArgument('object');
         if (!$object instanceof Concrete) {
+            return;
+        }
+
+        if ($user->isAllowed(self::PERMISSION_KEY_READONLY)) {
+            $data = $event->getArgument('data');
+            if (is_array($data)) {
+                $this->disableWritePermissions($data);
+                if (isset($data['layout'])) {
+                    $this->makeFieldsEditableOnly($data['layout'], []);
+                }
+                $event->setArgument('data', $data);
+            }
+
             return;
         }
 
@@ -219,6 +251,37 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
         }
 
         $event->setArgument('data', $data);
+    }
+
+    public function onPreSendAssetData(GenericEvent $event): void
+    {
+        $user = $this->userResolver->getUser();
+        if (!$user instanceof User || $user->isAdmin() || !$user->isAllowed(self::PERMISSION_KEY_READONLY)) {
+            return;
+        }
+
+        $asset = $event->getArgument('asset');
+        $data = $event->getArgument('data');
+        if (!$asset instanceof Asset || !is_array($data)) {
+            return;
+        }
+
+        foreach (['publish', 'delete', 'rename', 'create', 'settings', 'properties'] as $permission) {
+            $data['userPermissions'][$permission] = false;
+        }
+        $data['userPermissions']['list'] = true;
+        $data['userPermissions']['view'] = true;
+        $event->setArgument('data', $data);
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function disableWritePermissions(array &$data): void
+    {
+        foreach (['edit', 'save', 'publish', 'unpublish', 'delete', 'rename', 'create', 'settings', 'properties'] as $permission) {
+            $data['permissions'][$permission] = false;
+        }
     }
 
     /**

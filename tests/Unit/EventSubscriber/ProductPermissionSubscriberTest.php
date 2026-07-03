@@ -6,6 +6,7 @@ namespace App\Tests\Unit\EventSubscriber;
 use App\EventSubscriber\ProductPermissionSubscriber;
 use Codeception\Test\Unit;
 use Pimcore\Event\Model\DataObjectEvent;
+use Pimcore\Model\Asset\Image;
 use Pimcore\Model\DataObject\ClassDefinition\Data\Input;
 use Pimcore\Model\DataObject\ClassDefinition\Layout\Panel;
 use Pimcore\Model\DataObject\Concrete;
@@ -59,6 +60,40 @@ final class ProductPermissionSubscriberTest extends Unit
         );
     }
 
+    public function testKeyReadonlyUserCannotEditAnyObjectField(): void
+    {
+        $subscriber = new ProductPermissionSubscriber($this->keyReadonlyUserResolver());
+        $field = (new Input())->setName('name');
+        $layout = (new Panel())->setName('root')->setChildren([$field]);
+        $event = new GenericEvent(null, [
+            'object' => (new ProductPermissionTestObject())->setClassName('supplier'),
+            'data' => ['layout' => $layout, 'permissions' => ['edit' => true, 'publish' => true]],
+        ]);
+
+        $subscriber->onPreSendData($event);
+
+        self::assertTrue($field->getNoteditable());
+        self::assertFalse($event->getArgument('data')['permissions']['edit']);
+        self::assertFalse($event->getArgument('data')['permissions']['publish']);
+    }
+
+    public function testKeyReadonlyAssetPermissionsOnlyAllowViewing(): void
+    {
+        $subscriber = new ProductPermissionSubscriber($this->keyReadonlyUserResolver());
+        $event = new GenericEvent(null, [
+            'asset' => new Image(),
+            'data' => ['userPermissions' => ['view' => true, 'publish' => true, 'delete' => true]],
+        ]);
+
+        $subscriber->onPreSendAssetData($event);
+
+        $permissions = $event->getArgument('data')['userPermissions'];
+        self::assertTrue($permissions['view']);
+        self::assertTrue($permissions['list']);
+        self::assertFalse($permissions['publish']);
+        self::assertFalse($permissions['delete']);
+    }
+
     public function testMarketingUserCannotEditUnsupportedObject(): void
     {
         $subscriber = new ProductPermissionSubscriber($this->marketingUserResolver());
@@ -92,6 +127,19 @@ final class ProductPermissionSubscriberTest extends Unit
             (new User())
                 ->setUsername('marketing-user')
                 ->setPermissions([ProductPermissionSubscriber::PERMISSION_MARKETING_ONLY])
+                ->setAdmin(false)
+        );
+
+        return $resolver;
+    }
+
+    private function keyReadonlyUserResolver(): TokenStorageUserResolver
+    {
+        $resolver = $this->createMock(TokenStorageUserResolver::class);
+        $resolver->method('getUser')->willReturn(
+            (new User())
+                ->setUsername('key-readonly-user')
+                ->setPermissions([ProductPermissionSubscriber::PERMISSION_KEY_READONLY])
                 ->setAdmin(false)
         );
 
