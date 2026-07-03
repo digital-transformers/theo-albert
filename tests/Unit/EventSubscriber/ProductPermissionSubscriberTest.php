@@ -16,9 +16,11 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 final class ProductPermissionSubscriberTest extends Unit
 {
-    public function testMarketingUserOnlyReceivesMarketingLayout(): void
+    public function testMarketingUserOnlyEditsMarketingFields(): void
     {
         $subscriber = new ProductPermissionSubscriber($this->marketingUserResolver());
+        $baseField = (new Input())->setName('name');
+        $qualityControlField = (new Input())->setName('qualityControlRemarks');
         $marketing = (new Panel())
             ->setName('Marketing')
             ->setChildren([
@@ -28,9 +30,9 @@ final class ProductPermissionSubscriberTest extends Unit
         $layout = (new Panel())
             ->setName('root')
             ->setChildren([
-                (new Panel())->setName('Base data'),
+                (new Panel())->setName('Base data')->setChildren([$baseField]),
                 $marketing,
-                (new Panel())->setName('Quality Control'),
+                (new Panel())->setName('Quality Control')->setChildren([$qualityControlField]),
             ]);
         $event = new GenericEvent(null, [
             'object' => (new ProductPermissionTestObject())->setClassName('model'),
@@ -39,12 +41,22 @@ final class ProductPermissionSubscriberTest extends Unit
 
         $subscriber->onPreSendData($event);
 
-        self::assertSame(['Marketing'], array_map(
+        self::assertSame(['Base data', 'Marketing', 'Quality Control'], array_map(
             static fn (Panel $panel): string => $panel->getName(),
             $layout->getChildren()
         ));
+        self::assertTrue($baseField->getNoteditable());
         self::assertFalse($marketing->getChildren()[0]->getNoteditable());
         self::assertTrue($marketing->getChildren()[1]->getNoteditable());
+        self::assertTrue($qualityControlField->getNoteditable());
+    }
+
+    public function testSubscriberUsesCurrentPimcoreAdminObjectEvent(): void
+    {
+        self::assertArrayHasKey(
+            'pimcore.admin.dataobject.get.preSendData',
+            ProductPermissionSubscriber::getSubscribedEvents()
+        );
     }
 
     public function testMarketingUserCannotEditUnsupportedObject(): void

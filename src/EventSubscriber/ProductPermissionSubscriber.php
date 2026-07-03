@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
+use Pimcore\Bundle\AdminBundle\Event\AdminEvents;
 use Pimcore\Event\DataObjectEvents;
 use Pimcore\Event\Model\DataObjectEvent;
 use Pimcore\Model\DataObject\AbstractObject;
@@ -29,7 +30,6 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
     private const FAMILY_CLASS_NAME = 'family';
     private const SUPPLIER_CLASS_NAME = 'supplier';
     private const PRODUCT_CLASS_NAMES = ['family', 'model', 'frame'];
-    private const MARKETING_LAYOUT_PANEL_NAME = 'Marketing';
     private const PHASE_FIELDS = ['phase'];
     private const LAUNCH_FIELDS = ['launchPeriod', 'launchYear'];
     private const QUALITY_CONTROL_FIELDS = [
@@ -71,7 +71,7 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
             DataObjectEvents::PRE_ADD => ['onPreSave', -20],
             DataObjectEvents::PRE_UPDATE => ['onPreSave', -20],
             'pimcore.admin.object.list.beforeListLoad' => 'onBeforeListLoad',
-            'pimcore.dataobject.get.preSendData' => 'onPreSendData',
+            AdminEvents::OBJECT_GET_PRE_SEND_DATA => 'onPreSendData',
         ];
     }
 
@@ -207,7 +207,6 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
         if ($user->isAllowed(self::PERMISSION_QUALITY_CONTROL_ONLY)) {
             $this->makeFieldsEditableOnly($data['layout'], self::QUALITY_CONTROL_FIELDS);
         } elseif ($user->isAllowed(self::PERMISSION_MARKETING_ONLY)) {
-            $this->retainLayoutSection($data['layout'], self::MARKETING_LAYOUT_PANEL_NAME);
             $this->makeFieldsEditableOnly($data['layout'], self::MARKETING_FIELDS);
         } elseif (strtolower((string) $object->getClassName()) === self::FAMILY_CLASS_NAME) {
             if (!$user->isAllowed(self::PERMISSION_FAMILY_PHASE_UPDATE)) {
@@ -314,38 +313,6 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
         foreach ($children as $child) {
             $this->makeFieldsEditableOnly($child, $editableFieldNames);
         }
-    }
-
-    private function retainLayoutSection(mixed $layout, string $sectionName): bool
-    {
-        if (!is_object($layout)) {
-            return false;
-        }
-
-        $name = method_exists($layout, 'getName') ? (string) $layout->getName() : '';
-        if ($name === $sectionName) {
-            return true;
-        }
-
-        if (!method_exists($layout, 'getChildren') || !method_exists($layout, 'setChildren')) {
-            return false;
-        }
-
-        $children = $layout->getChildren();
-        if (!is_array($children)) {
-            return false;
-        }
-
-        $retained = [];
-        foreach ($children as $child) {
-            if ($this->retainLayoutSection($child, $sectionName)) {
-                $retained[] = $child;
-            }
-        }
-
-        $layout->setChildren(array_values($retained));
-
-        return $retained !== [];
     }
 
     private function isSupportedProductObject(Concrete $object): bool
