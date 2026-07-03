@@ -6,6 +6,7 @@ namespace App\EventSubscriber;
 use Pimcore\Event\DataObjectEvents;
 use Pimcore\Event\Model\DataObjectEvent;
 use Pimcore\Model\DataObject\AbstractObject;
+use Pimcore\Model\DataObject\ClassDefinition\Data as DataDefinition;
 use Pimcore\Model\DataObject\Concrete;
 use Pimcore\Model\DataObject\Data\ObjectMetadata;
 use Pimcore\Model\DataObject\Listing as ObjectListing;
@@ -28,6 +29,7 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
     private const FAMILY_CLASS_NAME = 'family';
     private const SUPPLIER_CLASS_NAME = 'supplier';
     private const PRODUCT_CLASS_NAMES = ['family', 'model', 'frame'];
+    private const MARKETING_LAYOUT_PANEL_NAME = 'Marketing';
     private const PHASE_FIELDS = ['phase'];
     private const LAUNCH_FIELDS = ['launchPeriod', 'launchYear'];
     private const QUALITY_CONTROL_FIELDS = [
@@ -91,14 +93,18 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($this->isSupportedProductObject($object) && $user->isAllowed(self::PERMISSION_QUALITY_CONTROL_ONLY)) {
-            $this->restoreFieldsExcept($object, self::QUALITY_CONTROL_FIELDS);
+        if ($user->isAllowed(self::PERMISSION_MARKETING_ONLY)) {
+            if (!$this->isSupportedProductObject($object)) {
+                throw new AccessDeniedHttpException('Marketing users may only update Family, Model, and Frame objects.');
+            }
+
+            $this->restoreFieldsExcept($object, self::MARKETING_FIELDS);
 
             return;
         }
 
-        if ($this->isSupportedProductObject($object) && $user->isAllowed(self::PERMISSION_MARKETING_ONLY)) {
-            $this->restoreFieldsExcept($object, self::MARKETING_FIELDS);
+        if ($this->isSupportedProductObject($object) && $user->isAllowed(self::PERMISSION_QUALITY_CONTROL_ONLY)) {
+            $this->restoreFieldsExcept($object, self::QUALITY_CONTROL_FIELDS);
 
             return;
         }
@@ -151,6 +157,18 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
             return;
         }
 
+        if ($user->isAllowed(self::PERMISSION_MARKETING_ONLY) && !$this->isSupportedProductObject($object)) {
+            $data = $event->getArgument('data');
+            if (is_array($data)) {
+                foreach (['edit', 'save', 'publish', 'unpublish', 'delete', 'rename', 'settings', 'properties'] as $permission) {
+                    $data['permissions'][$permission] = false;
+                }
+                $event->setArgument('data', $data);
+            }
+
+            return;
+        }
+
         if ($this->shouldLimitToSupplierProjects($user) && !$this->isObjectAllowedForSupplierUser($object, $user)) {
             $data = $event->getArgument('data');
             if (is_array($data)) {
@@ -189,6 +207,7 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
         if ($user->isAllowed(self::PERMISSION_QUALITY_CONTROL_ONLY)) {
             $this->makeFieldsEditableOnly($data['layout'], self::QUALITY_CONTROL_FIELDS);
         } elseif ($user->isAllowed(self::PERMISSION_MARKETING_ONLY)) {
+            $this->retainLayoutSection($data['layout'], self::MARKETING_LAYOUT_PANEL_NAME);
             $this->makeFieldsEditableOnly($data['layout'], self::MARKETING_FIELDS);
         } elseif (strtolower((string) $object->getClassName()) === self::FAMILY_CLASS_NAME) {
             if (!$user->isAllowed(self::PERMISSION_FAMILY_PHASE_UPDATE)) {
@@ -274,7 +293,12 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
         }
 
         $name = method_exists($layout, 'getName') ? (string) $layout->getName() : '';
-        if ($name !== '' && !in_array($name, $editableFieldNames, true) && method_exists($layout, 'setNoteditable')) {
+        if (
+            $layout instanceof DataDefinition
+            && $name !== ''
+            && !in_array($name, $editableFieldNames, true)
+            && method_exists($layout, 'setNoteditable')
+        ) {
             $layout->setNoteditable(true);
         }
 
@@ -290,6 +314,38 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
         foreach ($children as $child) {
             $this->makeFieldsEditableOnly($child, $editableFieldNames);
         }
+    }
+
+    private function retainLayoutSection(mixed $layout, string $sectionName): bool
+    {
+        if (!is_object($layout)) {
+            return false;
+        }
+
+        $name = method_exists($layout, 'getName') ? (string) $layout->getName() : '';
+        if ($name === $sectionName) {
+            return true;
+        }
+
+        if (!method_exists($layout, 'getChildren') || !method_exists($layout, 'setChildren')) {
+            return false;
+        }
+
+        $children = $layout->getChildren();
+        if (!is_array($children)) {
+            return false;
+        }
+
+        $retained = [];
+        foreach ($children as $child) {
+            if ($this->retainLayoutSection($child, $sectionName)) {
+                $retained[] = $child;
+            }
+        }
+
+        $layout->setChildren(array_values($retained));
+
+        return $retained !== [];
     }
 
     private function isSupportedProductObject(Concrete $object): bool
