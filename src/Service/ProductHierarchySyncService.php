@@ -556,7 +556,7 @@ final class ProductHierarchySyncService
     private function enrichFrame(int $id, array $frame): void
     {
         $hasItemGroups = $this->nonEmptyStrings($frame['item_group_numbers'] ?? []) !== [];
-        $hasColors = array_key_exists('composed_color_codes', $frame);
+        $hasColors = array_key_exists('composed_colors', $frame) || array_key_exists('composed_color_codes', $frame);
         $hasDsArtCat = array_key_exists('category_code', $frame);
         $hasDsType = array_key_exists('line_code', $frame);
         if (!$hasItemGroups && !$hasColors && !$hasDsArtCat && !$hasDsType) {
@@ -578,7 +578,9 @@ final class ProductHierarchySyncService
         }
 
         if ($hasColors) {
-            $object->setComposedColors($this->resolveComposedColors($frame['composed_color_codes'] ?? []));
+            $object->setComposedColors($this->resolveComposedColors(
+                $frame['composed_colors'] ?? $frame['composed_color_codes'] ?? []
+            ));
         }
 
         if ($hasDsArtCat) {
@@ -620,7 +622,8 @@ final class ProductHierarchySyncService
     {
         $metadata = [];
         $seen = [];
-        foreach ($this->nonEmptyStrings($codes) as $code) {
+        foreach ($this->composedColorEntries($codes) as $entry) {
+            $code = $entry['color_code'];
             $color = $this->findColorByCode($code);
             if (!$color instanceof Color) {
                 continue;
@@ -633,12 +636,36 @@ final class ProductHierarchySyncService
 
             $item = new ObjectMetadata('composedColors', ['name', 'relevant'], $color);
             $item->setName($this->stringValue($color->getName()));
-            $item->setRelevant(true);
+            $item->setRelevant($entry['is_relevant']);
             $metadata[] = $item;
             $seen[$id] = true;
         }
 
         return $metadata;
+    }
+
+    /** @return list<array{color_code: string, is_relevant: bool}> */
+    private function composedColorEntries(mixed $value): array
+    {
+        if (!is_array($value)) {
+            return [];
+        }
+
+        $entries = [];
+        foreach ($value as $item) {
+            if (is_array($item)) {
+                $code = $this->stringValue($item['color_code'] ?? null);
+                $isRelevant = filter_var($item['is_relevant'] ?? true, FILTER_VALIDATE_BOOL);
+            } else {
+                $code = $this->stringValue($item);
+                $isRelevant = true;
+            }
+            if ($code !== '') {
+                $entries[] = ['color_code' => $code, 'is_relevant' => $isRelevant];
+            }
+        }
+
+        return $entries;
     }
 
     /**

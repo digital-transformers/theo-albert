@@ -6,6 +6,7 @@ namespace App\Tests\Unit\Service;
 use App\Service\ProductHierarchyGraphqlClient;
 use App\Service\ProductHierarchySyncService;
 use Codeception\Test\Unit;
+use Pimcore\Model\DataObject\Color;
 
 final class ProductHierarchySyncServiceTest extends Unit
 {
@@ -102,6 +103,25 @@ final class ProductHierarchySyncServiceTest extends Unit
             ['ABC 123', 'Second-Code'],
             $method->invoke($service, "  ABC 123  \r\n\r\nSecond-Code\nABC 123\n")
         );
+    }
+
+    public function testComposedColorMetadataPreservesSourceRelevance(): void
+    {
+        $color = (new Color())->setId(3011)->setName('AB1882');
+        $service = new ProductHierarchySyncService(
+            new RecordingProductHierarchyClient(),
+            static fn (string $code): Color => $color
+        );
+        $method = new \ReflectionMethod($service, 'resolveComposedColors');
+        $method->setAccessible(true);
+
+        $metadata = $method->invoke($service, [[
+            'color_code' => 'AB1882 60/10 PVT',
+            'is_relevant' => false,
+        ]]);
+
+        self::assertCount(1, $metadata);
+        self::assertFalse($metadata[0]->getRelevant());
     }
 }
 

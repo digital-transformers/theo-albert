@@ -206,6 +206,53 @@ final class PrestaShopExportConverterTest extends Unit
         ]], $result['models'][0]['final_product_details']);
     }
 
+    public function testKeepsRelevantAndNonRelevantSourceColors(): void
+    {
+        $this->writeJson('config/CfgProductFamilies.json', [
+            ['Code' => 'family-a', 'Name' => 'Family A'],
+        ]);
+        $this->writeJson('config/CfgModels.json', [
+            ['Code' => 'ANDY', 'Name' => 'ANDY'],
+        ]);
+        $this->writeJson('config/TheoColors.json', [
+            ['ColorCode' => 'AB1882 60/10 PVT', 'ColorName' => 'Graphite'],
+            ['ColorCode' => '3YW 3211 40-60-80/10 PVT', 'ColorName' => 'Black lattice'],
+        ]);
+        $product = $this->product('ANDY --1', 'family-a', 'ANDY', '1', '');
+        $product['Colors'] = [[
+            'CombiCode' => '1',
+            'IsRelevant' => 'N',
+            'OrderNr' => 3,
+            'ColorCode' => 'AB1882 60/10 PVT',
+        ], [
+            'CombiCode' => '1',
+            'IsRelevant' => 'Y',
+            'OrderNr' => 4,
+            'ColorCode' => '3YW 3211 40-60-80/10 PVT',
+        ]];
+        $this->writeJson('products/Product_TransactionStep_1.json', [$product]);
+
+        $result = (new PrestaShopExportConverter())->convert($this->exportDirectory);
+
+        self::assertSame(
+            ['AB1882 60/10 PVT', '3YW 3211 40-60-80/10 PVT'],
+            $result['frames'][0]['composed_color_codes']
+        );
+        self::assertSame([false, true], array_column($result['frames'][0]['colors'], 'is_relevant'));
+        self::assertSame([[
+            'color_code' => 'AB1882 60/10 PVT',
+            'is_relevant' => false,
+        ], [
+            'color_code' => '3YW 3211 40-60-80/10 PVT',
+            'is_relevant' => true,
+        ]], $result['frames'][0]['composed_colors']);
+        self::assertCount(2, $result['frames'][0]['source']['source_colors']);
+        self::assertSame(
+            ['AB1882 60/10 PVT', '3YW 3211 40-60-80/10 PVT'],
+            $result['models'][0]['final_product_details'][0]['color_codes']
+        );
+    }
+
     public function testDerivesFrameBaseCodeWhenItDiffersFromModelCode(): void
     {
         $this->writeJson('config/CfgProductFamilies.json', [

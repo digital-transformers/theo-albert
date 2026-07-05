@@ -288,6 +288,13 @@ final class PrestaShopExportConverter
                         'item_group_numbers' => $this->nonEmptyList($articleGroupCode),
                         'supplier_code' => '',
                         'composed_color_codes' => array_values(array_unique(array_column($colors, 'color_code'))),
+                        'composed_colors' => array_map(
+                            static fn (array $color): array => [
+                                'color_code' => $color['color_code'],
+                                'is_relevant' => $color['is_relevant'],
+                            ],
+                            $colors
+                        ),
                         'component_item_codes' => [],
                         'pos_material_item_codes' => [],
                         'service_part_codes' => [],
@@ -308,7 +315,7 @@ final class PrestaShopExportConverter
                             'can_be_sold' => filter_var($product['CanBeSold'] ?? false, FILTER_VALIDATE_BOOL),
                             'combi_code' => $combiCode,
                             'colors' => $colors,
-                            'source_colors' => $this->relevantSourceColors($product['Colors'] ?? []),
+                            'source_colors' => $this->sourceColors($product['Colors'] ?? []),
                         ],
                     ];
                 }
@@ -422,7 +429,7 @@ final class PrestaShopExportConverter
     /**
      * @param array<string, array<string, mixed>> $colorsByCode
      *
-     * @return list<array{combi_code: string, color_code: string, color_name: string, generic_color: string, order_nr: int}>
+     * @return list<array{combi_code: string, color_code: string, color_name: string, generic_color: string, order_nr: int, is_relevant: bool}>
      */
     private function normalizeColors(mixed $colors, array $colorsByCode = []): array
     {
@@ -432,7 +439,7 @@ final class PrestaShopExportConverter
 
         $normalized = [];
         foreach ($colors as $color) {
-            if (!is_array($color) || strtoupper($this->stringValue($color['IsRelevant'] ?? 'Y')) === 'N') {
+            if (!is_array($color)) {
                 continue;
             }
 
@@ -448,6 +455,7 @@ final class PrestaShopExportConverter
                 'color_name' => $this->stringValue($colorConfig['ColorName'] ?? null),
                 'generic_color' => $this->stringValue($colorConfig['GenericColor'] ?? null),
                 'order_nr' => (int) ($color['OrderNr'] ?? PHP_INT_MAX),
+                'is_relevant' => strtoupper($this->stringValue($color['IsRelevant'] ?? 'Y')) !== 'N',
             ];
         }
 
@@ -459,7 +467,7 @@ final class PrestaShopExportConverter
     /**
      * @return list<array<string, mixed>>
      */
-    private function relevantSourceColors(mixed $colors): array
+    private function sourceColors(mixed $colors): array
     {
         if (!is_array($colors)) {
             return [];
@@ -468,7 +476,6 @@ final class PrestaShopExportConverter
         return array_values(array_filter(
             $colors,
             fn (mixed $color): bool => is_array($color)
-                && strtoupper($this->stringValue($color['IsRelevant'] ?? 'Y')) !== 'N'
                 && $this->stringValue($color['ColorCode'] ?? null) !== ''
         ));
     }
