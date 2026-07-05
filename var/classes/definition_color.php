@@ -13,6 +13,7 @@
  * - description [textarea]
  * - multiColor [manyToManyObjectRelation]
  * - image [image]
+ * - alternateCodes [textarea]
  */
 
 return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
@@ -22,7 +23,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => 'Color',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1775546388,
+   'modificationDate' => 1783228134,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -31,13 +32,13 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'useTraits' => '',
    'listingUseTraits' => '',
    'encryption' => false,
-   'encryptedTables' => 
+   'encryptedTables' =>
   array (
   ),
    'allowInherit' => false,
    'allowVariants' => false,
    'showVariants' => false,
-   'layoutDefinitions' => 
+   'layoutDefinitions' =>
   \Pimcore\Model\DataObject\ClassDefinition\Layout\Panel::__set_state(array(
      'name' => 'pimcore_root',
      'type' => NULL,
@@ -49,9 +50,9 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
      'collapsed' => false,
      'bodyStyle' => NULL,
      'datatype' => 'layout',
-     'children' => 
+     'children' =>
     array (
-      0 => 
+      0 =>
       \Pimcore\Model\DataObject\ClassDefinition\Layout\Panel::__set_state(array(
          'name' => 'Base data',
          'type' => NULL,
@@ -63,9 +64,9 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
          'collapsed' => false,
          'bodyStyle' => '',
          'datatype' => 'layout',
-         'children' => 
+         'children' =>
         array (
-          0 => 
+          0 =>
           \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
              'name' => 'colorType',
              'title' => 'Color Type',
@@ -81,22 +82,22 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'invisible' => false,
              'visibleGridView' => false,
              'visibleSearch' => false,
-             'blockedVarsForExport' => 
+             'blockedVarsForExport' =>
             array (
             ),
-             'options' => 
+             'options' =>
             array (
-              0 => 
+              0 =>
               array (
                 'key' => 'Acetate',
                 'value' => 'acetate',
               ),
-              1 => 
+              1 =>
               array (
                 'key' => 'Metal Bi-Color',
                 'value' => 'metal-bi-color',
               ),
-              2 => 
+              2 =>
               array (
                 'key' => 'Metal Single Color',
                 'value' => 'metal-single-color',
@@ -112,7 +113,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'optionsProviderClass' => '',
              'optionsProviderData' => '',
           )),
-          1 => 
+          1 =>
           \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
              'name' => 'genericColor',
              'title' => 'Generic Color',
@@ -128,82 +129,82 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'invisible' => false,
              'visibleGridView' => false,
              'visibleSearch' => false,
-             'blockedVarsForExport' => 
+             'blockedVarsForExport' =>
             array (
             ),
-             'options' => 
+             'options' =>
             array (
-              0 => 
+              0 =>
               array (
                 'key' => 'Transparent',
                 'value' => '1',
               ),
-              1 => 
+              1 =>
               array (
                 'key' => 'Black',
                 'value' => '2',
               ),
-              2 => 
+              2 =>
               array (
                 'key' => 'Blue',
                 'value' => '3',
               ),
-              3 => 
+              3 =>
               array (
                 'key' => 'Brown',
                 'value' => '4',
               ),
-              4 => 
+              4 =>
               array (
                 'key' => 'Gold',
                 'value' => '5',
               ),
-              5 => 
+              5 =>
               array (
                 'key' => 'Grey',
                 'value' => '6',
               ),
-              6 => 
+              6 =>
               array (
                 'key' => 'Green',
                 'value' => '7',
               ),
-              7 => 
+              7 =>
               array (
                 'key' => 'Orange',
                 'value' => '8',
               ),
-              8 => 
+              8 =>
               array (
                 'key' => 'Pink',
                 'value' => '9',
               ),
-              9 => 
+              9 =>
               array (
                 'key' => 'Purple',
                 'value' => '10',
               ),
-              10 => 
+              10 =>
               array (
                 'key' => 'Red',
                 'value' => '11',
               ),
-              11 => 
+              11 =>
               array (
                 'key' => 'Silver',
                 'value' => '12',
               ),
-              12 => 
+              12 =>
               array (
                 'key' => 'White',
                 'value' => '13',
               ),
-              13 => 
+              13 =>
               array (
                 'key' => 'Yellow',
                 'value' => '14',
               ),
-              14 => 
+              14 =>
               array (
                 'key' => 'Multi colour',
                 'value' => '15',
@@ -219,7 +220,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'optionsProviderClass' => '',
              'optionsProviderData' => '',
           )),
-          2 => 
+          2 =>
           \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
              'name' => 'code',
              'title' => 'Code',
@@ -235,13 +236,13 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'invisible' => false,
              'visibleGridView' => false,
              'visibleSearch' => false,
-             'blockedVarsForExport' => 
+             'blockedVarsForExport' =>
             array (
             ),
              'defaultValue' => NULL,
              'columnLength' => 190,
              'regex' => '',
-             'regexFlags' => 
+             'regexFlags' =>
             array (
             ),
              'unique' => true,
@@ -249,7 +250,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
-          3 => 
+          3 =>
           \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
              'name' => 'name',
              'title' => 'Name',
@@ -265,13 +266,13 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'invisible' => false,
              'visibleGridView' => false,
              'visibleSearch' => false,
-             'blockedVarsForExport' => 
+             'blockedVarsForExport' =>
             array (
             ),
              'defaultValue' => '',
              'columnLength' => 190,
              'regex' => '',
-             'regexFlags' => 
+             'regexFlags' =>
             array (
             ),
              'unique' => false,
@@ -279,7 +280,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
-          4 => 
+          4 =>
           \Pimcore\Model\DataObject\ClassDefinition\Data\Textarea::__set_state(array(
              'name' => 'description',
              'title' => 'Description/Notes',
@@ -295,7 +296,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'invisible' => false,
              'visibleGridView' => false,
              'visibleSearch' => false,
-             'blockedVarsForExport' => 
+             'blockedVarsForExport' =>
             array (
             ),
              'maxLength' => NULL,
@@ -304,7 +305,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'height' => '',
              'width' => '',
           )),
-          5 => 
+          5 =>
           \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
              'name' => 'multiColor',
              'title' => 'Multi Color',
@@ -320,12 +321,12 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'invisible' => false,
              'visibleGridView' => false,
              'visibleSearch' => false,
-             'blockedVarsForExport' => 
+             'blockedVarsForExport' =>
             array (
             ),
-             'classes' => 
+             'classes' =>
             array (
-              0 => 
+              0 =>
               array (
                 'classes' => 'color',
               ),
@@ -338,13 +339,13 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'allowToClearRelation' => true,
              'optimizedAdminLoading' => false,
              'enableTextSelection' => false,
-             'visibleFieldDefinitions' => 
+             'visibleFieldDefinitions' =>
             array (
             ),
              'width' => '',
              'height' => '',
           )),
-          6 => 
+          6 =>
           \Pimcore\Model\DataObject\ClassDefinition\Data\Image::__set_state(array(
              'name' => 'image',
              'title' => 'Image',
@@ -360,16 +361,41 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'invisible' => false,
              'visibleGridView' => false,
              'visibleSearch' => false,
-             'blockedVarsForExport' => 
+             'blockedVarsForExport' =>
             array (
             ),
              'uploadPath' => '',
              'width' => '',
              'height' => '',
           )),
+          7 =>
+          \Pimcore\Model\DataObject\ClassDefinition\Data\Textarea::__set_state(array(
+             'name' => 'alternateCodes',
+             'title' => 'Alternate codes',
+             'tooltip' => 'Enter one alternative color code per line.',
+             'mandatory' => false,
+             'noteditable' => false,
+             'index' => false,
+             'locked' => false,
+             'style' => NULL,
+             'permissions' => NULL,
+             'fieldtype' => '',
+             'relationType' => false,
+             'invisible' => false,
+             'visibleGridView' => true,
+             'visibleSearch' => true,
+             'blockedVarsForExport' =>
+            array (
+            ),
+             'maxLength' => NULL,
+             'showCharCount' => false,
+             'excludeFromSearchIndex' => false,
+             'height' => 120,
+             'width' => NULL,
+          )),
         ),
          'locked' => false,
-         'blockedVarsForExport' => 
+         'blockedVarsForExport' =>
         array (
         ),
          'fieldtype' => 'panel',
@@ -381,7 +407,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
       )),
     ),
      'locked' => false,
-     'blockedVarsForExport' => 
+     'blockedVarsForExport' =>
     array (
     ),
      'fieldtype' => 'panel',
@@ -396,13 +422,13 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'showAppLoggerTab' => false,
    'linkGeneratorReference' => '',
    'previewGeneratorReference' => '',
-   'compositeIndices' => 
+   'compositeIndices' =>
   array (
   ),
    'showFieldLookup' => false,
-   'propertyVisibility' => 
+   'propertyVisibility' =>
   array (
-    'grid' => 
+    'grid' =>
     array (
       'id' => true,
       'key' => false,
@@ -411,7 +437,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
       'modificationDate' => true,
       'creationDate' => true,
     ),
-    'search' => 
+    'search' =>
     array (
       'id' => true,
       'key' => false,
@@ -422,16 +448,16 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
     ),
   ),
    'enableGridLocking' => false,
-   'deletedDataComponents' => 
+   'deletedDataComponents' =>
   array (
   ),
-   'blockedVarsForExport' => 
+   'blockedVarsForExport' =>
   array (
   ),
-   'fieldDefinitionsCache' => 
+   'fieldDefinitionsCache' =>
   array (
   ),
-   'activeDispatchingEvents' => 
+   'activeDispatchingEvents' =>
   array (
   ),
 ));
