@@ -91,6 +91,18 @@ final class ProductHierarchySyncServiceTest extends Unit
         self::assertSame($sourceColor, $result['warnings'][0]['source_color']);
         self::assertSame('OTHER-18', $result['warnings'][1]['source_product_code']);
     }
+
+    public function testAlternateColorCodesUseTrimmedNonEmptyLines(): void
+    {
+        $service = new ProductHierarchySyncService(new RecordingProductHierarchyClient());
+        $method = new \ReflectionMethod($service, 'alternateColorCodes');
+        $method->setAccessible(true);
+
+        self::assertSame(
+            ['ABC 123', 'Second-Code'],
+            $method->invoke($service, "  ABC 123  \r\n\r\nSecond-Code\nABC 123\n")
+        );
+    }
 }
 
 final class RecordingProductHierarchyClient extends ProductHierarchyGraphqlClient

@@ -27,6 +27,9 @@ final class ProductHierarchySyncService
     /** @var array<string, Color|null> */
     private array $colorCache = [];
 
+    /** @var array<string, Color>|null */
+    private ?array $alternateColorIndex = null;
+
     public function __construct(
         private readonly ProductHierarchyGraphqlClient $client,
         ?callable $colorResolver = null,
@@ -681,8 +684,48 @@ final class ProductHierarchySyncService
         $listing->setCondition('code = ?', [$code]);
         $items = $listing->load();
         $color = $items[0] ?? null;
+        if (!$color instanceof Color) {
+            $color = $this->findColorByAlternateCode($code);
+        }
 
         return $this->colorCache[$code] = $color instanceof Color ? $color : null;
+    }
+
+    private function findColorByAlternateCode(string $code): ?Color
+    {
+        if ($this->alternateColorIndex === null) {
+            $this->alternateColorIndex = [];
+            $listing = new ColorListing();
+            $listing->setUnpublished(true);
+            foreach ($listing->load() as $color) {
+                if (!$color instanceof Color || !method_exists($color, 'getAlternateCodes')) {
+                    continue;
+                }
+                foreach ($this->alternateColorCodes($color->getAlternateCodes()) as $alternateCode) {
+                    $this->alternateColorIndex[$this->normalizeColorCode($alternateCode)] ??= $color;
+                }
+            }
+        }
+
+        return $this->alternateColorIndex[$this->normalizeColorCode($code)] ?? null;
+    }
+
+    /** @return list<string> */
+    private function alternateColorCodes(mixed $value): array
+    {
+        if (!is_string($value) || trim($value) === '') {
+            return [];
+        }
+
+        return array_values(array_unique(array_filter(
+            array_map('trim', preg_split('/\R/u', $value) ?: []),
+            static fn (string $code): bool => $code !== ''
+        )));
+    }
+
+    private function normalizeColorCode(string $code): string
+    {
+        return mb_strtolower(trim($code));
     }
 
     /**
