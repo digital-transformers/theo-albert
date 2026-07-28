@@ -5,22 +5,20 @@ pimcore_data_hub:
                 active: true
                 type: dataImporterDataObject
                 name: AcetaatColors
-                description: ''
+                description: 'Create and update acetate colors, including alternate source codes.'
                 group: ''
                 path: null
-                modificationDate: 1760081530
+                modificationDate: 1785226960
                 createDate: 1759495565
             loaderConfig:
                 type: asset
                 settings:
-                    assetPath: '/Datasource Files/ColorsAcetaat.csv'
+                    assetPath: '/Datasource Files/Acetate Colors + alternative.xlsx'
             interpreterConfig:
-                type: csv
+                type: xlsx
                 settings:
                     skipFirstRow: true
-                    delimiter: "\t"
-                    enclosure: '"'
-                    escape: \
+                    sheetName: Sheet1
             resolverConfig:
                 elementType: dataObject
                 dataObjectClassId: color
@@ -97,6 +95,35 @@ pimcore_data_hub:
                             writeIfTargetIsNotEmpty: true
                             writeIfSourceIsEmpty: true
                     transformationPipeline: {  }
+                -
+                    label: AlternativeCodes
+                    dataSourceIndex:
+                        - '9'
+                    settings:
+                        delimiter: ','
+                        mode: both
+                        glue: "\n"
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: alternateCodes
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: true
+                    transformationPipeline:
+                        -
+                            settings:
+                                delimiter: ','
+                            type: explode
+                        -
+                            settings:
+                                mode: both
+                            type: trim
+                        -
+                            settings:
+                                glue: "\n"
+                            type: combine
                 -
                     label: KEY
                     dataSourceIndex:
