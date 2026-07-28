@@ -14,7 +14,7 @@ final class AcetaatColorsImporterConfigTest extends Unit
         $importer = $configuration['pimcore_data_hub']['configurations']['AcetaatColors'];
 
         self::assertSame(
-            '/Datasource Files/Acetate Colors + alternative.xlsx',
+            '/Datasource Files/Acetate-Colors-alternative.xlsx',
             $importer['loaderConfig']['settings']['assetPath']
         );
         self::assertSame([
@@ -24,9 +24,20 @@ final class AcetaatColorsImporterConfigTest extends Unit
                 'sheetName' => 'Sheet1',
             ],
         ], $importer['interpreterConfig']);
+        self::assertSame('attributeWithTrimFallback', $importer['resolverConfig']['loadingStrategy']['type']);
         self::assertSame('0', $importer['resolverConfig']['loadingStrategy']['settings']['dataSourceIndex']);
         self::assertSame('code', $importer['resolverConfig']['loadingStrategy']['settings']['attributeName']);
         self::assertTrue($importer['resolverConfig']['loadingStrategy']['settings']['includeUnpublished']);
+        self::assertSame([
+            'type' => 'doNotCreate',
+            'settings' => [],
+        ], $importer['resolverConfig']['createLocationStrategy']);
+        self::assertFalse($importer['processingConfig']['cleanup']['doCleanup']);
+
+        $codeMapping = $this->mappingByLabel($importer['mappingConfig'], 'Code');
+        self::assertSame([
+            ['settings' => ['mode' => 'both'], 'type' => 'trim'],
+        ], $codeMapping['transformationPipeline']);
 
         $alternateCodesMapping = $this->mappingByLabel($importer['mappingConfig'], 'AlternativeCodes');
 
@@ -37,6 +48,14 @@ final class AcetaatColorsImporterConfigTest extends Unit
             ['settings' => ['mode' => 'both'], 'type' => 'trim'],
             ['settings' => ['glue' => "\n"], 'type' => 'combine'],
         ], $alternateCodesMapping['transformationPipeline']);
+
+        $keyMapping = $this->mappingByLabel($importer['mappingConfig'], 'KEY');
+        self::assertSame([
+            ['settings' => ['search' => '/', 'replace' => '-'], 'type' => 'stringReplace'],
+            ['settings' => ['mode' => 'both'], 'type' => 'trim'],
+            ['settings' => ['glue' => '|'], 'type' => 'combine'],
+            ['settings' => ['mode' => 'both'], 'type' => 'trim'],
+        ], $keyMapping['transformationPipeline']);
     }
 
     /**

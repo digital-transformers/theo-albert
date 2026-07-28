@@ -13,7 +13,7 @@ pimcore_data_hub:
             loaderConfig:
                 type: asset
                 settings:
-                    assetPath: '/Datasource Files/Acetate Colors + alternative.xlsx'
+                    assetPath: /Datasource Files/Acetate-Colors-alternative.xlsx
             interpreterConfig:
                 type: xlsx
                 settings:
@@ -23,16 +23,15 @@ pimcore_data_hub:
                 elementType: dataObject
                 dataObjectClassId: color
                 loadingStrategy:
-                    type: attribute
+                    type: attributeWithTrimFallback
                     settings:
                         dataSourceIndex: '0'
                         attributeName: code
                         language: ''
                         includeUnpublished: true
                 createLocationStrategy:
-                    type: staticPath
-                    settings:
-                        path: /SetupData/Colours/Acetaat
+                    type: doNotCreate
+                    settings: {  }
                 locationUpdateStrategy:
                     type: noChange
                 publishingStrategy:
@@ -41,6 +40,7 @@ pimcore_data_hub:
                 executionType: sequential
                 idDataIndex: '0'
                 cleanup:
+                    doCleanup: false
                     strategy: delete
             mappingConfig:
                 -
@@ -55,7 +55,11 @@ pimcore_data_hub:
                             language: ''
                             writeIfTargetIsNotEmpty: true
                             writeIfSourceIsEmpty: true
-                    transformationPipeline: {  }
+                    transformationPipeline:
+                        -
+                            settings:
+                                mode: both
+                            type: trim
                 -
                     label: Name
                     dataSourceIndex:
@@ -148,6 +152,10 @@ pimcore_data_hub:
                                 search: /
                                 replace: '-'
                             type: stringReplace
+                        -
+                            settings:
+                                mode: both
+                            type: trim
                         -
                             settings:
                                 glue: '|'

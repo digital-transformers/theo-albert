@@ -72,6 +72,10 @@ services:
       arguments:
         $jobsDirectory: '%prestashop_import_jobs_directory%'
 
+    App\DataImporter\AttributeWithTrimFallbackStrategy:
+      tags:
+        - { name: pimcore.datahub.data_importer.resolver.load, type: attributeWithTrimFallback }
+
     App\Controller\PrestaShopImportController:
       arguments:
         $importToken: '%env(PRESTASHOP_IMPORT_TOKEN)%'
