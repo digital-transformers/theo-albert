@@ -14,6 +14,7 @@
  * - multiColor [manyToManyObjectRelation]
  * - image [image]
  * - alternateCodes [textarea]
+ * - usedInFrames [reverseObjectRelation]
  */
 
 return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
@@ -23,7 +24,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => 'Color',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1783228134,
+   'modificationDate' => 1785242026,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -53,11 +54,11 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
      'children' =>
     array (
       0 =>
-      \Pimcore\Model\DataObject\ClassDefinition\Layout\Panel::__set_state(array(
-         'name' => 'Base data',
+      \Pimcore\Model\DataObject\ClassDefinition\Layout\Tabpanel::__set_state(array(
+         'name' => 'Layout',
          'type' => NULL,
          'region' => NULL,
-         'title' => 'Base data',
+         'title' => '',
          'width' => '',
          'height' => '',
          'collapsible' => false,
@@ -67,6 +68,20 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
          'children' =>
         array (
           0 =>
+          \Pimcore\Model\DataObject\ClassDefinition\Layout\Panel::__set_state(array(
+             'name' => 'Base data',
+             'type' => NULL,
+             'region' => NULL,
+             'title' => 'Base data',
+             'width' => '',
+             'height' => '',
+             'collapsible' => false,
+             'collapsed' => false,
+             'bodyStyle' => '',
+             'datatype' => 'layout',
+             'children' =>
+            array (
+              0 =>
           \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
              'name' => 'colorType',
              'title' => 'Color Type',
@@ -405,6 +420,81 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
          'labelWidth' => 100,
          'labelAlign' => 'left',
       )),
+      1 =>
+      \Pimcore\Model\DataObject\ClassDefinition\Layout\Panel::__set_state(array(
+         'name' => 'Used in Frames',
+         'type' => NULL,
+         'region' => NULL,
+         'title' => 'Used in Frames',
+         'width' => '',
+         'height' => '',
+         'collapsible' => false,
+         'collapsed' => false,
+         'bodyStyle' => '',
+         'datatype' => 'layout',
+         'children' =>
+        array (
+          0 =>
+          \Pimcore\Model\DataObject\ClassDefinition\Data\ReverseObjectRelation::__set_state(array(
+             'name' => 'usedInFrames',
+             'title' => 'Frames using this color',
+             'tooltip' => 'Frames where this color is used in Composed Colors.',
+             'mandatory' => false,
+             'noteditable' => false,
+             'index' => false,
+             'locked' => false,
+             'style' => '',
+             'permissions' => NULL,
+             'fieldtype' => '',
+             'relationType' => true,
+             'invisible' => false,
+             'visibleGridView' => false,
+             'visibleSearch' => false,
+             'blockedVarsForExport' =>
+            array (
+            ),
+             'classes' =>
+            array (
+            ),
+             'displayMode' => NULL,
+             'pathFormatterClass' => '',
+             'maxItems' => NULL,
+             'visibleFields' => 'code,name',
+             'allowToCreateNewObject' => false,
+             'allowToClearRelation' => true,
+             'optimizedAdminLoading' => false,
+             'enableTextSelection' => false,
+             'visibleFieldDefinitions' =>
+            array (
+            ),
+             'width' => '',
+             'height' => 500,
+             'ownerClassName' => 'frame',
+             'ownerClassId' => 'finishedProduct',
+             'ownerFieldName' => 'composedColors',
+             'lazyLoading' => true,
+          )),
+        ),
+         'locked' => false,
+         'blockedVarsForExport' =>
+        array (
+        ),
+         'fieldtype' => 'panel',
+         'layout' => NULL,
+         'border' => false,
+         'icon' => '',
+         'labelWidth' => 100,
+         'labelAlign' => 'left',
+      )),
+    ),
+     'locked' => false,
+     'blockedVarsForExport' =>
+    array (
+    ),
+     'fieldtype' => 'tabpanel',
+     'border' => false,
+     'tabPosition' => 'top',
+  )),
     ),
      'locked' => false,
      'blockedVarsForExport' =>

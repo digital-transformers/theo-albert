@@ -105,6 +105,16 @@ final class ProductHierarchySyncServiceTest extends Unit
         );
     }
 
+    public function testColorCodeNormalizationIgnoresWhitespace(): void
+    {
+        $service = new ProductHierarchySyncService(new RecordingProductHierarchyClient());
+        $method = new \ReflectionMethod($service, 'normalizeColorCode');
+        $method->setAccessible(true);
+
+        self::assertSame('ab165960/10', $method->invoke($service, "  AB 1659\t60/10  "));
+        self::assertSame('613bd0960/10tecko', $method->invoke($service, '613BD09 60/10  TECKO'));
+    }
+
     public function testComposedColorMetadataPreservesSourceRelevance(): void
     {
         $color = (new Color())->setId(3011)->setName('AB1882');

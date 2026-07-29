@@ -752,7 +752,9 @@ final class ProductHierarchySyncService
 
     private function normalizeColorCode(string $code): string
     {
-        return mb_strtolower(trim($code));
+        $withoutWhitespace = preg_replace('/\s+/u', '', trim($code));
+
+        return mb_strtolower(is_string($withoutWhitespace) ? $withoutWhitespace : trim($code));
     }
 
     /**
