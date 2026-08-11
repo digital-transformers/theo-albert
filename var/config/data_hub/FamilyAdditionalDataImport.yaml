@@ -95,6 +95,8 @@ pimcore_data_hub:
                             writeIfSourceIsEmpty: false
                     transformationPipeline:
                         -
+                            settings:
+                                returnNullIfEmpty: true
                             type: numeric
                 -
                     label: Designers
@@ -120,6 +122,11 @@ pimcore_data_hub:
                             settings:
                                 mode: both
                             type: trim
+                        -
+                            settings:
+                                original: 'HOET|JAMES'
+                                converted: 'Hoet|James'
+                            type: conditionalConversion
                         -
                             settings:
                                 loadStrategy: attribute
@@ -164,6 +171,11 @@ pimcore_data_hub:
                             settings:
                                 mode: both
                             type: trim
+                        -
+                            settings:
+                                original: 'HOET|JAMES'
+                                converted: 'Hoet|James'
+                            type: conditionalConversion
                         -
                             settings:
                                 loadStrategy: attribute
@@ -262,6 +274,8 @@ pimcore_data_hub:
                             writeIfSourceIsEmpty: false
                     transformationPipeline:
                         -
+                            settings:
+                                returnNullIfEmpty: true
                             type: numeric
             executionConfig:
                 scheduleType: job

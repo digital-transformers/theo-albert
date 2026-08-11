@@ -48,20 +48,28 @@ final class FamilyAdditionalDataImporterConfigTest extends Unit
 
         $designerRelation = $this->mappingByLabel($importer['mappingConfig'], 'Designers Relation');
         self::assertRelationLookup($designerRelation, '11', 'designersRelation', 'designer', 'key');
-        self::assertSame(['explode', 'trim', 'loadDataObject'], array_column($designerRelation['transformationPipeline'], 'type'));
+        self::assertSame(
+            ['explode', 'trim', 'conditionalConversion', 'loadDataObject'],
+            array_column($designerRelation['transformationPipeline'], 'type')
+        );
 
         $designers = $this->mappingByLabel($importer['mappingConfig'], 'Designers');
         self::assertSame('designers', $designers['dataTarget']['settings']['fieldName']);
         self::assertSame(
-            ['trim', 'loadDataObject', 'objectField', 'asArray'],
+            ['trim', 'conditionalConversion', 'loadDataObject', 'objectField', 'asArray'],
             array_column($designers['transformationPipeline'], 'type')
         );
-        self::assertSame('id', $designers['transformationPipeline'][2]['settings']['attribute']);
+        self::assertSame('id', $designers['transformationPipeline'][3]['settings']['attribute']);
 
         $suppliers = $this->mappingByLabel($importer['mappingConfig'], 'Suppliers');
         self::assertRelationLookup($suppliers, '15', 'suppliers', 'supplier', 'code');
         self::assertSame(['explode', 'trim', 'loadDataObject'], array_column($suppliers['transformationPipeline'], 'type'));
         self::assertSame(',', $suppliers['transformationPipeline'][0]['settings']['delimiter']);
+
+        foreach (['Launch Year', 'Magic Mechanism Score'] as $label) {
+            $mapping = $this->mappingByLabel($importer['mappingConfig'], $label);
+            self::assertTrue($mapping['transformationPipeline'][0]['settings']['returnNullIfEmpty']);
+        }
     }
 
     /**
@@ -80,7 +88,12 @@ final class FamilyAdditionalDataImporterConfigTest extends Unit
         self::assertSame('replace', $mapping['dataTarget']['settings']['overwriteMode']);
         self::assertFalse($mapping['dataTarget']['settings']['writeIfSourceIsEmpty']);
 
-        $lookup = $mapping['transformationPipeline'][2];
+        $lookups = array_values(array_filter(
+            $mapping['transformationPipeline'],
+            static fn (array $operator): bool => ($operator['type'] ?? null) === 'loadDataObject'
+        ));
+        self::assertCount(1, $lookups);
+        $lookup = $lookups[0];
         self::assertSame('loadDataObject', $lookup['type']);
         self::assertSame('attribute', $lookup['settings']['loadStrategy']);
         self::assertSame($classId, $lookup['settings']['attributeDataObjectClassId']);
