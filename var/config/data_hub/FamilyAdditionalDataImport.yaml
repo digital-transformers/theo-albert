@@ -25,7 +25,7 @@ pimcore_data_hub:
                 loadingStrategy:
                     type: attributeWithTrimFallback
                     settings:
-                        dataSourceIndex: '0'
+                        dataSourceIndex: '1'
                         attributeName: code
                         language: ''
                         includeUnpublished: true
@@ -38,7 +38,7 @@ pimcore_data_hub:
                     type: noChangePublishNew
             processingConfig:
                 executionType: sequential
-                idDataIndex: '0'
+                idDataIndex: '1'
                 cleanup:
                     doCleanup: false
                     strategy: unpublish

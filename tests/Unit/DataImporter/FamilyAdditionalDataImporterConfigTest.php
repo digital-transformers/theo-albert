@@ -23,10 +23,11 @@ final class FamilyAdditionalDataImporterConfigTest extends Unit
         ], $importer['interpreterConfig']);
         self::assertSame('family', $importer['resolverConfig']['dataObjectClassId']);
         self::assertSame('attributeWithTrimFallback', $importer['resolverConfig']['loadingStrategy']['type']);
-        self::assertSame('0', $importer['resolverConfig']['loadingStrategy']['settings']['dataSourceIndex']);
+        self::assertSame('1', $importer['resolverConfig']['loadingStrategy']['settings']['dataSourceIndex']);
         self::assertSame('code', $importer['resolverConfig']['loadingStrategy']['settings']['attributeName']);
         self::assertSame('doNotCreate', $importer['resolverConfig']['createLocationStrategy']['type']);
         self::assertSame('noChange', $importer['resolverConfig']['locationUpdateStrategy']['type']);
+        self::assertSame('1', $importer['processingConfig']['idDataIndex']);
         self::assertFalse($importer['processingConfig']['cleanup']['doCleanup']);
 
         $expectedDirectMappings = [
