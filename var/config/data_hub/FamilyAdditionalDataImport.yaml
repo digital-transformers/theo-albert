@@ -1,0 +1,273 @@
+pimcore_data_hub:
+    configurations:
+        FamilyAdditionalDataImport:
+            general:
+                active: true
+                type: dataImporterDataObject
+                name: FamilyAdditionalDataImport
+                description: 'Update existing ProductHierarchy families from the import-ready Family info workbook.'
+                group: ProductHierarchy
+                path: null
+                modificationDate: 1786435200
+                createDate: 1786435200
+            loaderConfig:
+                type: asset
+                settings:
+                    assetPath: '/Datasource Files/Family info.xlsx'
+            interpreterConfig:
+                type: xlsx
+                settings:
+                    skipFirstRow: true
+                    sheetName: Sheet1
+            resolverConfig:
+                elementType: dataObject
+                dataObjectClassId: family
+                loadingStrategy:
+                    type: attributeWithTrimFallback
+                    settings:
+                        dataSourceIndex: '0'
+                        attributeName: code
+                        language: ''
+                        includeUnpublished: true
+                createLocationStrategy:
+                    type: doNotCreate
+                    settings: {  }
+                locationUpdateStrategy:
+                    type: noChange
+                publishingStrategy:
+                    type: noChangePublishNew
+            processingConfig:
+                executionType: sequential
+                idDataIndex: '0'
+                cleanup:
+                    doCleanup: false
+                    strategy: unpublish
+            mappingConfig:
+                -
+                    label: 'Start Date'
+                    dataSourceIndex:
+                        - '8'
+                    settings:
+                        format: Y-m-d
+                    transformationResultType: date
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: startDate
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: false
+                    transformationPipeline:
+                        -
+                            settings:
+                                format: Y-m-d
+                            type: date
+                -
+                    label: 'Launch Period'
+                    dataSourceIndex:
+                        - '9'
+                    settings:
+                        mode: both
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: launchPeriod
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: false
+                    transformationPipeline:
+                        -
+                            settings:
+                                mode: both
+                            type: trim
+                -
+                    label: 'Launch Year'
+                    dataSourceIndex:
+                        - '10'
+                    transformationResultType: numeric
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: launchYear
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: false
+                    transformationPipeline:
+                        -
+                            type: numeric
+                -
+                    label: Designers
+                    dataSourceIndex:
+                        - '11'
+                    settings:
+                        loadStrategy: attribute
+                        attributeDataObjectClassId: designer
+                        attributeName: key
+                        attributeLanguage: ''
+                        loadUnpublished: 'on'
+                        attribute: id
+                    transformationResultType: array
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: designers
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: false
+                    transformationPipeline:
+                        -
+                            settings:
+                                mode: both
+                            type: trim
+                        -
+                            settings:
+                                loadStrategy: attribute
+                                attributeDataObjectClassId: designer
+                                attributeName: key
+                                attributeLanguage: ''
+                                loadUnpublished: 'on'
+                            type: loadDataObject
+                        -
+                            settings:
+                                attribute: id
+                            type: objectField
+                        -
+                            type: asArray
+                -
+                    label: 'Designers Relation'
+                    dataSourceIndex:
+                        - '11'
+                    settings:
+                        delimiter: ','
+                        mode: both
+                        loadStrategy: attribute
+                        attributeDataObjectClassId: designer
+                        attributeName: key
+                        attributeLanguage: ''
+                        loadUnpublished: 'on'
+                    transformationResultType: dataObjectArray
+                    dataTarget:
+                        type: manyToManyRelation
+                        settings:
+                            fieldName: designersRelation
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: false
+                            overwriteMode: replace
+                    transformationPipeline:
+                        -
+                            settings:
+                                delimiter: ','
+                            type: explode
+                        -
+                            settings:
+                                mode: both
+                            type: trim
+                        -
+                            settings:
+                                loadStrategy: attribute
+                                attributeDataObjectClassId: designer
+                                attributeName: key
+                                attributeLanguage: ''
+                                loadUnpublished: 'on'
+                            type: loadDataObject
+                -
+                    label: 'Exchangeable Branches'
+                    dataSourceIndex:
+                        - '13'
+                    settings:
+                        mode: both
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: exchangeableBranches
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: false
+                    transformationPipeline:
+                        -
+                            settings:
+                                mode: both
+                            type: trim
+                -
+                    label: 'Exchangeable Branches Partial'
+                    dataSourceIndex:
+                        - '14'
+                    settings:
+                        mode: both
+                    transformationResultType: default
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: exchangeableBranchesPartial
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: false
+                    transformationPipeline:
+                        -
+                            settings:
+                                mode: both
+                            type: trim
+                -
+                    label: Suppliers
+                    dataSourceIndex:
+                        - '15'
+                    settings:
+                        delimiter: ','
+                        mode: both
+                        loadStrategy: attribute
+                        attributeDataObjectClassId: supplier
+                        attributeName: code
+                        attributeLanguage: ''
+                        loadUnpublished: 'on'
+                    transformationResultType: dataObjectArray
+                    dataTarget:
+                        type: manyToManyRelation
+                        settings:
+                            fieldName: suppliers
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: false
+                            overwriteMode: replace
+                    transformationPipeline:
+                        -
+                            settings:
+                                delimiter: ','
+                            type: explode
+                        -
+                            settings:
+                                mode: both
+                            type: trim
+                        -
+                            settings:
+                                loadStrategy: attribute
+                                attributeDataObjectClassId: supplier
+                                attributeName: code
+                                attributeLanguage: ''
+                                loadUnpublished: 'on'
+                            type: loadDataObject
+                -
+                    label: 'Magic Mechanism Score'
+                    dataSourceIndex:
+                        - '29'
+                    transformationResultType: numeric
+                    dataTarget:
+                        type: direct
+                        settings:
+                            fieldName: magicMechanismScore
+                            language: ''
+                            writeIfTargetIsNotEmpty: true
+                            writeIfSourceIsEmpty: false
+                    transformationPipeline:
+                        -
+                            type: numeric
+            executionConfig:
+                scheduleType: job
+                cronDefinition: ''
+                scheduledAt: ''
+            permissions:
+                user: {  }
+                role: {  }
+            workspaces: {  }

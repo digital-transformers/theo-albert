@@ -68,6 +68,29 @@ subscriber to rewrite it.
 The example configs in this repository should be treated as environment-specific working examples.
 Check the current `active` flags in YAML before assuming a given importer or endpoint is enabled.
 
+## Family additional-data workbook
+
+`var/config/data_hub/FamilyAdditionalDataImport.yaml` updates the existing `family` objects created
+for the ProductHierarchy data. Upload the import-ready workbook as this Pimcore asset before running
+the importer:
+
+- `/Datasource Files/Family info.xlsx`
+
+The importer reads `Sheet1`, resolves each family by column `0` against `Family.code`, and never
+creates, moves, publishes, unpublishes, or cleans up family objects. Blank spreadsheet values leave
+the current Pimcore value unchanged.
+
+The relation mappings resolve:
+
+- column `11` (`designers`) against `designer.key`, writing both the `designers` option IDs and
+  `designersRelation`
+- comma-separated column `15` (`suppliers`) against `supplier.code`
+
+Before uploading, use a value-only copy of the workbook: the supplied workbook's `Sheet1` lookup
+formulas reference entire columns and its start dates are cached as Excel serial numbers. The
+import-ready copy must flatten those formulas and store `startDate` as ISO `yyyy-mm-dd` text,
+because the Data Importer reads XLSX content in data-only mode and does not apply Excel date styles.
+
 ## Suggested import order
 
 1. Families
