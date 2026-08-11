@@ -13,7 +13,7 @@ final class FamilyAdditionalDataImporterConfigTest extends Unit
         $configuration = Yaml::parseFile(PROJECT_ROOT . '/var/config/data_hub/FamilyAdditionalDataImport.yaml');
         $importer = $configuration['pimcore_data_hub']['configurations']['FamilyAdditionalDataImport'];
 
-        self::assertSame('/Datasource Files/Family info.xlsx', $importer['loaderConfig']['settings']['assetPath']);
+        self::assertSame('/Datasource Files/Family-additional-info.xlsx', $importer['loaderConfig']['settings']['assetPath']);
         self::assertSame([
             'type' => 'xlsx',
             'settings' => [

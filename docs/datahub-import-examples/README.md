@@ -74,7 +74,7 @@ Check the current `active` flags in YAML before assuming a given importer or end
 for the ProductHierarchy data. Upload the import-ready workbook as this Pimcore asset before running
 the importer:
 
-- `/Datasource Files/Family info.xlsx`
+- `/Datasource Files/Family-additional-info.xlsx`
 
 The importer reads `Sheet1`, resolves each family by column `0` against `Family.code`, and never
 creates, moves, publishes, unpublishes, or cleans up family objects. Blank spreadsheet values leave

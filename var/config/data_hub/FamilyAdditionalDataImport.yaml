@@ -13,7 +13,7 @@ pimcore_data_hub:
             loaderConfig:
                 type: asset
                 settings:
-                    assetPath: '/Datasource Files/Family info.xlsx'
+                    assetPath: '/Datasource Files/Family-additional-info.xlsx'
             interpreterConfig:
                 type: xlsx
                 settings:
