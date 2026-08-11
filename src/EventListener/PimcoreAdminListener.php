@@ -20,6 +20,7 @@ final class PimcoreAdminListener implements EventSubscriberInterface
     {
         $event->addPaths([
             '/app/admin/chunked-asset-upload-20260804.js',
+            '/app/admin/data-importer-attribute-trim-fallback.js',
             '/app/admin/color-autoname.js',
             '/app/admin/automatic-image-linking.js',
             '/app/admin/model-generate-frames.js',
