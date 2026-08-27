@@ -35,7 +35,7 @@
  * - dsSize [input]
  * - dsTarif [multiselect]
  * - intrastatCode [input]
- * - basePrice [fieldcollections]
+ * - basePrice [numeric]
  * - pricing [fieldcollections]
  * - imageGallery [imageGallery]
  * - facebookImageGallery [imageGallery]
@@ -1346,9 +1346,10 @@ public function setIntrastatCode(?string $intrastatCode): static
 }
 
 /**
-* @return \Pimcore\Model\DataObject\Fieldcollection|null
+* Get basePrice - Base Price
+* @return int|null
 */
-public function getBasePrice(): ?\Pimcore\Model\DataObject\Fieldcollection
+public function getBasePrice(): ?int
 {
 	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
 		$preValue = $this->preGetValue("basePrice");
@@ -1357,18 +1358,23 @@ public function getBasePrice(): ?\Pimcore\Model\DataObject\Fieldcollection
 		}
 	}
 
-	$data = $this->getClass()->getFieldDefinition("basePrice")->preGetData($this);
+	$data = $this->basePrice;
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
 	return $data;
 }
 
 /**
 * Set basePrice - Base Price
-* @param \Pimcore\Model\DataObject\Fieldcollection|null $basePrice
+* @param int|null $basePrice
 * @return $this
 */
-public function setBasePrice(?\Pimcore\Model\DataObject\Fieldcollection $basePrice): static
+public function setBasePrice(?int $basePrice): static
 {
-	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\Fieldcollections $fd */
+	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric $fd */
 	$fd = $this->getClass()->getFieldDefinition("basePrice");
 	$this->basePrice = $fd->preSetData($this, $basePrice);
 	return $this;
@@ -1893,4 +1899,3 @@ public function setQualityControlRemarks(?array $qualityControlRemarks): static
 }
 
 }
-
