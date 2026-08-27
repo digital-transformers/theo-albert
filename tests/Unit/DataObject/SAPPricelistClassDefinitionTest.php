@@ -19,6 +19,8 @@ final class SAPPricelistClassDefinitionTest extends Unit
             ['key' => '€', 'value' => 'EUR'],
             ['key' => '£', 'value' => 'GBP'],
             ['key' => 'US$', 'value' => 'USD'],
+            ['key' => '¥', 'value' => 'JPY'],
+            ['key' => 'CHF', 'value' => 'CHF'],
         ], $currency->getOptions());
     }
 

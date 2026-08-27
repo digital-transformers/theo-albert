@@ -20,7 +20,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1787829898,
+   'modificationDate' => 1787830214,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -183,6 +183,16 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
               array (
                 'key' => 'US$',
                 'value' => 'USD',
+              ),
+              3 =>
+              array (
+                'key' => '¥',
+                'value' => 'JPY',
+              ),
+              4 =>
+              array (
+                'key' => 'CHF',
+                'value' => 'CHF',
               ),
             ),
              'defaultValue' => '',
