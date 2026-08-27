@@ -8,7 +8,7 @@
  * - code [input]
  * - name [input]
  * - description [textarea]
- * - currency [input]
+ * - currency [select]
  * - basePricelist [manyToOneRelation]
  * - baseFactor [numeric]
  */
@@ -149,9 +149,9 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
           )),
           3 => 
-          \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
+          \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
              'name' => 'currency',
-             'title' => 'Currency code',
+             'title' => 'Currency',
              'tooltip' => '',
              'mandatory' => false,
              'noteditable' => false,
@@ -167,16 +167,32 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'blockedVarsForExport' => 
             array (
             ),
-             'defaultValue' => NULL,
-             'columnLength' => 190,
-             'regex' => '',
-             'regexFlags' => 
+             'options' =>
             array (
+              0 =>
+              array (
+                'key' => '€',
+                'value' => 'EUR',
+              ),
+              1 =>
+              array (
+                'key' => '£',
+                'value' => 'GBP',
+              ),
+              2 =>
+              array (
+                'key' => 'US$',
+                'value' => 'USD',
+              ),
             ),
-             'unique' => false,
-             'showCharCount' => false,
-             'width' => '',
+             'defaultValue' => '',
+             'columnLength' => 190,
+             'dynamicOptions' => false,
              'defaultValueGenerator' => '',
+             'width' => '',
+             'optionsProviderType' => 'configure',
+             'optionsProviderClass' => '',
+             'optionsProviderData' => '',
           )),
           4 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
