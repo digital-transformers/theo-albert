@@ -24,6 +24,15 @@ final class SAPPricelistClassDefinitionTest extends Unit
         ], $currency->getOptions());
     }
 
+    public function testCommercialPricelistIsACheckbox(): void
+    {
+        $definition = require dirname(__DIR__, 3) . '/var/classes/definition_SAPPricelist.php';
+        $commercial = $this->findField($definition->getLayoutDefinitions(), 'commercialPricelist');
+
+        self::assertInstanceOf(Data\Checkbox::class, $commercial);
+        self::assertSame(0, $commercial->getDefaultValue());
+    }
+
     private function findField(Layout|Data|null $node, string $name): ?Data
     {
         if ($node instanceof Data && $node->getName() === $name) {

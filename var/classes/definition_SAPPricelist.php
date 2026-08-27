@@ -11,6 +11,7 @@
  * - currency [select]
  * - basePricelist [manyToOneRelation]
  * - baseFactor [numeric]
+ * - commercialPricelist [checkbox]
  */
 
 return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
@@ -20,7 +21,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1787830214,
+   'modificationDate' => 1787830899,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -274,6 +275,28 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'decimalSize' => NULL,
              'decimalPrecision' => NULL,
              'width' => '',
+             'defaultValueGenerator' => '',
+          )),
+          6 =>
+          \Pimcore\Model\DataObject\ClassDefinition\Data\Checkbox::__set_state(array(
+             'name' => 'commercialPricelist',
+             'title' => 'Commercial pricelist',
+             'tooltip' => 'Include this pricelist when generating Family and Frame pricing.',
+             'mandatory' => false,
+             'noteditable' => false,
+             'index' => true,
+             'locked' => false,
+             'style' => '',
+             'permissions' => NULL,
+             'fieldtype' => '',
+             'relationType' => false,
+             'invisible' => false,
+             'visibleGridView' => true,
+             'visibleSearch' => true,
+             'blockedVarsForExport' =>
+            array (
+            ),
+             'defaultValue' => 0,
              'defaultValueGenerator' => '',
           )),
         ),

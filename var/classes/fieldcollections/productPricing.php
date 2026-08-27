@@ -7,6 +7,7 @@
  * - basePriceMultiplier [numeric]
  * - priceAmount [calculatedValue]
  * - currency [select]
+ * - pricelist [manyToOneRelation]
  */
 
 return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
@@ -184,17 +185,27 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
               0 => 
               array (
                 'key' => '€',
-                'value' => 'euro',
+                'value' => 'EUR',
               ),
               1 => 
               array (
                 'key' => '£',
-                'value' => 'gbp',
+                'value' => 'GBP',
               ),
               2 => 
               array (
                 'key' => 'US$',
-                'value' => 'usd',
+                'value' => 'USD',
+              ),
+              3 =>
+              array (
+                'key' => '¥',
+                'value' => 'JPY',
+              ),
+              4 =>
+              array (
+                'key' => 'CHF',
+                'value' => 'CHF',
               ),
             ),
              'defaultValue' => '',
@@ -205,6 +216,47 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
              'optionsProviderType' => 'configure',
              'optionsProviderClass' => '',
              'optionsProviderData' => '',
+          )),
+          5 =>
+          \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
+             'name' => 'pricelist',
+             'title' => 'Pricelist',
+             'tooltip' => 'SAP pricelist used to generate this price.',
+             'mandatory' => false,
+             'noteditable' => false,
+             'index' => false,
+             'locked' => false,
+             'style' => '',
+             'permissions' => NULL,
+             'fieldtype' => '',
+             'relationType' => true,
+             'invisible' => false,
+             'visibleGridView' => true,
+             'visibleSearch' => true,
+             'blockedVarsForExport' =>
+            array (
+            ),
+             'classes' =>
+            array (
+              0 =>
+              array (
+                'classes' => 'SAPPricelist',
+              ),
+            ),
+             'displayMode' => 'grid',
+             'pathFormatterClass' => '',
+             'assetInlineDownloadAllowed' => false,
+             'allowToClearRelation' => true,
+             'objectsAllowed' => true,
+             'assetsAllowed' => false,
+             'assetTypes' =>
+            array (
+            ),
+             'documentsAllowed' => false,
+             'documentTypes' =>
+            array (
+            ),
+             'width' => '',
           )),
         ),
          'locked' => false,

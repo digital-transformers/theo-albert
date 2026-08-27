@@ -21,7 +21,7 @@
  * - posMaterialProducts [manyToManyObjectRelation]
  * - servicePartProducts [manyToManyObjectRelation]
  * - downloadableAssets [manyToManyObjectRelation]
- * - basePrice [fieldcollections]
+ * - basePrice [numeric]
  * - pricing [fieldcollections]
  * - imageGallery [imageGallery]
  * - facebookImageGallery [imageGallery]
@@ -47,7 +47,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1777836474,
+   'modificationDate' => 1787830899,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -744,7 +744,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'children' => 
             array (
               0 => 
-              \Pimcore\Model\DataObject\ClassDefinition\Data\Fieldcollections::__set_state(array(
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'basePrice',
                  'title' => 'Base Price',
                  'tooltip' => '',
@@ -762,17 +762,16 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'blockedVarsForExport' => 
                 array (
                 ),
-                 'allowedTypes' => 
-                array (
-                  0 => 'productPricing',
-                ),
-                 'lazyLoading' => true,
-                 'maxItems' => NULL,
-                 'disallowAddRemove' => false,
-                 'disallowReorder' => false,
-                 'collapsed' => false,
-                 'collapsible' => false,
-                 'border' => false,
+                 'defaultValue' => NULL,
+                 'integer' => true,
+                 'unsigned' => true,
+                 'minValue' => 0,
+                 'maxValue' => NULL,
+                 'unique' => false,
+                 'decimalSize' => NULL,
+                 'decimalPrecision' => NULL,
+                 'width' => '',
+                 'defaultValueGenerator' => '',
               )),
               1 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Fieldcollections::__set_state(array(

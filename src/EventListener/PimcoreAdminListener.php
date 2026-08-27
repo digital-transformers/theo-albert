@@ -24,6 +24,7 @@ final class PimcoreAdminListener implements EventSubscriberInterface
             '/app/admin/color-autoname.js',
             '/app/admin/automatic-image-linking.js',
             '/app/admin/model-generate-frames.js',
+            '/app/admin/commercial-pricing-generator.js',
             '/app/admin/frame-save-reload.js',
             '/app/admin/datahub-control.js',
             '/app/admin/quality-control-remarks-table.js',
