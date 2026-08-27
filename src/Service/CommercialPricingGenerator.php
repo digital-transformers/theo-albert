@@ -15,6 +15,8 @@ use Pimcore\Model\User;
 
 final class CommercialPricingGenerator
 {
+    private const DESCENDANT_FRAME_CONDITION = 'oo_id IN (SELECT id FROM objects WHERE path LIKE ?)';
+
     /**
      * @return array{updated: list<array{id: int, path: string}>, errors: list<string>, pricelistCount: int}
      */
@@ -123,7 +125,10 @@ final class CommercialPricingGenerator
     {
         $listing = new FrameListing();
         $listing->setUnpublished(true);
-        $listing->setCondition('o_path LIKE ?', [rtrim($family->getRealFullPath(), '/') . '/%']);
+        $listing->setCondition(
+            self::DESCENDANT_FRAME_CONDITION,
+            [rtrim($family->getRealFullPath(), '/') . '/%']
+        );
 
         return array_values(array_filter(
             iterator_to_array($listing),
