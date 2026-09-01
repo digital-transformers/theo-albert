@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\EventSubscriber;
 
 use App\Service\CommercialPricingGenerator;
+use Doctrine\DBAL\Connection;
 use Pimcore\Event\DataObjectEvents;
 use Pimcore\Event\Model\DataObjectEvent;
 use Pimcore\Model\DataObject\Family;
@@ -12,8 +13,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class BasePricePricingSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private readonly CommercialPricingGenerator $generator)
-    {
+    public function __construct(
+        private readonly CommercialPricingGenerator $generator,
+        private readonly Connection $connection,
+    ) {
     }
 
     public static function getSubscribedEvents(): array
@@ -37,10 +40,23 @@ final class BasePricePricingSubscriber implements EventSubscriberInterface
     public function onPreUpdate(DataObjectEvent $event): void
     {
         $object = $event->getObject();
-        if ((!$object instanceof Family && !$object instanceof Frame) || !$object->isFieldDirty('basePrice')) {
+        if ((!$object instanceof Family && !$object instanceof Frame) || !$this->basePriceChanged($object)) {
             return;
         }
 
         $this->generator->synchronizeBasePriceChange($object);
+    }
+
+    private function basePriceChanged(Family|Frame $object): bool
+    {
+        $persisted = $this->connection->fetchOne(
+            sprintf('SELECT basePrice FROM object_store_%d WHERE oo_id = ?', $object->getClassId()),
+            [$object->getId()]
+        );
+        $persisted = $persisted === false || $persisted === null ? null : (int) $persisted;
+        $current = $object->getBasePrice();
+        $current = $current === null ? null : (int) $current;
+
+        return $persisted !== $current;
     }
 }
