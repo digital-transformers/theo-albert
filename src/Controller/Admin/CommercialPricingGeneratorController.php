@@ -37,7 +37,7 @@ final class CommercialPricingGeneratorController extends AbstractController
 
         $result = $this->generator->generate($object, $this->extractBasePrice($request), $user);
         $message = sprintf(
-            'Updated %d frame(s) with %d commercial pricelist price(s).',
+            'Updated %d object(s) with %d pricelist price(s).',
             count($result['updated']),
             $result['pricelistCount']
         );

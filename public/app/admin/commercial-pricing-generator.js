@@ -29,13 +29,13 @@ console.log('[commercial-pricing-generator] loaded');
       id: buttonId,
       text: 'Generate Pricing',
       tooltip: className === 'family'
-        ? 'Overwrite pricing on every descendant frame from this Family base price'
+        ? 'Overwrite pricing on this Family and every descendant Frame'
         : 'Overwrite pricing on this Frame from its base price',
       iconCls: 'pimcore_icon_money',
       scale: 'medium',
       disabled: objectEditor.isAllowed && !objectEditor.isAllowed('save'),
       handler: function () {
-        const scope = className === 'family' ? 'all descendant frames' : 'this frame';
+        const scope = className === 'family' ? 'this Family and all descendant Frames' : 'this Frame';
         Ext.Msg.confirm(
           'Generate Pricing',
           'This will overwrite pricing for ' + scope + ' using every eligible commercial pricelist. Continue?',

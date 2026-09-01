@@ -13,9 +13,11 @@ use Pimcore\Model\DataObject\SAPPricelist;
 use Pimcore\Model\DataObject\SAPPricelist\Listing as SAPPricelistListing;
 use Pimcore\Model\User;
 
-final class CommercialPricingGenerator
+class CommercialPricingGenerator
 {
     private const DESCENDANT_FRAME_CONDITION = 'oo_id IN (SELECT id FROM objects WHERE path LIKE ?)';
+
+    private bool $processing = false;
 
     /**
      * @return array{updated: list<array{id: int, path: string}>, errors: list<string>, pricelistCount: int}
@@ -25,13 +27,52 @@ final class CommercialPricingGenerator
         if (!$source instanceof Family && !$source instanceof Frame) {
             throw new \InvalidArgumentException('Pricing can only be generated from a Family or Frame.');
         }
-
-        $basePrice = $submittedBasePrice ?? $this->readBasePrice($source);
-        if ($basePrice === null || $basePrice < 0) {
+        if ($submittedBasePrice !== null && $submittedBasePrice < 0) {
             return ['updated' => [], 'errors' => ['Set a non-negative integer base price first.'], 'pricelistCount' => 0];
         }
+        if ($this->processing) {
+            return ['updated' => [], 'errors' => [], 'pricelistCount' => 0];
+        }
 
-        $pricelists = $this->commercialPricelists();
+        $this->processing = true;
+        try {
+            return $this->doGenerate($source, $submittedBasePrice, $user);
+        } finally {
+            $this->processing = false;
+        }
+    }
+
+    public function synchronizeBasePriceChange(Family|Frame $source): void
+    {
+        if ($this->processing) {
+            return;
+        }
+
+        $this->processing = true;
+        try {
+            $pricelists = $this->pricingPricelists();
+            if ($source instanceof Family) {
+                $this->synchronizeFamily($source, $this->readBasePrice($source), $pricelists, false, null);
+
+                return;
+            }
+
+            $source->setPricing($this->pricingForFrame($source, $pricelists));
+        } finally {
+            $this->processing = false;
+        }
+    }
+
+    /**
+     * @return array{updated: list<array{id: int, path: string}>, errors: list<string>, pricelistCount: int}
+     */
+    private function doGenerate(Concrete $source, ?int $submittedBasePrice, User $user): array
+    {
+        if ($submittedBasePrice !== null) {
+            $source->setBasePrice($submittedBasePrice);
+        }
+
+        $pricelists = $this->pricingPricelists();
         if ($pricelists === []) {
             return [
                 'updated' => [],
@@ -40,47 +81,111 @@ final class CommercialPricingGenerator
             ];
         }
 
-        if ($submittedBasePrice !== null) {
-            $source->setBasePrice($submittedBasePrice);
+        if ($source instanceof Family) {
+            $basePrice = $this->readBasePrice($source);
+            if ($basePrice === null || $basePrice < 0) {
+                return ['updated' => [], 'errors' => ['Set a non-negative integer base price first.'], 'pricelistCount' => count($pricelists)];
+            }
+
+            $result = $this->synchronizeFamily($source, $basePrice, $pricelists, true, $user);
+
+            return [...$result, 'pricelistCount' => count($pricelists)];
         }
 
-        if ($source instanceof Family && $submittedBasePrice !== null) {
+        $pricing = $this->pricingForFrame($source, $pricelists);
+        if ($pricing->isEmpty()) {
+            return [
+                'updated' => [],
+                'errors' => ['Set a base price on the Frame or its ancestor Family first.'],
+                'pricelistCount' => count($pricelists),
+            ];
+        }
+        if (!$source->isAllowed('save', $user)) {
+            return [
+                'updated' => [],
+                'errors' => [sprintf('No save permission for frame %s.', $source->getRealFullPath())],
+                'pricelistCount' => count($pricelists),
+            ];
+        }
+
+        try {
+            $source->setPricing($pricing);
+            $source->setUserModification($user->getId());
+            $source->save();
+        } catch (\Throwable $e) {
+            return [
+                'updated' => [],
+                'errors' => [sprintf('Failed to update frame %s: %s', $source->getRealFullPath(), $e->getMessage())],
+                'pricelistCount' => count($pricelists),
+            ];
+        }
+
+        return [
+            'updated' => [['id' => (int) $source->getId(), 'path' => $source->getRealFullPath()]],
+            'errors' => [],
+            'pricelistCount' => count($pricelists),
+        ];
+    }
+
+    /**
+     * @param list<SAPPricelist> $pricelists
+     *
+     * @return array{updated: list<array{id: int, path: string}>, errors: list<string>}
+     */
+    private function synchronizeFamily(
+        Family $family,
+        ?int $familyBasePrice,
+        array $pricelists,
+        bool $saveFamily,
+        ?User $user,
+    ): array {
+        $familyPricing = $familyBasePrice === null
+            ? new Fieldcollection()
+            : $this->buildPricing($familyBasePrice, $pricelists);
+        $family->setPricing($familyPricing);
+        $updated = [];
+        $errors = [];
+
+        if ($saveFamily) {
             try {
-                $source->setUserModification($user->getId());
-                $source->save();
+                if ($user instanceof User) {
+                    $family->setUserModification($user->getId());
+                }
+                $family->save();
+                $updated[] = ['id' => (int) $family->getId(), 'path' => $family->getRealFullPath()];
             } catch (\Throwable $e) {
                 return [
                     'updated' => [],
-                    'errors' => ['Failed to save the Family base price: ' . $e->getMessage()],
-                    'pricelistCount' => count($pricelists),
+                    'errors' => ['Failed to update the Family pricing: ' . $e->getMessage()],
                 ];
             }
         }
 
-        $targets = $source instanceof Frame ? [$source] : $this->descendantFrames($source);
-        $updated = [];
-        $errors = [];
-
-        foreach ($targets as $frame) {
-            if (!$frame->isAllowed('save', $user)) {
+        foreach ($this->descendantFrames($family) as $frame) {
+            if ($user instanceof User && !$frame->isAllowed('save', $user)) {
                 $errors[] = sprintf('No save permission for frame %s.', $frame->getRealFullPath());
                 continue;
             }
 
             try {
-                $frame->setPricing($this->buildPricing($basePrice, $pricelists));
-                $frame->setUserModification($user->getId());
+                $frame->setPricing($this->pricingForFrame(
+                    $frame,
+                    $pricelists,
+                    $family,
+                    $familyBasePrice,
+                    $familyPricing
+                ));
+                if ($user instanceof User) {
+                    $frame->setUserModification($user->getId());
+                }
                 $frame->save();
-                $updated[] = [
-                    'id' => (int) $frame->getId(),
-                    'path' => $frame->getRealFullPath(),
-                ];
+                $updated[] = ['id' => (int) $frame->getId(), 'path' => $frame->getRealFullPath()];
             } catch (\Throwable $e) {
                 $errors[] = sprintf('Failed to update frame %s: %s', $frame->getRealFullPath(), $e->getMessage());
             }
         }
 
-        return ['updated' => $updated, 'errors' => $errors, 'pricelistCount' => count($pricelists)];
+        return ['updated' => $updated, 'errors' => $errors];
     }
 
     private function readBasePrice(Concrete $source): ?int
@@ -91,37 +196,69 @@ final class CommercialPricingGenerator
     }
 
     /** @return list<SAPPricelist> */
-    private function commercialPricelists(): array
+    protected function pricingPricelists(): array
     {
         $listing = new SAPPricelistListing();
         $listing->setUnpublished(true);
-        $pricelists = [];
+        $commercial = [];
 
         foreach ($listing as $pricelist) {
-            if (!$pricelist instanceof SAPPricelist
-                || $pricelist->getValueForFieldName('commercialPricelist') !== true
-                && (int) $pricelist->getValueForFieldName('commercialPricelist') !== 1) {
+            if (!$pricelist instanceof SAPPricelist || !$this->isCommercial($pricelist)) {
                 continue;
             }
-
             $factor = $pricelist->getBaseFactor();
             if ($factor === null || (float) $factor === 0.0) {
                 continue;
             }
-
-            $pricelists[] = $pricelist;
+            $commercial[] = $pricelist;
         }
 
-        usort($pricelists, static fn (SAPPricelist $a, SAPPricelist $b): int => strnatcasecmp(
+        return $this->expandBasePricelists($commercial);
+    }
+
+    private function isCommercial(SAPPricelist $pricelist): bool
+    {
+        $value = $pricelist->getValueForFieldName('commercialPricelist');
+
+        return $value === true || (int) $value === 1;
+    }
+
+    /**
+     * @param list<SAPPricelist> $pricelists
+     *
+     * @return list<SAPPricelist>
+     */
+    private function expandBasePricelists(array $pricelists): array
+    {
+        $expanded = [];
+
+        foreach ($pricelists as $pricelist) {
+            $current = $pricelist;
+            $chain = [];
+            while ($current instanceof SAPPricelist) {
+                $id = (int) $current->getId();
+                if ($id < 1 || isset($chain[$id])) {
+                    break;
+                }
+                $chain[$id] = true;
+                $expanded[$id] ??= $current;
+
+                $base = $current->getBasePricelist();
+                $current = $base instanceof SAPPricelist ? $base : null;
+            }
+        }
+
+        $expanded = array_values($expanded);
+        usort($expanded, static fn (SAPPricelist $a, SAPPricelist $b): int => strnatcasecmp(
             (string) ($a->getCode() ?? $a->getKey()),
             (string) ($b->getCode() ?? $b->getKey())
         ));
 
-        return $pricelists;
+        return $expanded;
     }
 
     /** @return list<Frame> */
-    private function descendantFrames(Family $family): array
+    protected function descendantFrames(Family $family): array
     {
         $listing = new FrameListing();
         $listing->setUnpublished(true);
@@ -139,21 +276,106 @@ final class CommercialPricingGenerator
     /**
      * @param list<SAPPricelist> $pricelists
      */
+    private function pricingForFrame(
+        Frame $frame,
+        array $pricelists,
+        ?Family $knownFamily = null,
+        ?int $knownFamilyBasePrice = null,
+        ?Fieldcollection $knownFamilyPricing = null,
+    ): Fieldcollection {
+        $family = $knownFamily ?? $this->ancestorFamily($frame);
+        $familyBasePrice = $knownFamily instanceof Family
+            ? $knownFamilyBasePrice
+            : ($family instanceof Family ? $this->readBasePrice($family) : null);
+        $frameBasePrice = $this->readBasePrice($frame);
+
+        if ($this->frameUsesOwnBasePrice($frameBasePrice, $familyBasePrice)) {
+            return $this->buildPricing($frameBasePrice, $pricelists);
+        }
+
+        if ($family instanceof Family) {
+            $familyPricing = $knownFamilyPricing ?? $family->getPricing();
+            if ($familyPricing instanceof Fieldcollection && !$familyPricing->isEmpty()) {
+                return $this->copyPricing($familyPricing);
+            }
+            if ($familyBasePrice !== null) {
+                return $this->buildPricing($familyBasePrice, $pricelists);
+            }
+        }
+
+        return $frameBasePrice === null
+            ? new Fieldcollection()
+            : $this->buildPricing($frameBasePrice, $pricelists);
+    }
+
+    private function frameUsesOwnBasePrice(?int $frameBasePrice, ?int $familyBasePrice): bool
+    {
+        return $frameBasePrice !== null && ($familyBasePrice === null || $frameBasePrice !== $familyBasePrice);
+    }
+
+    private function ancestorFamily(Frame $frame): ?Family
+    {
+        $parent = $frame->getParent();
+        while ($parent instanceof Concrete) {
+            if ($parent instanceof Family) {
+                return $parent;
+            }
+            $parent = $parent->getParent();
+        }
+
+        return null;
+    }
+
+    /**
+     * @param list<SAPPricelist> $pricelists
+     */
     private function buildPricing(int $basePrice, array $pricelists): Fieldcollection
     {
         $collection = new Fieldcollection();
-
         foreach ($pricelists as $pricelist) {
-            $factor = (float) $pricelist->getBaseFactor();
-            $item = new ProductPricing();
-            $item->setMarket((string) ($pricelist->getName() ?: $pricelist->getKey()));
-            $item->setPriceAmountOverride($basePrice * $factor);
-            $item->setBasePriceMultiplier($factor);
-            $item->setCurrency((string) ($pricelist->getCurrency() ?: 'EUR'));
-            $item->setPricelist($pricelist);
-            $collection->add($item);
+            $collection->add($this->buildPricingItem($pricelist, $basePrice));
         }
 
         return $collection;
+    }
+
+    private function buildPricingItem(SAPPricelist $pricelist, int $basePrice): ProductPricing
+    {
+        $factor = $this->effectiveFactor($pricelist);
+        $item = new ProductPricing();
+        $item->setMarket((string) ($pricelist->getName() ?: $pricelist->getKey()));
+        $item->setPriceAmountOverride($basePrice * $factor);
+        $item->setBasePriceMultiplier($factor);
+        $item->setCurrency((string) ($pricelist->getCurrency() ?: 'EUR'));
+        $item->setPricelist($pricelist);
+
+        return $item;
+    }
+
+    private function effectiveFactor(SAPPricelist $pricelist): float
+    {
+        $factor = $pricelist->getBaseFactor();
+
+        return $factor === null || (float) $factor === 0.0 ? 1.0 : (float) $factor;
+    }
+
+    private function copyPricing(Fieldcollection $source): Fieldcollection
+    {
+        $copy = new Fieldcollection();
+        foreach ($source as $item) {
+            if (!$item instanceof ProductPricing) {
+                continue;
+            }
+
+            $clone = new ProductPricing();
+            $clone->setMarket($item->getMarket());
+            $clone->setPriceAmountOverride($item->getPriceAmountOverride());
+            $clone->setBasePriceMultiplier($item->getBasePriceMultiplier());
+            $clone->setCurrency($item->getCurrency());
+            $clone->setPricelist($item->getPricelist());
+            $copy->add($clone);
+        }
+
+        return $copy;
     }
 }
