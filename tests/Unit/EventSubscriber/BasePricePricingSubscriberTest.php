@@ -30,12 +30,12 @@ final class BasePricePricingSubscriberTest extends Unit
         $generator = $this->createMock(CommercialPricingGenerator::class);
         $connection = $this->createMock(Connection::class);
         $frame = $this->createMock(Frame::class);
-        $frame->method('getClassId')->willReturn('15');
+        $frame->method('getClassId')->willReturn('finishedProduct');
         $frame->method('getId')->willReturn(123);
         $frame->method('getBasePrice')->willReturn(120);
         $connection->expects(self::once())
             ->method('fetchOne')
-            ->with('SELECT basePrice FROM object_store_15 WHERE oo_id = ?', [123])
+            ->with('SELECT basePrice FROM object_store_finishedProduct WHERE oo_id = ?', [123])
             ->willReturn('100');
         $generator->expects(self::once())->method('synchronizeBasePriceChange')->with($frame);
 
@@ -47,7 +47,7 @@ final class BasePricePricingSubscriberTest extends Unit
         $generator = $this->createMock(CommercialPricingGenerator::class);
         $connection = $this->createMock(Connection::class);
         $family = $this->createMock(Family::class);
-        $family->method('getClassId')->willReturn('4');
+        $family->method('getClassId')->willReturn('family');
         $family->method('getId')->willReturn(456);
         $family->method('getBasePrice')->willReturn(100);
         $connection->method('fetchOne')->willReturn('100');

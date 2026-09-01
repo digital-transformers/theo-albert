@@ -50,7 +50,7 @@ final class BasePricePricingSubscriber implements EventSubscriberInterface
     private function basePriceChanged(Family|Frame $object): bool
     {
         $persisted = $this->connection->fetchOne(
-            sprintf('SELECT basePrice FROM object_store_%d WHERE oo_id = ?', $object->getClassId()),
+            sprintf('SELECT basePrice FROM object_store_%s WHERE oo_id = ?', $object->getClassId()),
             [$object->getId()]
         );
         $persisted = $persisted === false || $persisted === null ? null : (int) $persisted;
