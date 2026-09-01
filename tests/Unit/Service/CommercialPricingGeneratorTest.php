@@ -98,6 +98,26 @@ final class CommercialPricingGeneratorTest extends Unit
         (new \ReflectionMethod($generator, 'assignPricing'))->invoke($generator, $frame, $pricing);
     }
 
+    /** @dataProvider roundingCases */
+    public function testPriceRounding(float $price, ?string $rounding, float $expected): void
+    {
+        $method = new \ReflectionMethod(new CommercialPricingGenerator(), 'roundPrice');
+
+        self::assertSame($expected, $method->invoke(new CommercialPricingGenerator(), $price, $rounding));
+    }
+
+    /** @return iterable<string, array{float, ?string, float}> */
+    public static function roundingCases(): iterable
+    {
+        yield 'no rounding' => [14.2, 'no', 14.2];
+        yield 'missing rounding defaults to no' => [14.2, null, 14.2];
+        yield 'upper integer rounds a fraction' => [14.2, 'upper_1', 15.0];
+        yield 'upper integer keeps an integer' => [14.0, 'upper_1', 14.0];
+        yield 'upper five rounds 14 to 15' => [14.0, 'upper_5', 15.0];
+        yield 'upper five rounds 16 to 20' => [16.0, 'upper_5', 20.0];
+        yield 'upper five keeps a multiple of five' => [15.0, 'upper_5', 15.0];
+    }
+
     private function pricelist(int $id, string $code, ?SAPPricelist $base = null): SAPPricelist
     {
         $pricelist = $this->createMock(SAPPricelist::class);

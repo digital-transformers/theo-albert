@@ -33,6 +33,21 @@ final class SAPPricelistClassDefinitionTest extends Unit
         self::assertSame(0, $commercial->getDefaultValue());
     }
 
+    public function testRoundingIsASelectDefaultingToNo(): void
+    {
+        $definition = require dirname(__DIR__, 3) . '/var/classes/definition_SAPPricelist.php';
+        $rounding = $this->findField($definition->getLayoutDefinitions(), 'rounding');
+
+        self::assertInstanceOf(Data\Select::class, $rounding);
+        self::assertTrue($rounding->getMandatory());
+        self::assertSame('no', $rounding->getDefaultValue());
+        self::assertSame([
+            ['key' => 'No rounding', 'value' => 'no'],
+            ['key' => 'Upper integer', 'value' => 'upper_1'],
+            ['key' => 'Upper 5', 'value' => 'upper_5'],
+        ], $rounding->getOptions());
+    }
+
     private function findField(Layout|Data|null $node, string $name): ?Data
     {
         if ($node instanceof Data && $node->getName() === $name) {

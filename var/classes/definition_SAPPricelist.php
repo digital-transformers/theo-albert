@@ -12,6 +12,7 @@
  * - basePricelist [manyToOneRelation]
  * - baseFactor [numeric]
  * - commercialPricelist [checkbox]
+ * - rounding [select]
  */
 
 return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
@@ -21,7 +22,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1787830899,
+   'modificationDate' => 1788265842,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -199,6 +200,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'defaultValue' => '',
              'columnLength' => 190,
              'dynamicOptions' => false,
+             'enforceValidation' => false,
              'defaultValueGenerator' => '',
              'width' => '',
              'optionsProviderType' => 'configure',
@@ -298,6 +300,53 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
             ),
              'defaultValue' => 0,
              'defaultValueGenerator' => '',
+          )),
+          7 =>
+          \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
+             'name' => 'rounding',
+             'title' => 'Rounding',
+             'tooltip' => '',
+             'mandatory' => true,
+             'noteditable' => false,
+             'index' => false,
+             'locked' => false,
+             'style' => '',
+             'permissions' => NULL,
+             'fieldtype' => '',
+             'relationType' => false,
+             'invisible' => false,
+             'visibleGridView' => false,
+             'visibleSearch' => false,
+             'blockedVarsForExport' =>
+            array (
+            ),
+             'options' =>
+            array (
+              0 =>
+              array (
+                'key' => 'No rounding',
+                'value' => 'no',
+              ),
+              1 =>
+              array (
+                'key' => 'Upper integer',
+                'value' => 'upper_1',
+              ),
+              2 =>
+              array (
+                'key' => 'Upper 5',
+                'value' => 'upper_5',
+              ),
+            ),
+             'defaultValue' => 'no',
+             'columnLength' => 190,
+             'dynamicOptions' => false,
+             'enforceValidation' => false,
+             'defaultValueGenerator' => '',
+             'width' => '',
+             'optionsProviderType' => 'configure',
+             'optionsProviderClass' => '',
+             'optionsProviderData' => '',
           )),
         ),
          'locked' => false,

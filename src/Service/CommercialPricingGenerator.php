@@ -344,7 +344,7 @@ class CommercialPricingGenerator
         $factor = $this->effectiveFactor($pricelist);
         $item = new ProductPricing();
         $item->setMarket((string) ($pricelist->getName() ?: $pricelist->getKey()));
-        $item->setPriceAmountOverride($basePrice * $factor);
+        $item->setPriceAmountOverride($this->roundPrice($basePrice * $factor, $pricelist->getRounding()));
         $item->setBasePriceMultiplier($factor);
         $item->setCurrency((string) ($pricelist->getCurrency() ?: 'EUR'));
         $item->setPricelist($pricelist);
@@ -357,6 +357,17 @@ class CommercialPricingGenerator
         $factor = $pricelist->getBaseFactor();
 
         return $factor === null || (float) $factor === 0.0 ? 1.0 : (float) $factor;
+    }
+
+    private function roundPrice(float $price, ?string $rounding): float
+    {
+        $step = match ($rounding) {
+            'upper_1' => 1.0,
+            'upper_5' => 5.0,
+            default => null,
+        };
+
+        return $step === null ? $price : ceil(($price - 1e-9) / $step) * $step;
     }
 
     private function copyPricing(Fieldcollection $source): Fieldcollection
