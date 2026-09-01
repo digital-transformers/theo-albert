@@ -57,7 +57,7 @@ class CommercialPricingGenerator
                 return;
             }
 
-            $source->setPricing($this->pricingForFrame($source, $pricelists));
+            $this->assignPricing($source, $this->pricingForFrame($source, $pricelists));
         } finally {
             $this->processing = false;
         }
@@ -109,7 +109,7 @@ class CommercialPricingGenerator
         }
 
         try {
-            $source->setPricing($pricing);
+            $this->assignPricing($source, $pricing);
             $source->setUserModification($user->getId());
             $source->save();
         } catch (\Throwable $e) {
@@ -142,7 +142,7 @@ class CommercialPricingGenerator
         $familyPricing = $familyBasePrice === null
             ? new Fieldcollection()
             : $this->buildPricing($familyBasePrice, $pricelists);
-        $family->setPricing($familyPricing);
+        $this->assignPricing($family, $familyPricing);
         $updated = [];
         $errors = [];
 
@@ -168,7 +168,7 @@ class CommercialPricingGenerator
             }
 
             try {
-                $frame->setPricing($this->pricingForFrame(
+                $this->assignPricing($frame, $this->pricingForFrame(
                     $frame,
                     $pricelists,
                     $family,
@@ -377,5 +377,11 @@ class CommercialPricingGenerator
         }
 
         return $copy;
+    }
+
+    private function assignPricing(Family|Frame $object, Fieldcollection $pricing): void
+    {
+        $pricing->setObject($object);
+        $object->setPricing($pricing);
     }
 }

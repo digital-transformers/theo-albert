@@ -6,6 +6,8 @@ namespace App\Tests\Unit\Service;
 use App\Service\CommercialPricingGenerator;
 use Codeception\Test\Unit;
 use Pimcore\Model\DataObject\Family;
+use Pimcore\Model\DataObject\Fieldcollection;
+use Pimcore\Model\DataObject\Fieldcollection\Data\ProductPricing;
 use Pimcore\Model\DataObject\Frame;
 use Pimcore\Model\DataObject\SAPPricelist;
 
@@ -81,6 +83,19 @@ final class CommercialPricingGeneratorTest extends Unit
         $frame->expects(self::never())->method('setPricing');
 
         $generator->synchronizeBasePriceChange($frame);
+    }
+
+    public function testPricingItemsAreAttachedToTheirOwningObjectBeforeAssignment(): void
+    {
+        $generator = new CommercialPricingGenerator();
+        $frame = $this->createMock(Frame::class);
+        $item = new ProductPricing();
+        $pricing = new Fieldcollection([$item]);
+        $frame->expects(self::once())
+            ->method('setPricing')
+            ->with(self::callback(static fn (Fieldcollection $value): bool => $value->get(0)?->getObject() === $frame));
+
+        (new \ReflectionMethod($generator, 'assignPricing'))->invoke($generator, $frame, $pricing);
     }
 
     private function pricelist(int $id, string $code, ?SAPPricelist $base = null): SAPPricelist
