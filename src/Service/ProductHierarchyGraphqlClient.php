@@ -93,8 +93,13 @@ class ProductHierarchyGraphqlClient
         ]);
         $host = parse_url($url, PHP_URL_HOST);
         $scheme = parse_url($url, PHP_URL_SCHEME);
-        if ($host === 'theo.digital-transformers.it' && $scheme === 'https') {
-            curl_setopt($curl, CURLOPT_RESOLVE, [$host . ':443:127.0.0.1']);
+        $localPort = match ([$host, $scheme]) {
+            ['theo.digital-transformers.it', 'https'] => 443,
+            ['jules2.pimcore.xcommerce.eu', 'http'] => 80,
+            default => null,
+        };
+        if ($localPort !== null) {
+            curl_setopt($curl, CURLOPT_RESOLVE, [sprintf('%s:%d:127.0.0.1', $host, $localPort)]);
         }
 
         $response = curl_exec($curl);
