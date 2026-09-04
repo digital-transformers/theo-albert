@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
+use App\Service\AutomaticAssetMoveGuard;
 use Pimcore\Event\AssetEvents;
 use Pimcore\Event\Model\AssetEvent;
 use Pimcore\Model\Asset;
@@ -20,6 +21,7 @@ final class PhotographerAssetPermissionSubscriber implements EventSubscriberInte
 
     public function __construct(
         private readonly TokenStorageUserResolver $userResolver,
+        private readonly AutomaticAssetMoveGuard $automaticAssetMoveGuard,
     ) {
     }
 
@@ -32,6 +34,10 @@ final class PhotographerAssetPermissionSubscriber implements EventSubscriberInte
 
     public function onPreAdd(AssetEvent $event): void
     {
+        if ($this->automaticAssetMoveGuard->isActive()) {
+            return;
+        }
+
         $asset = $event->getAsset();
         if (!$asset instanceof Asset) {
             return;

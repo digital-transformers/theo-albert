@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
+use App\Service\AutomaticAssetMoveGuard;
 use Pimcore\Event\DataObjectEvents;
 use Pimcore\Event\Model\DataObjectEvent;
 use Pimcore\Model\Asset;
@@ -30,6 +31,11 @@ final class MarketingMaterialsAssetSubscriber implements EventSubscriberInterfac
     ];
     private const VIDEO_FIELD = 'video';
     private const ATTACHMENTS_FIELD = 'attachments';
+
+    public function __construct(
+        private readonly AutomaticAssetMoveGuard $automaticAssetMoveGuard,
+    ) {
+    }
 
     public static function getSubscribedEvents(): array
     {
@@ -60,7 +66,9 @@ final class MarketingMaterialsAssetSubscriber implements EventSubscriberInterfac
             }
 
             if (!$targetFolder instanceof AssetFolder) {
-                $targetFolder = $this->getOrCreateFolder($this->resolveTargetFolderPath($object));
+                $targetFolder = $this->automaticAssetMoveGuard->run(
+                    fn (): AssetFolder => $this->getOrCreateFolder($this->resolveTargetFolderPath($object))
+                );
             }
 
             $this->moveAssetToFolder($asset, $targetFolder);
@@ -331,7 +339,7 @@ final class MarketingMaterialsAssetSubscriber implements EventSubscriberInterfac
         $asset->setParent($targetFolder);
 
         try {
-            $asset->save();
+            $this->automaticAssetMoveGuard->run(static fn (): mixed => $asset->save());
         } catch (\Throwable $e) {
             throw new ValidationException(sprintf(
                 'Could not move Marketing materials asset "%s" to "%s": %s',

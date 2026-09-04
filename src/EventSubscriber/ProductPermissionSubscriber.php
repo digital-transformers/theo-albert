@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
+use App\Service\AutomaticAssetMoveGuard;
 use Pimcore\Bundle\AdminBundle\Event\AdminEvents;
 use Pimcore\Event\AssetEvents;
 use Pimcore\Event\DataObjectEvents;
@@ -64,9 +65,13 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
      */
     private array $supplierObjectIdsByUserId = [];
 
+    private readonly AutomaticAssetMoveGuard $automaticAssetMoveGuard;
+
     public function __construct(
         private readonly TokenStorageUserResolver $userResolver,
+        ?AutomaticAssetMoveGuard $automaticAssetMoveGuard = null,
     ) {
+        $this->automaticAssetMoveGuard = $automaticAssetMoveGuard ?? new AutomaticAssetMoveGuard();
     }
 
     public static function getSubscribedEvents(): array
@@ -140,6 +145,10 @@ final class ProductPermissionSubscriber implements EventSubscriberInterface
 
     public function onPreSaveAsset(AssetEvent $event): void
     {
+        if ($this->automaticAssetMoveGuard->isActive()) {
+            return;
+        }
+
         $user = $this->userResolver->getUser();
         if ($user instanceof User && !$user->isAdmin() && $user->isAllowed(self::PERMISSION_KEY_READONLY)) {
             throw new AccessDeniedHttpException('Key read-only users cannot update assets.');

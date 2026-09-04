@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\EventSubscriber;
 
 use App\EventSubscriber\MarketingMaterialsAssetSubscriber;
+use App\Service\AutomaticAssetMoveGuard;
 use Codeception\Test\Unit;
 use Pimcore;
 use Pimcore\Model\DataObject\Concrete;
@@ -32,7 +33,7 @@ final class MarketingMaterialsAssetSubscriberTest extends Unit
 
     public function testBuildHierarchySegmentsIncludesFamilyNameModelAndFrame(): void
     {
-        $subscriber = new MarketingMaterialsAssetSubscriber();
+        $subscriber = new MarketingMaterialsAssetSubscriber(new AutomaticAssetMoveGuard());
         $family = (new MarketingMaterialsTestObject())
             ->setClassName('family')
             ->setCode('TA-ALPHA')
@@ -57,7 +58,7 @@ final class MarketingMaterialsAssetSubscriberTest extends Unit
 
     public function testBuildHierarchySegmentsRequiresFamilyForModel(): void
     {
-        $subscriber = new MarketingMaterialsAssetSubscriber();
+        $subscriber = new MarketingMaterialsAssetSubscriber(new AutomaticAssetMoveGuard());
         $model = (new MarketingMaterialsTestObject())
             ->setClassName('model')
             ->setCode('ALP-OPT-01');

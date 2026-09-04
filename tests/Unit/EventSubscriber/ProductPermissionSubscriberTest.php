@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace App\Tests\Unit\EventSubscriber;
 
 use App\EventSubscriber\ProductPermissionSubscriber;
+use App\Service\AutomaticAssetMoveGuard;
 use Codeception\Test\Unit;
+use Pimcore\Event\Model\AssetEvent;
 use Pimcore\Event\Model\DataObjectEvent;
 use Pimcore\Model\Asset\Image;
 use Pimcore\Model\DataObject\ClassDefinition\Data\Input;
@@ -17,6 +19,18 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 final class ProductPermissionSubscriberTest extends Unit
 {
+    public function testAutomaticMarketingAssetMoveBypassesAssetWriteRestrictionOnlyInsideGuard(): void
+    {
+        $guard = new AutomaticAssetMoveGuard();
+        $subscriber = new ProductPermissionSubscriber($this->keyReadonlyUserResolver(), $guard);
+        $event = new AssetEvent(new Image());
+
+        $guard->run(static fn (): mixed => $subscriber->onPreSaveAsset($event));
+
+        $this->expectException(AccessDeniedHttpException::class);
+        $subscriber->onPreSaveAsset($event);
+    }
+
     public function testMarketingUserOnlyEditsMarketingFields(): void
     {
         $subscriber = new ProductPermissionSubscriber($this->marketingUserResolver());
