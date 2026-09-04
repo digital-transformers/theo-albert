@@ -63,6 +63,7 @@ use Pimcore\Model\DataObject\PreGetValueHookInterface;
 * @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByPosMaterialProducts(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByServicePartProducts(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByDownloadableAssets(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByBasePrice(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByAttachments(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByPublicationChannels(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByWorkingTitle(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
