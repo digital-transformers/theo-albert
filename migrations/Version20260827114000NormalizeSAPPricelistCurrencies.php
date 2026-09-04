@@ -13,7 +13,7 @@ final class Version20260827114000NormalizeSAPPricelistCurrencies extends Abstrac
 {
     public function getDescription(): string
     {
-        return 'Set SAP pricelist currencies from ISO codes or symbols in their object keys, defaulting to EUR.';
+        return 'Set SAP pricelist currencies from their keys and default empty rounding values to no.';
     }
 
     public function isTransactional(): bool
@@ -36,16 +36,24 @@ final class Version20260827114000NormalizeSAPPricelistCurrencies extends Abstrac
 
             ++$seen;
             $currency = $resolver->resolve((string) $priceList->getKey());
-            if ($priceList->getCurrency() === $currency) {
+            $changed = false;
+            if ($priceList->getCurrency() !== $currency) {
+                $priceList->setCurrency($currency);
+                $changed = true;
+            }
+            if (trim((string) $priceList->getRounding()) === '') {
+                $priceList->setRounding('no');
+                $changed = true;
+            }
+            if (!$changed) {
                 continue;
             }
 
-            $priceList->setCurrency($currency);
             $priceList->save();
             ++$updated;
         }
 
-        $this->write(sprintf('Normalized %d of %d SAP pricelist currencies.', $updated, $seen));
+        $this->write(sprintf('Normalized %d of %d SAP pricelists.', $updated, $seen));
     }
 
     public function down(Schema $schema): void
