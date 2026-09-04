@@ -99,9 +99,7 @@ services:
 
 volumes:
     pimcore-database:
-        name: theo_database-data
     pimcore-rabbitmq:
-        name: theo_rabbitmq-data
     pimcore-test-database:
     pimcore-test-var:
     pimcore-test-public-var:
