@@ -1,0 +1,6 @@
+pimcore_data_importer:
+    messenger_queue_processing:
+        activated: true
+        worker_count_lifetime: 1800
+        worker_count_parallel: 3
+        worker_item_count: 200

@@ -1,0 +1,8 @@
+MAILTO=""
+SHELL=/bin/bash
+PATH=/var/web/vd31987/.bin:/usr/local/bin:/usr/bin:/bin
+
+@reboot /var/web/vd31987/public_html/theo-pimcore/deploy/level27/ensure-supervisord.sh >> /var/web/vd31987/public_html/theo-pimcore/var/log/supervisor-ensure.log 2>&1
+* * * * * /var/web/vd31987/public_html/theo-pimcore/deploy/level27/ensure-supervisord.sh >> /var/web/vd31987/public_html/theo-pimcore/var/log/supervisor-ensure.log 2>&1
+*/5 * * * * /usr/bin/flock -n /var/web/vd31987/var/supervisor/maintenance.lock /var/web/vd31987/.bin/php -d memory_limit=512M /var/web/vd31987/public_html/theo-pimcore/bin/console pimcore:maintenance --env=prod --no-debug >> /var/web/vd31987/public_html/theo-pimcore/var/log/cron-maintenance.log 2>&1
+* * * * * /usr/bin/flock -n /var/web/vd31987/var/supervisor/data-import-cron.lock /var/web/vd31987/.bin/php -d memory_limit=512M /var/web/vd31987/public_html/theo-pimcore/bin/console datahub:data-importer:execute-cron --env=prod --no-debug >> /var/web/vd31987/public_html/theo-pimcore/var/log/cron-data-importer.log 2>&1

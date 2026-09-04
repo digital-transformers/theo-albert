@@ -128,7 +128,6 @@ final class DataHubSupervisorController extends AbstractController
             'datahub:data-importer:process-queue-sequential',
             '--no-interaction',
             '--no-ansi',
-            '--env=dev',
             '--no-debug',
         ];
         if ($extra) {
