@@ -9,23 +9,26 @@ lock="$runtime_dir/start.lock"
 
 mkdir -p "$runtime_dir"
 
-exec /usr/bin/flock -n "$lock" /bin/bash -c '
-    if /usr/bin/supervisorctl -c "$1" pid >/dev/null 2>&1; then
-        exit 0
-    fi
+exec 9>"$lock"
+if ! /usr/bin/flock -n 9; then
+    exit 0
+fi
 
-    if test -r "$2"; then
-        pid=$(cat "$2" 2>/dev/null || true)
-        case "$pid" in
-            *[!0-9]*|"") ;;
-            *)
-                if kill -0 "$pid" 2>/dev/null; then
-                    exit 0
-                fi
-                ;;
-        esac
-    fi
+if /usr/bin/supervisorctl -c "$config" pid >/dev/null 2>&1; then
+    exit 0
+fi
 
-    rm -f "$2" "$3"
-    exec /usr/bin/supervisord -c "$1"
-' ensure-supervisord "$config" "$pidfile" "$socket"
+if test -r "$pidfile"; then
+    pid=$(cat "$pidfile" 2>/dev/null || true)
+    case "$pid" in
+        *[!0-9]*|"") ;;
+        *)
+            if kill -0 "$pid" 2>/dev/null; then
+                exit 0
+            fi
+            ;;
+    esac
+fi
+
+rm -f "$pidfile" "$socket"
+/usr/bin/supervisord -c "$config" 9>&-
