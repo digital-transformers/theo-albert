@@ -24,6 +24,11 @@ final class Version20260611090000UseQualityRemarksPresenceIndex extends Abstract
         return 'Use an indexed generated flag for non-empty quality-control remarks';
     }
 
+    public function isTransactional(): bool
+    {
+        return false;
+    }
+
     public function up(Schema $schema): void
     {
         $this->abortIf(

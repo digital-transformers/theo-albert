@@ -22,6 +22,11 @@ final class Version20260611084500OptimizeQualityRemarksPortlet extends AbstractM
         return 'Index quality-control remark presence for the dashboard portlet';
     }
 
+    public function isTransactional(): bool
+    {
+        return false;
+    }
+
     public function up(Schema $schema): void
     {
         $this->abortIf(
