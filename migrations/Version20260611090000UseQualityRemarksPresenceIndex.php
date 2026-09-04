@@ -32,12 +32,11 @@ final class Version20260611090000UseQualityRemarksPresenceIndex extends Abstract
         );
 
         foreach (self::TABLES as $tableName) {
-            if (!$schema->hasTable($tableName)) {
+            if (!$this->tableExists($tableName)) {
                 continue;
             }
 
-            $table = $schema->getTable($tableName);
-            if ($table->hasIndex(self::OLD_INDEX_NAME)) {
+            if ($this->indexExists($tableName, self::OLD_INDEX_NAME)) {
                 $this->addSql(sprintf(
                     'DROP INDEX `%s` ON `%s`',
                     self::OLD_INDEX_NAME,
@@ -45,7 +44,7 @@ final class Version20260611090000UseQualityRemarksPresenceIndex extends Abstract
                 ));
             }
 
-            if (!$table->hasColumn(self::PRESENCE_COLUMN)) {
+            if (!$this->columnExists($tableName, self::PRESENCE_COLUMN)) {
                 $this->addSql(sprintf(
                     'ALTER TABLE `%s` ADD COLUMN `%s` TINYINT(1) GENERATED ALWAYS AS (CHAR_LENGTH(`qualityControlRemarks`) > 0) STORED',
                     $tableName,
@@ -53,7 +52,7 @@ final class Version20260611090000UseQualityRemarksPresenceIndex extends Abstract
                 ));
             }
 
-            if (!$table->hasIndex(self::INDEX_NAME)) {
+            if (!$this->indexExists($tableName, self::INDEX_NAME)) {
                 $this->addSql(sprintf(
                     'CREATE INDEX `%s` ON `%s` (`%s`, `oo_id`)',
                     self::INDEX_NAME,
@@ -67,12 +66,11 @@ final class Version20260611090000UseQualityRemarksPresenceIndex extends Abstract
     public function down(Schema $schema): void
     {
         foreach (self::TABLES as $tableName) {
-            if (!$schema->hasTable($tableName)) {
+            if (!$this->tableExists($tableName)) {
                 continue;
             }
 
-            $table = $schema->getTable($tableName);
-            if ($table->hasIndex(self::INDEX_NAME)) {
+            if ($this->indexExists($tableName, self::INDEX_NAME)) {
                 $this->addSql(sprintf(
                     'DROP INDEX `%s` ON `%s`',
                     self::INDEX_NAME,
@@ -80,7 +78,7 @@ final class Version20260611090000UseQualityRemarksPresenceIndex extends Abstract
                 ));
             }
 
-            if ($table->hasColumn(self::PRESENCE_COLUMN)) {
+            if ($this->columnExists($tableName, self::PRESENCE_COLUMN)) {
                 $this->addSql(sprintf(
                     'ALTER TABLE `%s` DROP COLUMN `%s`',
                     $tableName,
@@ -88,7 +86,7 @@ final class Version20260611090000UseQualityRemarksPresenceIndex extends Abstract
                 ));
             }
 
-            if (!$table->hasIndex(self::OLD_INDEX_NAME)) {
+            if (!$this->indexExists($tableName, self::OLD_INDEX_NAME)) {
                 $this->addSql(sprintf(
                     'CREATE INDEX `%s` ON `%s` (`qualityControlRemarks`(1))',
                     self::OLD_INDEX_NAME,
@@ -96,5 +94,29 @@ final class Version20260611090000UseQualityRemarksPresenceIndex extends Abstract
                 ));
             }
         }
+    }
+
+    private function tableExists(string $tableName): bool
+    {
+        return (int) $this->connection->fetchOne(
+            'SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = ?',
+            [$tableName]
+        ) > 0;
+    }
+
+    private function columnExists(string $tableName, string $columnName): bool
+    {
+        return (int) $this->connection->fetchOne(
+            'SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = ? AND column_name = ?',
+            [$tableName, $columnName]
+        ) > 0;
+    }
+
+    private function indexExists(string $tableName, string $indexName): bool
+    {
+        return (int) $this->connection->fetchOne(
+            'SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = ? AND index_name = ?',
+            [$tableName, $indexName]
+        ) > 0;
     }
 }

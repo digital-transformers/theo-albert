@@ -30,7 +30,7 @@ final class Version20260611084500OptimizeQualityRemarksPortlet extends AbstractM
         );
 
         foreach (self::TABLES as $tableName) {
-            if (!$schema->hasTable($tableName) || $schema->getTable($tableName)->hasIndex(self::INDEX_NAME)) {
+            if (!$this->tableExists($tableName) || $this->indexExists($tableName, self::INDEX_NAME)) {
                 continue;
             }
 
@@ -45,7 +45,7 @@ final class Version20260611084500OptimizeQualityRemarksPortlet extends AbstractM
     public function down(Schema $schema): void
     {
         foreach (self::TABLES as $tableName) {
-            if (!$schema->hasTable($tableName) || !$schema->getTable($tableName)->hasIndex(self::INDEX_NAME)) {
+            if (!$this->tableExists($tableName) || !$this->indexExists($tableName, self::INDEX_NAME)) {
                 continue;
             }
 
@@ -55,5 +55,21 @@ final class Version20260611084500OptimizeQualityRemarksPortlet extends AbstractM
                 $tableName
             ));
         }
+    }
+
+    private function tableExists(string $tableName): bool
+    {
+        return (int) $this->connection->fetchOne(
+            'SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = ?',
+            [$tableName]
+        ) > 0;
+    }
+
+    private function indexExists(string $tableName, string $indexName): bool
+    {
+        return (int) $this->connection->fetchOne(
+            'SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = ? AND index_name = ?',
+            [$tableName, $indexName]
+        ) > 0;
     }
 }
