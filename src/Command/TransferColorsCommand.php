@@ -154,6 +154,7 @@ final class TransferColorsCommand extends Command
         $existingColors->setUnpublished(true);
         foreach ($existingColors as $existingColor) {
             $existingColor->setCode(sprintf('__color_transfer_%d__', $existingColor->getId()));
+            $existingColor->setMultiColor([]);
             $existingColor->save();
         }
 
