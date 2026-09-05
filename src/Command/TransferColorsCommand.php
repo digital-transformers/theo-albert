@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use JsonException;
+use Pimcore\Db;
 use Pimcore\Model\Asset;
 use Pimcore\Model\Asset\Folder as AssetFolder;
 use Pimcore\Model\Asset\Image;
@@ -187,20 +188,31 @@ final class TransferColorsCommand extends Command
             $imported[$fullPath] = $color;
         }
 
+        $database = Db::get();
+        $database->executeStatement(
+            'DELETE FROM object_relations_color WHERE fieldname = ? AND ownertype = ?',
+            ['multiColor', 'object'],
+        );
         foreach ($payload['colors'] as $row) {
             $fullPath = $this->requiredPath($row['full_path'] ?? null);
             $color = $imported[$fullPath];
-            $relations = [];
-            foreach (($row['multi_color_paths'] ?? []) as $relatedPath) {
+            foreach (array_values($row['multi_color_paths'] ?? []) as $position => $relatedPath) {
                 $relatedPath = $this->requiredPath($relatedPath);
                 $related = $imported[$relatedPath] ?? Color::getByPath($relatedPath);
                 if (!$related instanceof Color) {
                     throw new RuntimeException(sprintf('Related color "%s" is missing.', $relatedPath));
                 }
-                $relations[] = $related;
+                $database->insert('object_relations_color', [
+                    'src_id' => $color->getId(),
+                    'dest_id' => $related->getId(),
+                    'type' => 'object',
+                    'fieldname' => 'multiColor',
+                    'index' => $position + 1,
+                    'ownertype' => 'object',
+                    'ownername' => '',
+                    'position' => 0,
+                ]);
             }
-            $color->setMultiColor($relations);
-            $color->save();
         }
 
         $deleted = 0;
