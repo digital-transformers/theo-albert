@@ -30,7 +30,7 @@ final class BasePricePricingSubscriber implements EventSubscriberInterface
     public function onPreAdd(DataObjectEvent $event): void
     {
         $object = $event->getObject();
-        if ((!$object instanceof Family && !$object instanceof Frame) || $object->getBasePrice() === null) {
+        if (!$this->isPricingObject($object) || $object->getBasePrice() === null) {
             return;
         }
 
@@ -40,7 +40,7 @@ final class BasePricePricingSubscriber implements EventSubscriberInterface
     public function onPreUpdate(DataObjectEvent $event): void
     {
         $object = $event->getObject();
-        if ((!$object instanceof Family && !$object instanceof Frame) || !$this->basePriceChanged($object)) {
+        if (!$this->isPricingObject($object) || !$this->basePriceChanged($object)) {
             return;
         }
 
@@ -58,5 +58,11 @@ final class BasePricePricingSubscriber implements EventSubscriberInterface
         $current = $current === null ? null : (int) $current;
 
         return $persisted !== $current;
+    }
+
+    private function isPricingObject(mixed $object): bool
+    {
+        return ($object instanceof Family || $object instanceof Frame)
+            && in_array(strtolower((string) $object->getClassName()), ['family', 'frame'], true);
     }
 }

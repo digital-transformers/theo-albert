@@ -24,7 +24,7 @@ class CommercialPricingGenerator
      */
     public function generate(Concrete $source, ?int $submittedBasePrice, User $user): array
     {
-        if (!$source instanceof Family && !$source instanceof Frame) {
+        if (!$this->isFamily($source) && !$this->isFrame($source)) {
             throw new \InvalidArgumentException('Pricing can only be generated from a Family or Frame.');
         }
         if ($submittedBasePrice !== null && $submittedBasePrice < 0) {
@@ -44,6 +44,9 @@ class CommercialPricingGenerator
 
     public function synchronizeBasePriceChange(Family|Frame $source): void
     {
+        if (!$this->isFamily($source) && !$this->isFrame($source)) {
+            return;
+        }
         if ($this->processing) {
             return;
         }
@@ -51,7 +54,7 @@ class CommercialPricingGenerator
         $this->processing = true;
         try {
             $pricelists = $this->pricingPricelists();
-            if ($source instanceof Family) {
+            if ($this->isFamily($source)) {
                 $this->synchronizeFamily($source, $this->readBasePrice($source), $pricelists, false, null);
 
                 return;
@@ -81,7 +84,7 @@ class CommercialPricingGenerator
             ];
         }
 
-        if ($source instanceof Family) {
+        if ($this->isFamily($source)) {
             $basePrice = $this->readBasePrice($source);
             if ($basePrice === null || $basePrice < 0) {
                 return ['updated' => [], 'errors' => ['Set a non-negative integer base price first.'], 'pricelistCount' => count($pricelists)];
@@ -284,16 +287,16 @@ class CommercialPricingGenerator
         ?Fieldcollection $knownFamilyPricing = null,
     ): Fieldcollection {
         $family = $knownFamily ?? $this->ancestorFamily($frame);
-        $familyBasePrice = $knownFamily instanceof Family
+        $familyBasePrice = $knownFamily instanceof Family && $this->isFamily($knownFamily)
             ? $knownFamilyBasePrice
-            : ($family instanceof Family ? $this->readBasePrice($family) : null);
+            : ($family instanceof Family && $this->isFamily($family) ? $this->readBasePrice($family) : null);
         $frameBasePrice = $this->readBasePrice($frame);
 
         if ($this->frameUsesOwnBasePrice($frameBasePrice, $familyBasePrice)) {
             return $this->buildPricing($frameBasePrice, $pricelists);
         }
 
-        if ($family instanceof Family) {
+        if ($family instanceof Family && $this->isFamily($family)) {
             $familyPricing = $knownFamilyPricing ?? $family->getPricing();
             if ($familyPricing instanceof Fieldcollection && !$familyPricing->isEmpty()) {
                 return $this->copyPricing($familyPricing);
@@ -317,13 +320,23 @@ class CommercialPricingGenerator
     {
         $parent = $frame->getParent();
         while ($parent instanceof Concrete) {
-            if ($parent instanceof Family) {
+            if ($parent instanceof Family && $this->isFamily($parent)) {
                 return $parent;
             }
             $parent = $parent->getParent();
         }
 
         return null;
+    }
+
+    private function isFamily(Concrete $object): bool
+    {
+        return strtolower((string) $object->getClassName()) === 'family';
+    }
+
+    private function isFrame(Concrete $object): bool
+    {
+        return strtolower((string) $object->getClassName()) === 'frame';
     }
 
     /**

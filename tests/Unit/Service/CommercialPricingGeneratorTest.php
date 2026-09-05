@@ -68,6 +68,7 @@ final class CommercialPricingGeneratorTest extends Unit
     public function testFamilyIsAssignedPricingDuringAutomaticSynchronization(): void
     {
         $family = $this->createMock(Family::class);
+        $family->method('getClassName')->willReturn('family');
         $family->method('getValueForFieldName')->with('basePrice')->willReturn(100);
         $family->expects(self::once())->method('setPricing');
 
@@ -80,6 +81,7 @@ final class CommercialPricingGeneratorTest extends Unit
         $processing = new \ReflectionProperty(CommercialPricingGenerator::class, 'processing');
         $processing->setValue($generator, true);
         $frame = $this->createMock(Frame::class);
+        $frame->method('getClassName')->willReturn('frame');
         $frame->expects(self::never())->method('setPricing');
 
         $generator->synchronizeBasePriceChange($frame);

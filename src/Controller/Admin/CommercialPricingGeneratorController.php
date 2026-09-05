@@ -26,7 +26,10 @@ final class CommercialPricingGeneratorController extends AbstractController
     public function generate(Request $request, int $id): JsonResponse
     {
         $object = DataObject::getById($id, ['force' => true]);
-        if (!$object instanceof Family && !$object instanceof Frame) {
+        if (
+            (!$object instanceof Family && !$object instanceof Frame)
+            || !in_array(strtolower((string) $object->getClassName()), ['family', 'frame'], true)
+        ) {
             return new JsonResponse(['success' => false, 'message' => 'Object is not a Family or Frame.'], 404);
         }
 

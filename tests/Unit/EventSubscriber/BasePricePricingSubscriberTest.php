@@ -11,6 +11,7 @@ use Pimcore\Event\DataObjectEvents;
 use Pimcore\Event\Model\DataObjectEvent;
 use Pimcore\Model\DataObject\Family;
 use Pimcore\Model\DataObject\Frame;
+use Pimcore\Model\DataObject\Model as ModelObject;
 
 final class BasePricePricingSubscriberTest extends Unit
 {
@@ -30,6 +31,7 @@ final class BasePricePricingSubscriberTest extends Unit
         $generator = $this->createMock(CommercialPricingGenerator::class);
         $connection = $this->createMock(Connection::class);
         $frame = $this->createMock(Frame::class);
+        $frame->method('getClassName')->willReturn('frame');
         $frame->method('getClassId')->willReturn('finishedProduct');
         $frame->method('getId')->willReturn(123);
         $frame->method('getBasePrice')->willReturn(120);
@@ -47,6 +49,7 @@ final class BasePricePricingSubscriberTest extends Unit
         $generator = $this->createMock(CommercialPricingGenerator::class);
         $connection = $this->createMock(Connection::class);
         $family = $this->createMock(Family::class);
+        $family->method('getClassName')->willReturn('family');
         $family->method('getClassId')->willReturn('family');
         $family->method('getId')->willReturn(456);
         $family->method('getBasePrice')->willReturn(100);
@@ -54,5 +57,17 @@ final class BasePricePricingSubscriberTest extends Unit
         $generator->expects(self::never())->method('synchronizeBasePriceChange');
 
         (new BasePricePricingSubscriber($generator, $connection))->onPreUpdate(new DataObjectEvent($family));
+    }
+
+    public function testModelSubclassIsNotTreatedAsFamilyPricingObject(): void
+    {
+        $generator = $this->createMock(CommercialPricingGenerator::class);
+        $connection = $this->createMock(Connection::class);
+        $model = $this->createMock(ModelObject::class);
+        $model->method('getClassName')->willReturn('model');
+        $connection->expects(self::never())->method('fetchOne');
+        $generator->expects(self::never())->method('synchronizeBasePriceChange');
+
+        (new BasePricePricingSubscriber($generator, $connection))->onPreUpdate(new DataObjectEvent($model));
     }
 }
