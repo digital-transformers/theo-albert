@@ -57,7 +57,7 @@ final class TransferColorsCommand extends Command
     {
         $listing = new ColorListing();
         $listing->setUnpublished(true);
-        $listing->setOrderKey('o_id');
+        $listing->setOrderKey('id');
         $listing->setOrder('ASC');
 
         $colors = [];
