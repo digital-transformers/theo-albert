@@ -202,16 +202,21 @@ final class TransferColorsCommand extends Command
                 if (!$related instanceof Color) {
                     throw new RuntimeException(sprintf('Related color "%s" is missing.', $relatedPath));
                 }
-                $database->insert('object_relations_color', [
-                    'src_id' => $color->getId(),
-                    'dest_id' => $related->getId(),
-                    'type' => 'object',
-                    'fieldname' => 'multiColor',
-                    'index' => $position + 1,
-                    'ownertype' => 'object',
-                    'ownername' => '',
-                    'position' => 0,
-                ]);
+                $database->executeStatement(
+                    'INSERT INTO object_relations_color '
+                    . '(src_id, dest_id, type, fieldname, `index`, ownertype, ownername, position) '
+                    . 'VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                    [
+                        $color->getId(),
+                        $related->getId(),
+                        'object',
+                        'multiColor',
+                        $position + 1,
+                        'object',
+                        '',
+                        0,
+                    ],
+                );
             }
         }
 
