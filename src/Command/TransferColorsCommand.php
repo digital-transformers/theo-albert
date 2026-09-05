@@ -122,10 +122,40 @@ final class TransferColorsCommand extends Command
             throw new RuntimeException('The transfer file has an unsupported format.');
         }
 
+        $sourcePaths = [];
+        $sourceCodes = [];
+        foreach ($payload['colors'] as $row) {
+            if (!is_array($row)) {
+                throw new RuntimeException('The transfer file contains an invalid color row.');
+            }
+            $fullPath = $this->requiredPath($row['full_path'] ?? null);
+            $code = trim((string) ($row['code'] ?? ''));
+            if ($code === '') {
+                throw new RuntimeException(sprintf('Color "%s" has no code.', $fullPath));
+            }
+            if (isset($sourcePaths[$fullPath])) {
+                throw new RuntimeException(sprintf('Color path "%s" occurs more than once.', $fullPath));
+            }
+            if (isset($sourceCodes[$code])) {
+                throw new RuntimeException(sprintf('Color code "%s" occurs more than once.', $code));
+            }
+            $sourcePaths[$fullPath] = true;
+            $sourceCodes[$code] = true;
+        }
+
         /** @var array<string, Color> $imported */
         $imported = [];
         $created = 0;
         $updated = 0;
+
+        // Codes are unique. Neutralize the current values first so that code swaps
+        // between two existing object IDs cannot fail halfway through the import.
+        $existingColors = new ColorListing();
+        $existingColors->setUnpublished(true);
+        foreach ($existingColors as $existingColor) {
+            $existingColor->setCode(sprintf('__color_transfer_%d__', $existingColor->getId()));
+            $existingColor->save();
+        }
 
         foreach ($payload['colors'] as $row) {
             if (!is_array($row)) {
