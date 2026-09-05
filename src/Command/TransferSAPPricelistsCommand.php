@@ -67,8 +67,8 @@ final class TransferSAPPricelistsCommand extends Command
                 'name' => $pricelist->getName(),
                 'description' => $pricelist->getDescription(),
                 'currency' => $pricelist->getCurrency(),
-                'base_factor' => $pricelist->getBaseFactor(),
-                'commercial_pricelist' => $pricelist->getCommercialPricelist(),
+                'base_factor' => $this->normalizedDecimal($pricelist->getBaseFactor()),
+                'commercial_pricelist' => (bool) $pricelist->getCommercialPricelist(),
                 'rounding' => $pricelist->getRounding(),
                 'base_pricelist_path' => $basePricelist instanceof SAPPricelist
                     ? $basePricelist->getFullPath()
@@ -234,6 +234,15 @@ final class TransferSAPPricelistsCommand extends Command
     private function nullableFloat(mixed $value): ?float
     {
         return $value === null ? null : (float) $value;
+    }
+
+    private function normalizedDecimal(?float $value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        return rtrim(rtrim(sprintf('%.12F', $value), '0'), '.');
     }
 
     private function nullableBool(mixed $value): ?bool
