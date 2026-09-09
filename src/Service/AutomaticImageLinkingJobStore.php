@@ -60,6 +60,34 @@ final readonly class AutomaticImageLinkingJobStore
         return $this->readJson($this->jobDirectory($jobId) . '/result.json');
     }
 
+    /** @return list<array<string, mixed>> */
+    public function listJobs(int $limit = 100): array
+    {
+        if (!is_dir($this->jobsDirectory)) {
+            return [];
+        }
+
+        $jobs = [];
+        foreach (scandir($this->jobsDirectory, SCANDIR_SORT_DESCENDING) ?: [] as $jobId) {
+            if (!preg_match('/^[a-f0-9-]{36}$/', $jobId)) {
+                continue;
+            }
+
+            $status = $this->readStatus($jobId);
+            if ($status !== null) {
+                $jobs[] = $status;
+            }
+        }
+
+        usort(
+            $jobs,
+            static fn (array $left, array $right): int =>
+                strcmp((string) ($right['created_at'] ?? ''), (string) ($left['created_at'] ?? '')),
+        );
+
+        return array_slice($jobs, 0, max(1, min(500, $limit)));
+    }
+
     public function jobDirectory(string $jobId): string
     {
         if (!preg_match('/^[a-f0-9-]{36}$/', $jobId)) {

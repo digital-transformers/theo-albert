@@ -54,4 +54,18 @@ final class AutomaticImageLinkingJobStoreTest extends Unit
 
         (new AutomaticImageLinkingJobStore($this->jobsDirectory))->readStatus('../invalid');
     }
+
+    public function testJobsAreListedNewestFirstAndLimited(): void
+    {
+        $store = new AutomaticImageLinkingJobStore($this->jobsDirectory);
+        $olderId = '0199aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee';
+        $newerId = '0299aaaa-bbbb-7ccc-8ddd-eeeeeeeeeeee';
+        $store->writeStatus($olderId, ['status' => 'completed', 'created_at' => '2026-09-08T12:00:00Z']);
+        $store->writeStatus($newerId, ['status' => 'running', 'created_at' => '2026-09-09T12:00:00Z']);
+
+        $jobs = $store->listJobs(1);
+
+        self::assertCount(1, $jobs);
+        self::assertSame($newerId, $jobs[0]['job_id']);
+    }
 }

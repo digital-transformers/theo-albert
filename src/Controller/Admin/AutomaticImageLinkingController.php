@@ -9,7 +9,9 @@ use App\Service\AutomaticImageLinkingJobStore;
 use Pimcore\Model\Asset;
 use Pimcore\Security\User\TokenStorageUserResolver;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Uid\Uuid;
@@ -78,19 +80,72 @@ final class AutomaticImageLinkingController extends AbstractController
 
         $folder = Asset::getById((int) ($status['folder_id'] ?? 0));
         $user = $this->userResolver->getUser();
-        $canView = $folder instanceof Asset\Folder
-            && $user
-            && $folder->isAllowed('view', $user)
-            && ($user->isAdmin() || $user->isAllowed(ProductPermissionSubscriber::PERMISSION_AUTOMATIC_IMAGE_LINKING));
+        $canView = $user
+            && ($user->isAdmin() || $user->isAllowed(ProductPermissionSubscriber::PERMISSION_AUTOMATIC_IMAGE_LINKING))
+            && ($user->isAdmin() || ($folder instanceof Asset\Folder && $folder->isAllowed('view', $user)));
         if (!$canView) {
             return new JsonResponse(['success' => false, 'message' => 'Missing permission to view this job.'], 403);
         }
 
         $response = ['success' => true, ...$status];
         if (($status['status'] ?? null) === 'completed') {
-            $response['result'] = $this->jobStore->readResult($jobId);
+            $response['report_url'] = $this->generateUrl('admin_automatic_image_linking_report', ['jobId' => $jobId]);
         }
 
         return new JsonResponse($response);
+    }
+
+    #[Route('/jobs', name: 'admin_automatic_image_linking_jobs', methods: ['GET'])]
+    public function jobs(Request $request): JsonResponse
+    {
+        $user = $this->userResolver->getUser();
+        if (!$user || (!$user->isAdmin() && !$user->isAllowed(ProductPermissionSubscriber::PERMISSION_AUTOMATIC_IMAGE_LINKING))) {
+            return new JsonResponse(['success' => false, 'message' => 'Missing permission to view image linking jobs.'], 403);
+        }
+
+        $jobs = array_values(array_filter(
+            $this->jobStore->listJobs((int) $request->query->get('limit', 100)),
+            static function (array $job) use ($user): bool {
+                if ($user->isAdmin()) {
+                    return true;
+                }
+
+                $folder = Asset::getById((int) ($job['folder_id'] ?? 0));
+
+                return $folder instanceof Asset\Folder && $folder->isAllowed('view', $user);
+            },
+        ));
+
+        return new JsonResponse(['success' => true, 'jobs' => $jobs]);
+    }
+
+    #[Route('/report/{jobId}', name: 'admin_automatic_image_linking_report', methods: ['GET'])]
+    public function report(string $jobId): JsonResponse
+    {
+        try {
+            $status = $this->jobStore->readStatus($jobId);
+            $result = $this->jobStore->readResult($jobId);
+        } catch (\Throwable) {
+            $status = null;
+            $result = null;
+        }
+        if ($status === null || $result === null) {
+            return new JsonResponse(['success' => false, 'message' => 'Image linking report not found.'], 404);
+        }
+
+        $folder = Asset::getById((int) ($status['folder_id'] ?? 0));
+        $user = $this->userResolver->getUser();
+        $canView = $user
+            && ($user->isAdmin() || $user->isAllowed(ProductPermissionSubscriber::PERMISSION_AUTOMATIC_IMAGE_LINKING))
+            && ($user->isAdmin() || ($folder instanceof Asset\Folder && $folder->isAllowed('view', $user)));
+        if (!$canView) {
+            return new JsonResponse(['success' => false, 'message' => 'Missing permission to view this report.'], 403);
+        }
+
+        return new JsonResponse(
+            ['success' => true, 'status' => $status, 'result' => $result],
+            200,
+            ['Content-Disposition' => HeaderUtils::makeDisposition('attachment', sprintf('image-linking-%s.json', $jobId))],
+        );
     }
 }
