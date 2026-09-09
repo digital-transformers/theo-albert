@@ -79,15 +79,29 @@ console.log('[automatic-image-linking] loaded');
                 button.setDisabled(true);
               }
               if (assetEditor.tab) {
-                assetEditor.tab.mask('Linking images...');
+                assetEditor.tab.mask('Queuing image linking...');
               }
 
-              Ext.Ajax.request({
-                url: '/admin/automatic-image-linking/process-folder/' + data.id,
-                method: 'POST',
-                success: function (response) {
-                  const result = Ext.decode(response.responseText);
-                  Ext.create('Ext.window.Window', {
+              const finish = function () {
+                if (assetEditor.tab) {
+                  assetEditor.tab.unmask();
+                }
+                if (button) {
+                  button.setDisabled(false);
+                }
+              };
+
+              const showFailure = function (message) {
+                finish();
+                pimcore.helpers.showNotification('Link Images', message || 'Image linking failed', 'error');
+              };
+
+              const showResult = function (result) {
+                finish();
+                if (!result) {
+                  return showFailure('Image linking completed without a readable report.');
+                }
+                Ext.create('Ext.window.Window', {
                     title: 'Image Linking Summary',
                     width: 760,
                     height: 520,
@@ -105,9 +119,51 @@ console.log('[automatic-image-linking] loaded');
                         btn.up('window').close();
                       }
                     }]
-                  }).show();
-                  pimcore.helpers.showNotification('Link Images', result.message || 'Image linking completed', result.errors?.length ? 'warning' : 'success');
-                  pimcore.elementservice.refreshNodeAllTrees('asset', data.id);
+                }).show();
+                pimcore.helpers.showNotification('Link Images', result.message || 'Image linking completed', result.errors?.length ? 'warning' : 'success');
+                pimcore.elementservice.refreshNodeAllTrees('asset', data.id);
+              };
+
+              const poll = function (statusUrl) {
+                Ext.Ajax.request({
+                  url: statusUrl,
+                  method: 'GET',
+                  timeout: 30000,
+                  success: function (response) {
+                    const status = Ext.decode(response.responseText);
+                    if (status.status === 'completed') {
+                      return showResult(status.result);
+                    }
+                    if (status.status === 'failed') {
+                      return showFailure(status.error || 'Image linking failed.');
+                    }
+                    if (assetEditor.tab) {
+                      assetEditor.tab.mask(status.status === 'running' ? 'Linking images in background...' : 'Waiting for image linking worker...');
+                    }
+                    setTimeout(function () { poll(statusUrl); }, 2000);
+                  },
+                  failure: function (response) {
+                    let message = 'Unable to read image linking status.';
+                    try {
+                      const result = Ext.decode(response.responseText);
+                      message = result.message || message;
+                    } catch (e) {}
+                    showFailure(message);
+                  }
+                });
+              };
+
+              Ext.Ajax.request({
+                url: '/admin/automatic-image-linking/process-folder/' + data.id,
+                method: 'POST',
+                timeout: 30000,
+                success: function (response) {
+                  const job = Ext.decode(response.responseText);
+                  if (!job.status_url) {
+                    return showFailure('The server did not return an image linking job URL.');
+                  }
+                  pimcore.helpers.showNotification('Link Images', job.message || 'Image linking queued.', 'info');
+                  poll(job.status_url);
                 },
                 failure: function (response) {
                   let message = 'Image linking failed';
@@ -116,15 +172,7 @@ console.log('[automatic-image-linking] loaded');
                     message = result.message || message;
                   } catch (e) {}
 
-                  pimcore.helpers.showNotification('Link Images', message, 'error');
-                },
-                callback: function () {
-                  if (assetEditor.tab) {
-                    assetEditor.tab.unmask();
-                  }
-                  if (button) {
-                    button.setDisabled(false);
-                  }
+                  showFailure(message);
                 }
               });
             };

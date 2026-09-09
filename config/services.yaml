@@ -1,6 +1,7 @@
 parameters:
     secret: HDrOmrrKIRRZCD2V9VtAJA35nMpxPBt9KwcXWGEQEic=
     prestashop_import_jobs_directory: '%kernel.project_dir%/var/prestashop-import/jobs'
+    automatic_image_linking_jobs_directory: '%kernel.project_dir%/var/automatic-image-linking/jobs'
 
     # customize the full path to external executables
     # normally they are auto-detected by `which program` or auto-discovered in the configured path in
@@ -71,6 +72,13 @@ services:
     App\Service\PrestaShopImportJobStore:
       arguments:
         $jobsDirectory: '%prestashop_import_jobs_directory%'
+
+    App\Service\AutomaticImageLinkingJobStore:
+      arguments:
+        $jobsDirectory: '%automatic_image_linking_jobs_directory%'
+
+    App\MessageHandler\:
+      resource: '../src/MessageHandler'
 
     App\DataImporter\AttributeWithTrimFallbackStrategy:
       tags:

@@ -203,6 +203,9 @@ pimcore:
 
 #### SYMFONY OVERRIDES
 framework:
+    messenger:
+        routing:
+            App\Message\AutomaticImageLinkingMessage: pimcore_generic_execution_engine
 #    WHEN RUNNING PIMCORE AND OTHER APPLICATIONS ON SAME DOMAIN, SET SESSION COOKIE NAME TO PROVIDE COLLISION
 #    session:
 #        name: "PIMCORE_SESSION_ID"
@@ -239,4 +242,3 @@ framework:
 #     return:
 #         name: ''
 #         email: ''
-
