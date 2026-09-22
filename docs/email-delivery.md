@@ -49,11 +49,15 @@ changing the environment variables.
 On Level27, use the deployment's configured PHP binary:
 
 ```bash
-~/.bin/php /path/to/composer install --no-dev --no-interaction --no-scripts --optimize-autoloader
+~/.bin/php ~/.bin/composer install --no-dev --no-interaction --no-scripts --optimize-autoloader --ignore-platform-req=ext-amqp
 ~/.bin/php bin/console cache:clear --env=prod --no-debug
 /usr/bin/supervisorctl -c deploy/level27/supervisord.conf restart all
 ~/.bin/php bin/console mailer:test davide@digital-transformers.it --from=theo@digital-transformers.it --env=prod --no-debug
 ```
+
+Level27 uses Doctrine queues and does not provide the AMQP extension, so its
+install command ignores that existing, unused transport requirement. Do not
+ignore this requirement on the Docker deployment, which uses RabbitMQ.
 
 For Docker, run Composer and console commands inside the existing production PHP
 container and restart its PHP/worker services using `docker-compose.production.yaml`.
