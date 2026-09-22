@@ -1,0 +1,14 @@
+framework:
+    mailer:
+        transports:
+            main: '%env(MAILER_DSN)%'
+        headers:
+            From: '%env(MAILER_FROM)%'
+        envelope:
+            sender: '%env(MAILER_FROM)%'
+
+pimcore:
+    email:
+        sender:
+            name: '%env(MAILER_FROM_NAME)%'
+            email: '%env(MAILER_FROM)%'

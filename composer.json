@@ -24,6 +24,7 @@
     "pimcore/quill-bundle": "*",
     "symfony/amqp-messenger": "7.0.*",
     "symfony/dotenv": "7.0.*",
+    "symfony/http-client": "^7.4",
     "symfony/runtime": "^7.3"
   },
   "require-dev": {

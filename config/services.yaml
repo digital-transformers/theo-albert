@@ -64,6 +64,13 @@ services:
     App\Service\:
         resource: '../src/Service'
 
+    App\Mailer\CloudflareTransportFactory:
+        arguments:
+            $dispatcher: '@event_dispatcher'
+            $client: '@http_client'
+            $logger: '@logger'
+        tags: ['mailer.transport_factory']
+
     App\Service\ProductHierarchyGraphqlClient:
       arguments:
         $endpointUrl: '%env(PRODUCT_HIERARCHY_GRAPHQL_URL)%'
