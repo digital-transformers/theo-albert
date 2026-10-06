@@ -13,6 +13,7 @@
  * - pricelist [manyToOneRelation]
  * - importType [input]
  * - itemType [multiselect]
+ * - step [select]
  * - linkedColor [select]
  * - cost [numeric]
  * - supplier [manyToOneRelation]
@@ -331,6 +332,63 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
           )),
           7 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
+             'name' => 'step',
+             'title' => 'Step',
+             'tooltip' => '',
+             'mandatory' => false,
+             'noteditable' => false,
+             'index' => false,
+             'locked' => false,
+             'style' => '',
+             'permissions' => NULL,
+             'fieldtype' => '',
+             'relationType' => false,
+             'invisible' => false,
+             'visibleGridView' => false,
+             'visibleSearch' => false,
+             'blockedVarsForExport' => 
+            array (
+            ),
+             'options' => 
+            array (
+              0 => 
+              array (
+                'key' => 'Color',
+                'value' => 'Color',
+              ),
+              1 => 
+              array (
+                'key' => 'Acetate',
+                'value' => 'Acetate',
+              ),
+              2 => 
+              array (
+                'key' => 'Metal',
+                'value' => 'Metal',
+              ),
+              3 => 
+              array (
+                'key' => 'Parts',
+                'value' => 'Parts',
+              ),
+              4 => 
+              array (
+                'key' => 'Finishing',
+                'value' => 'Finishing',
+              ),
+            ),
+             'defaultValue' => NULL,
+             'columnLength' => 190,
+             'dynamicOptions' => false,
+             'enforceValidation' => true,
+             'defaultValueGenerator' => '',
+             'width' => '',
+             'optionsProviderType' => 'configure',
+             'optionsProviderClass' => '',
+             'optionsProviderData' => '',
+          )),
+          8 => 
+          \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
              'name' => 'linkedColor',
              'title' => 'Linked Color',
              'tooltip' => '',
@@ -358,7 +416,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\ColorOptionsProvider',
              'optionsProviderData' => '',
           )),
-          8 => 
+          9 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
              'name' => 'cost',
              'title' => 'Cost',
@@ -388,7 +446,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
-          9 => 
+          10 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
              'name' => 'supplier',
              'title' => 'Supplier',
@@ -430,7 +488,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
             ),
              'width' => '',
           )),
-          10 => 
+          11 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
              'name' => 'supCatNum',
              'title' => 'Supplier ItemCode',
