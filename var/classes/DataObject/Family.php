@@ -7,6 +7,7 @@
  * Fields Summary:
  * - code [input]
  * - name [input]
+ * - itemGroup [manyToManyObjectRelation]
  * - familyType [select]
  * - description [textarea]
  * - designers [multiselect]
@@ -49,6 +50,7 @@ use Pimcore\Model\DataObject\PreGetValueHookInterface;
 * @method static \Pimcore\Model\DataObject\Family\Listing getList(array $config = [])
 * @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByCode(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByName(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByItemGroup(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByFamilyType(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByDescription(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByDesigners(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
@@ -80,6 +82,7 @@ class Family extends Concrete
 {
 public const FIELD_CODE = 'code';
 public const FIELD_NAME = 'name';
+public const FIELD_ITEM_GROUP = 'itemGroup';
 public const FIELD_FAMILY_TYPE = 'familyType';
 public const FIELD_DESCRIPTION = 'description';
 public const FIELD_DESIGNERS = 'designers';
@@ -115,6 +118,7 @@ protected $classId = "family";
 protected $className = "family";
 protected $code;
 protected $name;
+protected $itemGroup;
 protected $familyType;
 protected $description;
 protected $designers;
@@ -242,6 +246,59 @@ public function setName(?string $name): static
 
 	$this->name = $name;
 
+	return $this;
+}
+
+/**
+* Get itemGroup - Item Group
+* @return \Pimcore\Model\DataObject\SAPItemGroup[]
+*/
+public function getItemGroup(): array
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("itemGroup");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->getClass()->getFieldDefinition("itemGroup")->preGetData($this);
+
+	if (\Pimcore\Model\DataObject::doGetInheritedValues() && $this->getClass()->getFieldDefinition("itemGroup")->isEmpty($data)) {
+		try {
+			return $this->getValueFromParent("itemGroup");
+		} catch (InheritanceParentNotFoundException $e) {
+			// no data from parent available, continue ...
+		}
+	}
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set itemGroup - Item Group
+* @param \Pimcore\Model\DataObject\SAPItemGroup[] $itemGroup
+* @return $this
+*/
+public function setItemGroup(?array $itemGroup): static
+{
+	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation $fd */
+	$fd = $this->getClass()->getFieldDefinition("itemGroup");
+	$hideUnpublished = \Pimcore\Model\DataObject\Concrete::getHideUnpublished();
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished(false);
+	$currentData = \Pimcore\Model\DataObject\Service::useInheritedValues(false, function() {
+		return $this->getItemGroup();
+	});
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished($hideUnpublished);
+	$isEqual = $fd->isEqual($currentData, $itemGroup);
+	if (!$isEqual) {
+		$this->markFieldDirty("itemGroup", true);
+	}
+	$this->itemGroup = $fd->preSetData($this, $itemGroup);
 	return $this;
 }
 
@@ -1651,3 +1708,4 @@ public function setQualityControlRemarks(?array $qualityControlRemarks): static
 }
 
 }
+

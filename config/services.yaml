@@ -152,6 +152,10 @@ services:
       tags:
         - { name: kernel.event_subscriber }
 
+    App\EventSubscriber\ItemGroupCreationSubscriber:
+      tags:
+        - { name: kernel.event_subscriber }
+
     App\EventSubscriber\PlanAttachmentSubscriber:
       tags:
         - { name: kernel.event_subscriber }

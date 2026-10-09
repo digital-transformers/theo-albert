@@ -7,6 +7,7 @@
  * Fields Summary:
  * - code [input]
  * - name [input]
+ * - itemGroup [manyToManyObjectRelation]
  * - frameBaseCode [input]
  * - description [textarea]
  * - outlineImage [image]
@@ -14,6 +15,7 @@
  * - posMaterialProducts [manyToManyObjectRelation]
  * - servicePartProducts [advancedManyToManyObjectRelation]
  * - downloadableAssets [manyToManyObjectRelation]
+ * - suppliers [advancedManyToManyObjectRelation]
  * - seriesCode [input]
  * - createDate [date]
  * - shape [select]
@@ -79,6 +81,7 @@ use Pimcore\Model\DataObject\PreGetValueHookInterface;
 * @method static \Pimcore\Model\DataObject\Model\Listing getList(array $config = [])
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByCode(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByName(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByItemGroup(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByFrameBaseCode(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByDescription(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByOutlineImage(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
@@ -86,6 +89,7 @@ use Pimcore\Model\DataObject\PreGetValueHookInterface;
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByPosMaterialProducts(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByServicePartProducts(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByDownloadableAssets(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getBySuppliers(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getBySeriesCode(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByCreateDate(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByShape(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
@@ -139,6 +143,7 @@ class Model extends \Pimcore\Model\DataObject\Family
 {
 public const FIELD_CODE = 'code';
 public const FIELD_NAME = 'name';
+public const FIELD_ITEM_GROUP = 'itemGroup';
 public const FIELD_FRAME_BASE_CODE = 'frameBaseCode';
 public const FIELD_DESCRIPTION = 'description';
 public const FIELD_OUTLINE_IMAGE = 'outlineImage';
@@ -146,6 +151,7 @@ public const FIELD_PLAN_ATTACHMENT = 'planAttachment';
 public const FIELD_POS_MATERIAL_PRODUCTS = 'posMaterialProducts';
 public const FIELD_SERVICE_PART_PRODUCTS = 'servicePartProducts';
 public const FIELD_DOWNLOADABLE_ASSETS = 'downloadableAssets';
+public const FIELD_SUPPLIERS = 'suppliers';
 public const FIELD_SERIES_CODE = 'seriesCode';
 public const FIELD_CREATE_DATE = 'createDate';
 public const FIELD_SHAPE = 'shape';
@@ -204,6 +210,7 @@ protected $classId = "baseProduct";
 protected $className = "model";
 protected $code;
 protected $name;
+protected $itemGroup;
 protected $frameBaseCode;
 protected $description;
 protected $outlineImage;
@@ -211,6 +218,7 @@ protected $planAttachment;
 protected $posMaterialProducts;
 protected $servicePartProducts;
 protected $downloadableAssets;
+protected $suppliers;
 protected $seriesCode;
 protected $createDate;
 protected $shape;
@@ -361,6 +369,59 @@ public function setName(?string $name): static
 
 	$this->name = $name;
 
+	return $this;
+}
+
+/**
+* Get itemGroup - Item Group
+* @return \Pimcore\Model\DataObject\SAPItemGroup[]
+*/
+public function getItemGroup(): array
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("itemGroup");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->getClass()->getFieldDefinition("itemGroup")->preGetData($this);
+
+	if (\Pimcore\Model\DataObject::doGetInheritedValues() && $this->getClass()->getFieldDefinition("itemGroup")->isEmpty($data)) {
+		try {
+			return $this->getValueFromParent("itemGroup");
+		} catch (InheritanceParentNotFoundException $e) {
+			// no data from parent available, continue ...
+		}
+	}
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set itemGroup - Item Group
+* @param \Pimcore\Model\DataObject\SAPItemGroup[] $itemGroup
+* @return $this
+*/
+public function setItemGroup(?array $itemGroup): static
+{
+	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation $fd */
+	$fd = $this->getClass()->getFieldDefinition("itemGroup");
+	$hideUnpublished = \Pimcore\Model\DataObject\Concrete::getHideUnpublished();
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished(false);
+	$currentData = \Pimcore\Model\DataObject\Service::useInheritedValues(false, function() {
+		return $this->getItemGroup();
+	});
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished($hideUnpublished);
+	$isEqual = $fd->isEqual($currentData, $itemGroup);
+	if (!$isEqual) {
+		$this->markFieldDirty("itemGroup", true);
+	}
+	$this->itemGroup = $fd->preSetData($this, $itemGroup);
 	return $this;
 }
 
@@ -705,6 +766,59 @@ public function setDownloadableAssets(?array $downloadableAssets): static
 		$this->markFieldDirty("downloadableAssets", true);
 	}
 	$this->downloadableAssets = $fd->preSetData($this, $downloadableAssets);
+	return $this;
+}
+
+/**
+* Get suppliers - Suppliers
+* @return \Pimcore\Model\DataObject\Data\ObjectMetadata[]
+*/
+public function getSuppliers(): array
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("suppliers");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->getClass()->getFieldDefinition("suppliers")->preGetData($this);
+
+	if (\Pimcore\Model\DataObject::doGetInheritedValues() && $this->getClass()->getFieldDefinition("suppliers")->isEmpty($data)) {
+		try {
+			return $this->getValueFromParent("suppliers");
+		} catch (InheritanceParentNotFoundException $e) {
+			// no data from parent available, continue ...
+		}
+	}
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set suppliers - Suppliers
+* @param \Pimcore\Model\DataObject\Data\ObjectMetadata[] $suppliers
+* @return $this
+*/
+public function setSuppliers(?array $suppliers): static
+{
+	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation $fd */
+	$fd = $this->getClass()->getFieldDefinition("suppliers");
+	$hideUnpublished = \Pimcore\Model\DataObject\Concrete::getHideUnpublished();
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished(false);
+	$currentData = \Pimcore\Model\DataObject\Service::useInheritedValues(false, function() {
+		return $this->getSuppliers();
+	});
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished($hideUnpublished);
+	$isEqual = $fd->isEqual($currentData, $suppliers);
+	if (!$isEqual) {
+		$this->markFieldDirty("suppliers", true);
+	}
+	$this->suppliers = $fd->preSetData($this, $suppliers);
 	return $this;
 }
 

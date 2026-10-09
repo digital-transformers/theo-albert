@@ -7,6 +7,7 @@
  * Fields Summary:
  * - code [input]
  * - name [input]
+ * - itemGroup [manyToManyObjectRelation]
  * - frameBaseCode [input]
  * - description [textarea]
  * - outlineImage [image]
@@ -14,6 +15,7 @@
  * - posMaterialProducts [manyToManyObjectRelation]
  * - servicePartProducts [advancedManyToManyObjectRelation]
  * - downloadableAssets [manyToManyObjectRelation]
+ * - suppliers [advancedManyToManyObjectRelation]
  * - seriesCode [input]
  * - createDate [date]
  * - shape [select]
@@ -77,7 +79,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1779168380,
+   'modificationDate' => 1791526132,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => 'Pimcore\\Model\\DataObject\\Family',
@@ -195,6 +197,46 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'defaultValueGenerator' => '',
               )),
               2 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
+                 'name' => 'itemGroup',
+                 'title' => 'Item Group',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => true,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'classes' => 
+                array (
+                  0 => 
+                  array (
+                    'classes' => 'SAPItemGroup',
+                  ),
+                ),
+                 'displayMode' => 'grid',
+                 'pathFormatterClass' => '',
+                 'maxItems' => NULL,
+                 'visibleFields' => 'groupNum,groupName',
+                 'allowToCreateNewObject' => false,
+                 'allowToClearRelation' => true,
+                 'optimizedAdminLoading' => false,
+                 'enableTextSelection' => false,
+                 'visibleFieldDefinitions' => 
+                array (
+                ),
+                 'width' => '',
+                 'height' => '',
+              )),
+              3 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'frameBaseCode',
                  'title' => 'Frame Base code',
@@ -224,7 +266,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              3 => 
+              4 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Textarea::__set_state(array(
                  'name' => 'description',
                  'title' => 'Description',
@@ -249,7 +291,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'height' => '',
                  'width' => '',
               )),
-              4 => 
+              5 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Image::__set_state(array(
                  'name' => 'outlineImage',
                  'title' => 'Outline Image',
@@ -272,7 +314,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
               )),
-              5 => 
+              6 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyRelation::__set_state(array(
                  'name' => 'planAttachment',
                  'title' => 'Plan Attachment',
@@ -336,7 +378,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'enableBatchEdit' => false,
                  'allowMultipleAssignments' => false,
               )),
-              6 => 
+              7 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
                  'name' => 'posMaterialProducts',
                  'title' => 'Pos Material Products',
@@ -376,7 +418,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
               )),
-              7 => 
+              8 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
                  'name' => 'servicePartProducts',
                  'title' => 'Service Part Products',
@@ -445,7 +487,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'enableBatchEdit' => false,
                  'allowMultipleAssignments' => false,
               )),
-              8 => 
+              9 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
                  'name' => 'downloadableAssets',
                  'title' => 'Downloadable assets',
@@ -484,6 +526,61 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 ),
                  'width' => '',
                  'height' => '',
+              )),
+              10 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
+                 'name' => 'suppliers',
+                 'title' => 'Suppliers',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => true,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'classes' => 
+                array (
+                ),
+                 'displayMode' => NULL,
+                 'pathFormatterClass' => '',
+                 'maxItems' => NULL,
+                 'visibleFields' => 'code,name',
+                 'allowToCreateNewObject' => false,
+                 'allowToClearRelation' => true,
+                 'optimizedAdminLoading' => false,
+                 'enableTextSelection' => false,
+                 'visibleFieldDefinitions' => 
+                array (
+                ),
+                 'width' => '',
+                 'height' => '',
+                 'allowedClassId' => 'supplier',
+                 'columns' => 
+                array (
+                  0 => 
+                  array (
+                    'type' => 'multiselect',
+                    'position' => 1,
+                    'key' => 'supplierType',
+                    'label' => 'Supplier Type',
+                    'width' => NULL,
+                    'value' => 'Color;Acetate;Metal;Parts;Finishing',
+                  ),
+                ),
+                 'columnKeys' => 
+                array (
+                  0 => 'supplierType',
+                ),
+                 'enableBatchEdit' => false,
+                 'allowMultipleAssignments' => true,
               )),
             ),
              'locked' => false,
@@ -1655,6 +1752,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                      'blockedVarsForExport' => 
                     array (
                     ),
+                     'options' => NULL,
                      'defaultValue' => NULL,
                      'columnLength' => 190,
                      'dynamicOptions' => false,
