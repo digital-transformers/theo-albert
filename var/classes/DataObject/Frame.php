@@ -6,6 +6,7 @@
  *
  * Fields Summary:
  * - code [input]
+ * - EANCode [input]
  * - mainColorCode [input]
  * - name [input]
  * - itemGroup [manyToManyObjectRelation]
@@ -60,6 +61,7 @@ use Pimcore\Model\DataObject\PreGetValueHookInterface;
 /**
 * @method static \Pimcore\Model\DataObject\Frame\Listing getList(array $config = [])
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByCode(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByEANCode(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByMainColorCode(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByName(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByItemGroup(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
@@ -103,6 +105,7 @@ use Pimcore\Model\DataObject\PreGetValueHookInterface;
 class Frame extends \Pimcore\Model\DataObject\Model
 {
 public const FIELD_CODE = 'code';
+public const FIELD_EANCODE = 'EANCode';
 public const FIELD_MAIN_COLOR_CODE = 'mainColorCode';
 public const FIELD_NAME = 'name';
 public const FIELD_ITEM_GROUP = 'itemGroup';
@@ -150,6 +153,7 @@ public const FIELD_QUALITY_CONTROL_REMARKS = 'qualityControlRemarks';
 protected $classId = "finishedProduct";
 protected $className = "frame";
 protected $code;
+protected $EANCode;
 protected $mainColorCode;
 protected $name;
 protected $itemGroup;
@@ -237,6 +241,42 @@ public function setCode(?string $code): static
 	$this->markFieldDirty("code", true);
 
 	$this->code = $code;
+
+	return $this;
+}
+
+/**
+* Get EANCode - EAN Code
+* @return string|null
+*/
+public function getEANCode(): ?string
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("EANCode");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->EANCode;
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set EANCode - EAN Code
+* @param string|null $EANCode
+* @return $this
+*/
+public function setEANCode(?string $EANCode): static
+{
+	$this->markFieldDirty("EANCode", true);
+
+	$this->EANCode = $EANCode;
 
 	return $this;
 }

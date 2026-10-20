@@ -6,6 +6,7 @@
  *
  * Fields Summary:
  * - code [input]
+ * - EANCode [input]
  * - mainColorCode [input]
  * - name [input]
  * - itemGroup [manyToManyObjectRelation]
@@ -517,6 +518,36 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 ),
                  'width' => '',
                  'height' => '',
+              )),
+              10 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
+                 'name' => 'EANCode',
+                 'title' => 'EAN Code',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' =>
+                array (
+                ),
+                 'defaultValue' => NULL,
+                 'columnLength' => 190,
+                 'regex' => '',
+                 'regexFlags' =>
+                array (
+                ),
+                 'unique' => false,
+                 'showCharCount' => false,
+                 'width' => '',
+                 'defaultValueGenerator' => '',
               )),
             ),
              'locked' => false,
