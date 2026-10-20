@@ -34,7 +34,7 @@
  * - dsArtCat [select]
  * - dsType [select]
  * - dsSize [input]
- * - dsTarif [multiselect]
+ * - dsTarif [select]
  * - intrastatCode [input]
  * - basePrice [numeric]
  * - pricing [fieldcollections]
@@ -1316,9 +1316,9 @@ public function setDsSize(?string $dsSize): static
 
 /**
 * Get dsTarif - Ds Tarif
-* @return string[]|null
+* @return string|null
 */
-public function getDsTarif(): ?array
+public function getDsTarif(): ?string
 {
 	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
 		$preValue = $this->preGetValue("dsTarif");
@@ -1338,10 +1338,10 @@ public function getDsTarif(): ?array
 
 /**
 * Set dsTarif - Ds Tarif
-* @param string[]|null $dsTarif
+* @param string|null $dsTarif
 * @return $this
 */
-public function setDsTarif(?array $dsTarif): static
+public function setDsTarif(?string $dsTarif): static
 {
 	$this->markFieldDirty("dsTarif", true);
 

@@ -9,6 +9,7 @@
  * - name [input]
  * - itemGroup [multiselect]
  * - itemGroupRelation [manyToManyObjectRelation]
+ * - dsTarif [select]
  * - linkedFamilies [reverseObjectRelation]
  * - linkedModels [reverseObjectRelation]
  * - linkedFrames [reverseObjectRelation]
@@ -320,6 +321,38 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'ownerClassId' => 'finishedProduct',
              'ownerFieldName' => 'servicePartProducts',
              'lazyLoading' => true,
+          )),
+          7 =>
+          \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
+             'name' => 'dsTarif',
+             'title' => 'Ds Tarif',
+             'tooltip' => '',
+             'mandatory' => false,
+             'noteditable' => false,
+             'index' => false,
+             'locked' => false,
+             'style' => '',
+             'permissions' => NULL,
+             'fieldtype' => '',
+             'relationType' => false,
+             'invisible' => false,
+             'visibleGridView' => false,
+             'visibleSearch' => false,
+             'blockedVarsForExport' =>
+            array (
+            ),
+             'options' =>
+            array (
+            ),
+             'defaultValue' => NULL,
+             'columnLength' => 190,
+             'dynamicOptions' => false,
+             'enforceValidation' => false,
+             'defaultValueGenerator' => '',
+             'width' => '',
+             'optionsProviderType' => 'class',
+             'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\TarifCodeOptionsProvider',
+             'optionsProviderData' => '',
           )),
         ),
          'locked' => false,

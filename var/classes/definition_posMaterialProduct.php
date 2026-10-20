@@ -9,7 +9,7 @@
  * - itemName [input]
  * - itemGroup [multiselect]
  * - itemGroupRelation [manyToManyObjectRelation]
- * - tarifCode [multiselect]
+ * - tarifCode [select]
  * - tarifCodeRelation [manyToOneRelation]
  * - supplier [manyToOneRelation]
  * - linkedFamilies [reverseObjectRelation]
@@ -219,9 +219,9 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'height' => '',
               )),
               4 => 
-              \Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect::__set_state(array(
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
                  'name' => 'tarifCode',
-                 'title' => 'Tarif Code',
+                 'title' => 'Ds Tarif',
                  'tooltip' => '',
                  'mandatory' => false,
                  'noteditable' => false,
@@ -237,14 +237,15 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'blockedVarsForExport' => 
                 array (
                 ),
-                 'maxItems' => NULL,
-                 'renderType' => 'tags',
+                 'options' =>
+                array (
+                ),
+                 'defaultValue' => NULL,
+                 'columnLength' => 190,
                  'enforceValidation' => false,
                  'dynamicOptions' => false,
-                 'defaultValue' => NULL,
-                 'height' => '',
-                 'width' => '',
                  'defaultValueGenerator' => '',
+                 'width' => '',
                  'optionsProviderType' => 'class',
                  'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\TarifCodeOptionsProvider',
                  'optionsProviderData' => '',

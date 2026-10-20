@@ -43,7 +43,7 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
         $currentName = $this->getFieldString($frame, 'name');
         $rebuiltName = $this->joinNonEmpty([$baseName, $this->formatColorCodes($colorCodes)], ' ');
         $name = $rebuiltName !== '' ? $rebuiltName : $currentName;
-        if ($rebuiltName !== '' && $currentName !== $rebuiltName) {
+        if ($this->shouldGenerateName($currentName, $rebuiltName)) {
             $this->setFieldValue($frame, 'name', $rebuiltName);
         }
 
@@ -172,6 +172,11 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
     private function formatColorCodes(array $colorCodes): string
     {
         return implode(' + ', $colorCodes);
+    }
+
+    private function shouldGenerateName(string $currentName, string $rebuiltName): bool
+    {
+        return $currentName === '' && $rebuiltName !== '';
     }
 
     private function getFieldValue(object|null $object, string $fieldName): mixed

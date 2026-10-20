@@ -34,7 +34,7 @@
  * - dsArtCat [select]
  * - dsType [select]
  * - dsSize [input]
- * - dsTarif [multiselect]
+ * - dsTarif [select]
  * - intrastatCode [input]
  * - basePrice [numeric]
  * - pricing [fieldcollections]
@@ -149,6 +149,36 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
               )),
               1 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
+                 'name' => 'EANCode',
+                 'title' => 'EAN Code',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' =>
+                array (
+                ),
+                 'defaultValue' => NULL,
+                 'columnLength' => 190,
+                 'regex' => '',
+                 'regexFlags' =>
+                array (
+                ),
+                 'unique' => false,
+                 'showCharCount' => false,
+                 'width' => '',
+                 'defaultValueGenerator' => '',
+              )),
+              2 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'mainColorCode',
                  'title' => 'Main Color Code',
                  'tooltip' => '',
@@ -177,7 +207,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              2 => 
+              3 =>
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'name',
                  'title' => 'Name',
@@ -207,7 +237,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              3 => 
+              4 =>
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
                  'name' => 'itemGroup',
                  'title' => 'Item Group',
@@ -247,7 +277,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
               )),
-              4 => 
+              5 =>
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
                  'name' => 'supplier',
                  'title' => 'Supplier',
@@ -289,7 +319,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 ),
                  'width' => '',
               )),
-              5 => 
+              6 =>
               \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
                  'name' => 'composedColors',
                  'title' => 'Composed Colors',
@@ -354,7 +384,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'enableBatchEdit' => false,
                  'allowMultipleAssignments' => false,
               )),
-              6 => 
+              7 =>
               \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
                  'name' => 'components',
                  'title' => 'Components',
@@ -399,7 +429,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'enableBatchEdit' => false,
                  'allowMultipleAssignments' => false,
               )),
-              7 => 
+              8 =>
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
                  'name' => 'posMaterialProducts',
                  'title' => 'Pos Material Products',
@@ -439,7 +469,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
               )),
-              8 => 
+              9 =>
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
                  'name' => 'servicePartProducts',
                  'title' => 'Service Part Products',
@@ -479,7 +509,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
               )),
-              9 => 
+              10 =>
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
                  'name' => 'downloadableAssets',
                  'title' => 'Downloadable assets',
@@ -518,36 +548,6 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 ),
                  'width' => '',
                  'height' => '',
-              )),
-              10 =>
-              \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
-                 'name' => 'EANCode',
-                 'title' => 'EAN Code',
-                 'tooltip' => '',
-                 'mandatory' => false,
-                 'noteditable' => false,
-                 'index' => false,
-                 'locked' => false,
-                 'style' => '',
-                 'permissions' => NULL,
-                 'fieldtype' => '',
-                 'relationType' => false,
-                 'invisible' => false,
-                 'visibleGridView' => false,
-                 'visibleSearch' => false,
-                 'blockedVarsForExport' =>
-                array (
-                ),
-                 'defaultValue' => NULL,
-                 'columnLength' => 190,
-                 'regex' => '',
-                 'regexFlags' =>
-                array (
-                ),
-                 'unique' => false,
-                 'showCharCount' => false,
-                 'width' => '',
-                 'defaultValueGenerator' => '',
               )),
             ),
              'locked' => false,
@@ -1381,7 +1381,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'defaultValueGenerator' => '',
               )),
               18 => 
-              \Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect::__set_state(array(
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
                  'name' => 'dsTarif',
                  'title' => 'Ds Tarif',
                  'tooltip' => '',
@@ -1399,14 +1399,15 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'blockedVarsForExport' => 
                 array (
                 ),
-                 'maxItems' => NULL,
-                 'renderType' => 'list',
+                 'options' =>
+                array (
+                ),
+                 'defaultValue' => NULL,
+                 'columnLength' => 190,
                  'enforceValidation' => false,
                  'dynamicOptions' => false,
-                 'defaultValue' => NULL,
-                 'height' => '',
-                 'width' => '',
                  'defaultValueGenerator' => '',
+                 'width' => '',
                  'optionsProviderType' => 'class',
                  'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\TarifCodeOptionsProvider',
                  'optionsProviderData' => '',

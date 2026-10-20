@@ -27,4 +27,21 @@ final class FrameNameFromComposedColorsSubscriberTest extends Unit
 
         self::assertSame('508 + 184', $suffix);
     }
+
+    public function testExistingFrameNameIsPreserved(): void
+    {
+        $subscriber = new FrameNameFromComposedColorsSubscriber();
+        $method = new \ReflectionMethod($subscriber, 'shouldGenerateName');
+
+        self::assertFalse($method->invoke($subscriber, 'Custom frame name', 'Generated name 184'));
+    }
+
+    public function testBlankFrameNameIsGenerated(): void
+    {
+        $subscriber = new FrameNameFromComposedColorsSubscriber();
+        $method = new \ReflectionMethod($subscriber, 'shouldGenerateName');
+
+        self::assertTrue($method->invoke($subscriber, '', 'Generated name 184'));
+        self::assertFalse($method->invoke($subscriber, '', ''));
+    }
 }
