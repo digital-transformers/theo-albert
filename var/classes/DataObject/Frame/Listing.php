@@ -79,14 +79,14 @@ public function filterByItemGroup ($data, $operator = '='): static
 }
 
 /**
-* Filter by supplier (Supplier)
+* Filter by suppliers (Suppliers)
 * @param mixed $data
 * @param string $operator SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
 * @return $this
 */
-public function filterBySupplier ($data, $operator = '='): static
+public function filterBySuppliers ($data, $operator = '='): static
 {
-	$this->getClass()->getFieldDefinition("supplier")->addListingFilter($this, $data, $operator);
+	$this->getClass()->getFieldDefinition("suppliers")->addListingFilter($this, $data, $operator);
 	return $this;
 }
 

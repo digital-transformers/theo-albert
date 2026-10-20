@@ -10,7 +10,7 @@
  * - mainColorCode [input]
  * - name [input]
  * - itemGroup [manyToManyObjectRelation]
- * - supplier [manyToOneRelation]
+ * - suppliers [advancedManyToManyObjectRelation]
  * - composedColors [advancedManyToManyObjectRelation]
  * - components [advancedManyToManyObjectRelation]
  * - posMaterialProducts [manyToManyObjectRelation]
@@ -65,7 +65,7 @@ use Pimcore\Model\DataObject\PreGetValueHookInterface;
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByMainColorCode(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByName(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByItemGroup(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
-* @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getBySupplier(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getBySuppliers(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByComposedColors(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByComponents(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByPosMaterialProducts(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
@@ -109,7 +109,7 @@ public const FIELD_EANCODE = 'EANCode';
 public const FIELD_MAIN_COLOR_CODE = 'mainColorCode';
 public const FIELD_NAME = 'name';
 public const FIELD_ITEM_GROUP = 'itemGroup';
-public const FIELD_SUPPLIER = 'supplier';
+public const FIELD_SUPPLIERS = 'suppliers';
 public const FIELD_COMPOSED_COLORS = 'composedColors';
 public const FIELD_COMPONENTS = 'components';
 public const FIELD_POS_MATERIAL_PRODUCTS = 'posMaterialProducts';
@@ -157,7 +157,7 @@ protected $EANCode;
 protected $mainColorCode;
 protected $name;
 protected $itemGroup;
-protected $supplier;
+protected $suppliers;
 protected $composedColors;
 protected $components;
 protected $posMaterialProducts;
@@ -397,19 +397,19 @@ public function setItemGroup(?array $itemGroup): static
 }
 
 /**
-* Get supplier - Supplier
-* @return \Pimcore\Model\DataObject\Supplier|null
+* Get suppliers - Suppliers
+* @return \Pimcore\Model\DataObject\Data\ObjectMetadata[]
 */
-public function getSupplier(): ?\Pimcore\Model\Element\AbstractElement
+public function getSuppliers(): array
 {
 	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
-		$preValue = $this->preGetValue("supplier");
+		$preValue = $this->preGetValue("suppliers");
 		if ($preValue !== null) {
 			return $preValue;
 		}
 	}
 
-	$data = $this->getClass()->getFieldDefinition("supplier")->preGetData($this);
+	$data = $this->getClass()->getFieldDefinition("suppliers")->preGetData($this);
 
 	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
 		return $data->getPlain();
@@ -419,23 +419,23 @@ public function getSupplier(): ?\Pimcore\Model\Element\AbstractElement
 }
 
 /**
-* Set supplier - Supplier
-* @param \Pimcore\Model\DataObject\Supplier|null $supplier
+* Set suppliers - Suppliers
+* @param \Pimcore\Model\DataObject\Data\ObjectMetadata[] $suppliers
 * @return $this
 */
-public function setSupplier(?\Pimcore\Model\Element\AbstractElement $supplier): static
+public function setSuppliers(?array $suppliers): static
 {
-	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation $fd */
-	$fd = $this->getClass()->getFieldDefinition("supplier");
+	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation $fd */
+	$fd = $this->getClass()->getFieldDefinition("suppliers");
 	$hideUnpublished = \Pimcore\Model\DataObject\Concrete::getHideUnpublished();
 	\Pimcore\Model\DataObject\Concrete::setHideUnpublished(false);
-	$currentData = $this->getSupplier();
+	$currentData = $this->getSuppliers();
 	\Pimcore\Model\DataObject\Concrete::setHideUnpublished($hideUnpublished);
-	$isEqual = $fd->isEqual($currentData, $supplier);
+	$isEqual = $fd->isEqual($currentData, $suppliers);
 	if (!$isEqual) {
-		$this->markFieldDirty("supplier", true);
+		$this->markFieldDirty("suppliers", true);
 	}
-	$this->supplier = $fd->preSetData($this, $supplier);
+	$this->suppliers = $fd->preSetData($this, $suppliers);
 	return $this;
 }
 
