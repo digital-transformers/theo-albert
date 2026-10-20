@@ -277,7 +277,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
               )),
-              6 =>
+              5 =>
               \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
                  'name' => 'composedColors',
                  'title' => 'Composed Colors',
@@ -342,7 +342,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'enableBatchEdit' => false,
                  'allowMultipleAssignments' => false,
               )),
-              7 =>
+              6 =>
               \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
                  'name' => 'components',
                  'title' => 'Components',
@@ -387,7 +387,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'enableBatchEdit' => false,
                  'allowMultipleAssignments' => false,
               )),
-              8 =>
+              7 =>
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
                  'name' => 'posMaterialProducts',
                  'title' => 'Pos Material Products',
@@ -427,7 +427,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
               )),
-              9 =>
+              8 =>
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
                  'name' => 'servicePartProducts',
                  'title' => 'Service Part Products',
@@ -467,7 +467,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
               )),
-              10 =>
+              9 =>
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
                  'name' => 'downloadableAssets',
                  'title' => 'Downloadable assets',
@@ -507,7 +507,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
               )),
-              11 =>
+              10 =>
               \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
                  'name' => 'suppliers',
                  'title' => 'Suppliers',

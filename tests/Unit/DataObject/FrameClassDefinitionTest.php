@@ -6,6 +6,7 @@ namespace App\Tests\Unit\DataObject;
 use Codeception\Test\Unit;
 use Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation;
 use Pimcore\Model\DataObject\ClassDefinition\Data\Input;
+use Pimcore\Model\DataObject\ClassDefinition\Layout;
 
 final class FrameClassDefinitionTest extends Unit
 {
@@ -29,5 +30,31 @@ final class FrameClassDefinitionTest extends Unit
         self::assertSame(['supplierType'], $field->getColumnKeys());
         self::assertSame('multiselect', $field->getColumns()[0]['type']);
         self::assertTrue($field->getAllowMultipleAssignments());
+    }
+
+    public function testBaseDataChildrenRemainASequentialList(): void
+    {
+        $definition = require dirname(__DIR__, 3) . '/var/classes/definition_frame.php';
+        $baseData = $this->findLayout($definition->getLayoutDefinitions(), 'Base data');
+
+        self::assertInstanceOf(Layout::class, $baseData);
+        self::assertTrue(array_is_list($baseData->getChildren()));
+    }
+
+    private function findLayout(?Layout $layout, string $name): ?Layout
+    {
+        if (!$layout instanceof Layout) {
+            return null;
+        }
+        if ($layout->getName() === $name) {
+            return $layout;
+        }
+        foreach ($layout->getChildren() as $child) {
+            if ($child instanceof Layout && ($match = $this->findLayout($child, $name))) {
+                return $match;
+            }
+        }
+
+        return null;
     }
 }
