@@ -12,12 +12,12 @@
  * - description [textarea]
  * - outlineImage [image]
  * - planAttachment [advancedManyToManyRelation]
+ * - launchPeriod [select]
+ * - launchYear [numeric]
  * - posMaterialProducts [manyToManyObjectRelation]
  * - servicePartProducts [advancedManyToManyObjectRelation]
  * - downloadableAssets [manyToManyObjectRelation]
  * - suppliers [advancedManyToManyObjectRelation]
- * - launchPeriod [select]
- * - launchYear [numeric]
  * - seriesCode [input]
  * - createDate [date]
  * - shape [select]
@@ -80,7 +80,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1791526132,
+   'modificationDate' => 1793176971,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => 'Pimcore\\Model\\DataObject\\Family',
@@ -380,6 +380,88 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'allowMultipleAssignments' => false,
               )),
               7 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
+                 'name' => 'launchPeriod',
+                 'title' => 'Launch Period',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'options' => 
+                array (
+                  0 => 
+                  array (
+                    'key' => 'January',
+                    'value' => 'jan',
+                  ),
+                  1 => 
+                  array (
+                    'key' => 'April',
+                    'value' => 'apr',
+                  ),
+                  2 => 
+                  array (
+                    'key' => 'Summer',
+                    'value' => 'sum',
+                  ),
+                  3 => 
+                  array (
+                    'key' => 'Silmo',
+                    'value' => 'silmo',
+                  ),
+                ),
+                 'defaultValue' => '',
+                 'columnLength' => 190,
+                 'dynamicOptions' => false,
+                 'enforceValidation' => false,
+                 'defaultValueGenerator' => '',
+                 'width' => '',
+                 'optionsProviderType' => 'configure',
+                 'optionsProviderClass' => '',
+                 'optionsProviderData' => '',
+              )),
+              8 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
+                 'name' => 'launchYear',
+                 'title' => 'Launch Year',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'defaultValue' => NULL,
+                 'integer' => false,
+                 'unsigned' => false,
+                 'minValue' => NULL,
+                 'maxValue' => NULL,
+                 'unique' => false,
+                 'decimalSize' => NULL,
+                 'decimalPrecision' => NULL,
+                 'width' => '',
+                 'defaultValueGenerator' => '',
+              )),
+              9 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
                  'name' => 'posMaterialProducts',
                  'title' => 'Pos Material Products',
@@ -419,7 +501,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
               )),
-              8 => 
+              10 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
                  'name' => 'servicePartProducts',
                  'title' => 'Service Part Products',
@@ -488,7 +570,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'enableBatchEdit' => false,
                  'allowMultipleAssignments' => false,
               )),
-              9 => 
+              11 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
                  'name' => 'downloadableAssets',
                  'title' => 'Downloadable assets',
@@ -528,7 +610,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
               )),
-              10 => 
+              12 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
                  'name' => 'suppliers',
                  'title' => 'Suppliers',
@@ -582,88 +664,6 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 ),
                  'enableBatchEdit' => false,
                  'allowMultipleAssignments' => true,
-              )),
-              11 =>
-              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
-                 'name' => 'launchPeriod',
-                 'title' => 'Launch Period',
-                 'tooltip' => '',
-                 'mandatory' => false,
-                 'noteditable' => false,
-                 'index' => false,
-                 'locked' => false,
-                 'style' => '',
-                 'permissions' => NULL,
-                 'fieldtype' => '',
-                 'relationType' => false,
-                 'invisible' => false,
-                 'visibleGridView' => false,
-                 'visibleSearch' => false,
-                 'blockedVarsForExport' =>
-                array (
-                ),
-                 'options' =>
-                array (
-                  0 =>
-                  array (
-                    'key' => 'January',
-                    'value' => 'jan',
-                  ),
-                  1 =>
-                  array (
-                    'key' => 'April',
-                    'value' => 'apr',
-                  ),
-                  2 =>
-                  array (
-                    'key' => 'Summer',
-                    'value' => 'sum',
-                  ),
-                  3 =>
-                  array (
-                    'key' => 'Silmo',
-                    'value' => 'silmo',
-                  ),
-                ),
-                 'defaultValue' => '',
-                 'columnLength' => 190,
-                 'dynamicOptions' => false,
-                 'enforceValidation' => false,
-                 'defaultValueGenerator' => '',
-                 'width' => '',
-                 'optionsProviderType' => 'configure',
-                 'optionsProviderClass' => '',
-                 'optionsProviderData' => '',
-              )),
-              12 =>
-              \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
-                 'name' => 'launchYear',
-                 'title' => 'Launch Year',
-                 'tooltip' => '',
-                 'mandatory' => false,
-                 'noteditable' => false,
-                 'index' => false,
-                 'locked' => false,
-                 'style' => '',
-                 'permissions' => NULL,
-                 'fieldtype' => '',
-                 'relationType' => false,
-                 'invisible' => false,
-                 'visibleGridView' => false,
-                 'visibleSearch' => false,
-                 'blockedVarsForExport' =>
-                array (
-                ),
-                 'defaultValue' => NULL,
-                 'integer' => false,
-                 'unsigned' => false,
-                 'minValue' => NULL,
-                 'maxValue' => NULL,
-                 'unique' => false,
-                 'decimalSize' => NULL,
-                 'decimalPrecision' => NULL,
-                 'width' => '',
-                 'defaultValueGenerator' => '',
               )),
             ),
              'locked' => false,
@@ -1333,7 +1333,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              17 =>
+              17 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'lensHeight',
                  'title' => 'Lens Height',
@@ -1363,7 +1363,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              18 =>
+              18 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'boxingSize',
                  'title' => 'Boxing Size',
@@ -1393,7 +1393,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              19 =>
+              19 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'widthVisibleLens',
                  'title' => 'Width Visible Lens',
@@ -1423,7 +1423,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              20 =>
+              20 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'distanceBetweenLens',
                  'title' => 'Distance Between Lens',
@@ -1453,7 +1453,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              21 =>
+              21 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'heightVisibleLens',
                  'title' => 'Height Visible Lens',
@@ -1483,7 +1483,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              22 =>
+              22 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'totalWidth',
                  'title' => 'Total Width',
@@ -1513,7 +1513,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              23 =>
+              23 => 
               \Pimcore\Model\DataObject\ClassDefinition\Layout\Fieldset::__set_state(array(
                  'name' => 'References',
                  'type' => NULL,
@@ -1656,7 +1656,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'labelWidth' => 100,
                  'labelAlign' => 'left',
               )),
-              24 =>
+              24 => 
               \Pimcore\Model\DataObject\ClassDefinition\Layout\Fieldset::__set_state(array(
                  'name' => 'Temples',
                  'type' => NULL,
@@ -1789,7 +1789,6 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                      'blockedVarsForExport' => 
                     array (
                     ),
-                     'options' => NULL,
                      'defaultValue' => NULL,
                      'columnLength' => 190,
                      'dynamicOptions' => false,
@@ -1909,7 +1908,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'labelWidth' => 100,
                  'labelAlign' => 'left',
               )),
-              25 =>
+              25 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\ImageGallery::__set_state(array(
                  'name' => 'toolingSamplesGallery',
                  'title' => 'Tooling Samples',
@@ -1935,7 +1934,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'height' => '',
                  'width' => '',
               )),
-              26 =>
+              26 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'basicUDI',
                  'title' => 'Basic UDI',
@@ -1965,7 +1964,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              27 =>
+              27 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'masterUDI',
                  'title' => 'Master UDI',

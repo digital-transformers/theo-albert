@@ -10,14 +10,13 @@
  * - mainColorCode [input]
  * - name [input]
  * - itemGroup [manyToManyObjectRelation]
- * - suppliers [advancedManyToManyObjectRelation]
- * - lensType [multiselect]
- * - materialType [select]
  * - composedColors [advancedManyToManyObjectRelation]
  * - components [advancedManyToManyObjectRelation]
  * - posMaterialProducts [manyToManyObjectRelation]
  * - servicePartProducts [manyToManyObjectRelation]
  * - downloadableAssets [manyToManyObjectRelation]
+ * - suppliers [advancedManyToManyObjectRelation]
+ * - materialType [select]
  * - artBase [manyToOneRelation]
  * - seriesCode [input]
  * - ecomFileName [input]
@@ -29,6 +28,7 @@
  * - exchangeCode [input]
  * - activeFrom [date]
  * - leadTime [numeric]
+ * - lensType [multiselect]
  * - lensColor [select]
  * - basicUDI [input]
  * - masterUDI [input]
@@ -62,7 +62,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1787830899,
+   'modificationDate' => 1793176874,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => 'Pimcore\\Model\\DataObject\\Model',
@@ -165,13 +165,13 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'invisible' => false,
                  'visibleGridView' => false,
                  'visibleSearch' => false,
-                 'blockedVarsForExport' =>
+                 'blockedVarsForExport' => 
                 array (
                 ),
                  'defaultValue' => NULL,
                  'columnLength' => 190,
                  'regex' => '',
-                 'regexFlags' =>
+                 'regexFlags' => 
                 array (
                 ),
                  'unique' => false,
@@ -179,7 +179,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              2 =>
+              2 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'mainColorCode',
                  'title' => 'Main Color Code',
@@ -209,7 +209,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              3 =>
+              3 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'name',
                  'title' => 'Name',
@@ -239,7 +239,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              4 =>
+              4 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
                  'name' => 'itemGroup',
                  'title' => 'Item Group',
@@ -279,7 +279,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
               )),
-              5 =>
+              5 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
                  'name' => 'composedColors',
                  'title' => 'Composed Colors',
@@ -344,7 +344,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'enableBatchEdit' => false,
                  'allowMultipleAssignments' => false,
               )),
-              6 =>
+              6 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
                  'name' => 'components',
                  'title' => 'Components',
@@ -389,7 +389,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'enableBatchEdit' => false,
                  'allowMultipleAssignments' => false,
               )),
-              7 =>
+              7 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
                  'name' => 'posMaterialProducts',
                  'title' => 'Pos Material Products',
@@ -429,7 +429,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
               )),
-              8 =>
+              8 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
                  'name' => 'servicePartProducts',
                  'title' => 'Service Part Products',
@@ -469,7 +469,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
               )),
-              9 =>
+              9 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
                  'name' => 'downloadableAssets',
                  'title' => 'Downloadable assets',
@@ -509,7 +509,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
               )),
-              10 =>
+              10 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
                  'name' => 'suppliers',
                  'title' => 'Suppliers',
@@ -525,10 +525,10 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'invisible' => false,
                  'visibleGridView' => false,
                  'visibleSearch' => false,
-                 'blockedVarsForExport' =>
+                 'blockedVarsForExport' => 
                 array (
                 ),
-                 'classes' =>
+                 'classes' => 
                 array (
                 ),
                  'displayMode' => NULL,
@@ -539,15 +539,15 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'allowToClearRelation' => true,
                  'optimizedAdminLoading' => false,
                  'enableTextSelection' => false,
-                 'visibleFieldDefinitions' =>
+                 'visibleFieldDefinitions' => 
                 array (
                 ),
                  'width' => '',
                  'height' => '',
                  'allowedClassId' => 'supplier',
-                 'columns' =>
+                 'columns' => 
                 array (
-                  0 =>
+                  0 => 
                   array (
                     'type' => 'multiselect',
                     'position' => 1,
@@ -557,60 +557,14 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                     'value' => 'Color;Acetate;Metal;Parts;Finishing',
                   ),
                 ),
-                 'columnKeys' =>
+                 'columnKeys' => 
                 array (
                   0 => 'supplierType',
                 ),
                  'enableBatchEdit' => false,
                  'allowMultipleAssignments' => true,
               )),
-              11 =>
-              \Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect::__set_state(array(
-                 'name' => 'lensType',
-                 'title' => 'Lens Type',
-                 'tooltip' => '',
-                 'mandatory' => false,
-                 'noteditable' => false,
-                 'index' => false,
-                 'locked' => false,
-                 'style' => '',
-                 'permissions' => NULL,
-                 'fieldtype' => '',
-                 'relationType' => false,
-                 'invisible' => false,
-                 'visibleGridView' => false,
-                 'visibleSearch' => false,
-                 'blockedVarsForExport' =>
-                array (
-                ),
-                 'options' =>
-                array (
-                  0 =>
-                  array (
-                    'key' => 'Optic',
-                    'value' => 'optic',
-                  ),
-                  1 =>
-                  array (
-                    'key' => 'Sun',
-                    'value' => 'sun',
-                  ),
-                ),
-                 'maxItems' => NULL,
-                 'renderType' => 'list',
-                 'enforceValidation' => false,
-                 'dynamicOptions' => false,
-                 'defaultValue' =>
-                array (
-                ),
-                 'height' => '',
-                 'width' => '',
-                 'defaultValueGenerator' => '',
-                 'optionsProviderType' => 'configure',
-                 'optionsProviderClass' => '',
-                 'optionsProviderData' => '',
-              )),
-              12 =>
+              11 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
                  'name' => 'materialType',
                  'title' => 'Material Type',
@@ -626,37 +580,37 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'invisible' => false,
                  'visibleGridView' => false,
                  'visibleSearch' => false,
-                 'blockedVarsForExport' =>
+                 'blockedVarsForExport' => 
                 array (
                 ),
-                 'options' =>
+                 'options' => 
                 array (
-                  0 =>
+                  0 => 
                   array (
                     'key' => 'Metal Single Color',
                     'value' => 'metal-single-color',
                   ),
-                  1 =>
+                  1 => 
                   array (
                     'key' => 'Metal Bi-Color',
                     'value' => 'metal-bi-color',
                   ),
-                  2 =>
+                  2 => 
                   array (
                     'key' => 'Acetat',
                     'value' => 'acetat',
                   ),
-                  3 =>
+                  3 => 
                   array (
                     'key' => 'Metal-Acetat',
                     'value' => 'metal-acetat',
                   ),
-                  4 =>
+                  4 => 
                   array (
                     'key' => 'Horn',
                     'value' => 'horn',
                   ),
-                  5 =>
+                  5 => 
                   array (
                     'key' => 'Metal-Hoorn',
                     'value' => 'metal-horn',
@@ -1143,6 +1097,52 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'defaultValueGenerator' => '',
               )),
               11 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect::__set_state(array(
+                 'name' => 'lensType',
+                 'title' => 'Lens Type',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'options' => 
+                array (
+                  0 => 
+                  array (
+                    'key' => 'Optic',
+                    'value' => 'optic',
+                  ),
+                  1 => 
+                  array (
+                    'key' => 'Sun',
+                    'value' => 'sun',
+                  ),
+                ),
+                 'maxItems' => NULL,
+                 'renderType' => 'list',
+                 'enforceValidation' => false,
+                 'dynamicOptions' => false,
+                 'defaultValue' => 
+                array (
+                ),
+                 'height' => '',
+                 'width' => '',
+                 'defaultValueGenerator' => '',
+                 'optionsProviderType' => 'configure',
+                 'optionsProviderClass' => '',
+                 'optionsProviderData' => '',
+              )),
+              12 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
                  'name' => 'lensColor',
                  'title' => 'Lens Color',
@@ -1174,7 +1174,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderClass' => '',
                  'optionsProviderData' => '',
               )),
-              12 => 
+              13 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'basicUDI',
                  'title' => 'Basic UDI',
@@ -1204,7 +1204,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              13 => 
+              14 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'masterUDI',
                  'title' => 'Master UDI',
@@ -1234,7 +1234,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              14 => 
+              15 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Country::__set_state(array(
                  'name' => 'countryOfOrigin',
                  'title' => 'Country Of Origin',
@@ -1264,7 +1264,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderData' => NULL,
                  'restrictTo' => '',
               )),
-              15 => 
+              16 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
                  'name' => 'dsArtCat',
                  'title' => 'DS_ArtCat',
@@ -1283,89 +1283,89 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'blockedVarsForExport' => 
                 array (
                 ),
-                 'options' =>
+                 'options' => 
                 array (
-                  0 =>
+                  0 => 
                   array (
                     'key' => 'Accessories',
                     'value' => 'A',
                   ),
-                  1 =>
+                  1 => 
                   array (
                     'key' => 'Christoph Broich',
                     'value' => 'CB',
                   ),
-                  2 =>
+                  2 => 
                   array (
                     'key' => 'Diverse',
                     'value' => 'D',
                   ),
-                  3 =>
+                  3 => 
                   array (
                     'key' => 'Eye Witness',
                     'value' => 'E',
                   ),
-                  4 =>
+                  4 => 
                   array (
                     'key' => 'Eye Witness Clips',
                     'value' => 'EC',
                   ),
-                  5 =>
+                  5 => 
                   array (
                     'key' => 'Interior',
                     'value' => 'I',
                   ),
-                  6 =>
+                  6 => 
                   array (
                     'key' => 'Oldie',
                     'value' => 'O',
                   ),
-                  7 =>
+                  7 => 
                   array (
                     'key' => 'Old Accessories',
                     'value' => 'OA',
                   ),
-                  8 =>
+                  8 => 
                   array (
                     'key' => 'Old and over',
                     'value' => 'OO',
                   ),
-                  9 =>
+                  9 => 
                   array (
                     'key' => 'Old Publicity',
                     'value' => 'OP',
                   ),
-                  10 =>
+                  10 => 
                   array (
                     'key' => 'Publicity',
                     'value' => 'P',
                   ),
-                  11 =>
+                  11 => 
                   array (
                     'key' => 'Service',
                     'value' => 'S',
                   ),
-                  12 =>
+                  12 => 
                   array (
                     'key' => 'Theo',
                     'value' => 'T',
                   ),
-                  13 =>
+                  13 => 
                   array (
                     'key' => 'Theo Clips',
                     'value' => 'TC',
                   ),
-                  14 =>
+                  14 => 
                   array (
                     'key' => 'T.O en alles Serge Collectie',
                     'value' => 'TO',
                   ),
-                  15 =>
+                  15 => 
                   array (
                     'key' => 'Tim Van Steenbergen',
                     'value' => 'TVS',
                   ),
-                  16 =>
+                  16 => 
                   array (
                     'key' => 'Treasury',
                     'value' => 'X',
@@ -1381,7 +1381,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderClass' => '',
                  'optionsProviderData' => '',
               )),
-              16 =>
+              17 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
                  'name' => 'dsType',
                  'title' => 'DS_Type',
@@ -1397,67 +1397,67 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'invisible' => false,
                  'visibleGridView' => false,
                  'visibleSearch' => false,
-                 'blockedVarsForExport' =>
+                 'blockedVarsForExport' => 
                 array (
                 ),
-                 'options' =>
+                 'options' => 
                 array (
-                  0 =>
+                  0 => 
                   array (
                     'key' => 'THEO',
                     'value' => 'T',
                   ),
-                  1 =>
+                  1 => 
                   array (
                     'key' => 'EYE WITNESS',
                     'value' => 'E',
                   ),
-                  2 =>
+                  2 => 
                   array (
                     'key' => 'THEO + TVS',
                     'value' => 'TVS',
                   ),
-                  3 =>
+                  3 => 
                   array (
                     'key' => 'CHRISTOPH BROICH',
                     'value' => 'CB',
                   ),
-                  4 =>
+                  4 => 
                   array (
                     'key' => 'PUBLICITY',
                     'value' => 'P',
                   ),
-                  5 =>
+                  5 => 
                   array (
                     'key' => 'ACCESOIRES',
                     'value' => 'A',
                   ),
-                  6 =>
+                  6 => 
                   array (
                     'key' => 'VINGT-AGE',
                     'value' => 'VIN',
                   ),
-                  7 =>
+                  7 => 
                   array (
                     'key' => 'THEO + JAMES',
                     'value' => 'JVV',
                   ),
-                  8 =>
+                  8 => 
                   array (
                     'key' => 'FACTORY 900',
                     'value' => 'F900',
                   ),
-                  9 =>
+                  9 => 
                   array (
                     'key' => 'MILLE',
                     'value' => 'MIL',
                   ),
-                  10 =>
+                  10 => 
                   array (
                     'key' => 'THEO + MATALI',
                     'value' => 'MATALI',
                   ),
-                  11 =>
+                  11 => 
                   array (
                     'key' => 'THEO + KIDS',
                     'value' => 'KIDS',
@@ -1473,7 +1473,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderClass' => '',
                  'optionsProviderData' => '',
               )),
-              17 => 
+              18 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'dsSize',
                  'title' => 'DS_Size',
@@ -1503,7 +1503,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'defaultValueGenerator' => '',
               )),
-              18 => 
+              19 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
                  'name' => 'dsTarif',
                  'title' => 'Ds Tarif',
@@ -1522,20 +1522,17 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'blockedVarsForExport' => 
                 array (
                 ),
-                 'options' =>
-                array (
-                ),
                  'defaultValue' => NULL,
                  'columnLength' => 190,
-                 'enforceValidation' => false,
                  'dynamicOptions' => false,
+                 'enforceValidation' => false,
                  'defaultValueGenerator' => '',
                  'width' => '',
                  'optionsProviderType' => 'class',
                  'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\TarifCodeOptionsProvider',
                  'optionsProviderData' => '',
               )),
-              19 => 
+              20 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'intrastatCode',
                  'title' => 'Intrastat Code',
@@ -1613,7 +1610,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'defaultValue' => NULL,
                  'integer' => true,
                  'unsigned' => true,
-                 'minValue' => 0,
+                 'minValue' => 0.0,
                  'maxValue' => NULL,
                  'unique' => false,
                  'decimalSize' => NULL,

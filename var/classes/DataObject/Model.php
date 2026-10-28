@@ -12,6 +12,8 @@
  * - description [textarea]
  * - outlineImage [image]
  * - planAttachment [advancedManyToManyRelation]
+ * - launchPeriod [select]
+ * - launchYear [numeric]
  * - posMaterialProducts [manyToManyObjectRelation]
  * - servicePartProducts [advancedManyToManyObjectRelation]
  * - downloadableAssets [manyToManyObjectRelation]
@@ -32,7 +34,6 @@
  * - templeLenght [numeric]
  * - facepartReferenceSupplier [input]
  * - templeReferenceSupplier [input]
- * - lensType [multiselect]
  * - lensMounting [input]
  * - lensHeight [numeric]
  * - boxingSize [input]
@@ -86,6 +87,8 @@ use Pimcore\Model\DataObject\PreGetValueHookInterface;
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByDescription(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByOutlineImage(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByPlanAttachment(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByLaunchPeriod(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByLaunchYear(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByPosMaterialProducts(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByServicePartProducts(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByDownloadableAssets(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
@@ -106,7 +109,6 @@ use Pimcore\Model\DataObject\PreGetValueHookInterface;
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByTempleLenght(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByFacepartReferenceSupplier(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByTempleReferenceSupplier(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
-* @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByLensType(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByLensMounting(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByLensHeight(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByBoxingSize(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
@@ -148,6 +150,8 @@ public const FIELD_FRAME_BASE_CODE = 'frameBaseCode';
 public const FIELD_DESCRIPTION = 'description';
 public const FIELD_OUTLINE_IMAGE = 'outlineImage';
 public const FIELD_PLAN_ATTACHMENT = 'planAttachment';
+public const FIELD_LAUNCH_PERIOD = 'launchPeriod';
+public const FIELD_LAUNCH_YEAR = 'launchYear';
 public const FIELD_POS_MATERIAL_PRODUCTS = 'posMaterialProducts';
 public const FIELD_SERVICE_PART_PRODUCTS = 'servicePartProducts';
 public const FIELD_DOWNLOADABLE_ASSETS = 'downloadableAssets';
@@ -168,7 +172,6 @@ public const FIELD_TEMPLE_REFERENCE = 'templeReference';
 public const FIELD_TEMPLE_LENGHT = 'templeLenght';
 public const FIELD_FACEPART_REFERENCE_SUPPLIER = 'facepartReferenceSupplier';
 public const FIELD_TEMPLE_REFERENCE_SUPPLIER = 'templeReferenceSupplier';
-public const FIELD_LENS_TYPE = 'lensType';
 public const FIELD_LENS_MOUNTING = 'lensMounting';
 public const FIELD_LENS_HEIGHT = 'lensHeight';
 public const FIELD_BOXING_SIZE = 'boxingSize';
@@ -215,6 +218,8 @@ protected $frameBaseCode;
 protected $description;
 protected $outlineImage;
 protected $planAttachment;
+protected $launchPeriod;
+protected $launchYear;
 protected $posMaterialProducts;
 protected $servicePartProducts;
 protected $downloadableAssets;
@@ -235,7 +240,6 @@ protected $templeReference;
 protected $templeLenght;
 protected $facepartReferenceSupplier;
 protected $templeReferenceSupplier;
-protected $lensType;
 protected $lensMounting;
 protected $lensHeight;
 protected $boxingSize;
@@ -607,6 +611,93 @@ public function setPlanAttachment(?array $planAttachment): static
 		$this->markFieldDirty("planAttachment", true);
 	}
 	$this->planAttachment = $fd->preSetData($this, $planAttachment);
+	return $this;
+}
+
+/**
+* Get launchPeriod - Launch Period
+* @return string|null
+*/
+public function getLaunchPeriod(): ?string
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("launchPeriod");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->launchPeriod;
+
+	if (\Pimcore\Model\DataObject::doGetInheritedValues() && $this->getClass()->getFieldDefinition("launchPeriod")->isEmpty($data)) {
+		try {
+			return $this->getValueFromParent("launchPeriod");
+		} catch (InheritanceParentNotFoundException $e) {
+			// no data from parent available, continue ...
+		}
+	}
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set launchPeriod - Launch Period
+* @param string|null $launchPeriod
+* @return $this
+*/
+public function setLaunchPeriod(?string $launchPeriod): static
+{
+	$this->markFieldDirty("launchPeriod", true);
+
+	$this->launchPeriod = $launchPeriod;
+
+	return $this;
+}
+
+/**
+* Get launchYear - Launch Year
+* @return float|null
+*/
+public function getLaunchYear(): ?float
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("launchYear");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->launchYear;
+
+	if (\Pimcore\Model\DataObject::doGetInheritedValues() && $this->getClass()->getFieldDefinition("launchYear")->isEmpty($data)) {
+		try {
+			return $this->getValueFromParent("launchYear");
+		} catch (InheritanceParentNotFoundException $e) {
+			// no data from parent available, continue ...
+		}
+	}
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set launchYear - Launch Year
+* @param float|null $launchYear
+* @return $this
+*/
+public function setLaunchYear(?float $launchYear): static
+{
+	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric $fd */
+	$fd = $this->getClass()->getFieldDefinition("launchYear");
+	$this->launchYear = $fd->preSetData($this, $launchYear);
 	return $this;
 }
 
@@ -1517,50 +1608,6 @@ public function setTempleReferenceSupplier(?string $templeReferenceSupplier): st
 	$this->markFieldDirty("templeReferenceSupplier", true);
 
 	$this->templeReferenceSupplier = $templeReferenceSupplier;
-
-	return $this;
-}
-
-/**
-* Get lensType - Lens Type
-* @return string[]|null
-*/
-public function getLensType(): ?array
-{
-	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
-		$preValue = $this->preGetValue("lensType");
-		if ($preValue !== null) {
-			return $preValue;
-		}
-	}
-
-	$data = $this->lensType;
-
-	if (\Pimcore\Model\DataObject::doGetInheritedValues() && $this->getClass()->getFieldDefinition("lensType")->isEmpty($data)) {
-		try {
-			return $this->getValueFromParent("lensType");
-		} catch (InheritanceParentNotFoundException $e) {
-			// no data from parent available, continue ...
-		}
-	}
-
-	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
-		return $data->getPlain();
-	}
-
-	return $data;
-}
-
-/**
-* Set lensType - Lens Type
-* @param string[]|null $lensType
-* @return $this
-*/
-public function setLensType(?array $lensType): static
-{
-	$this->markFieldDirty("lensType", true);
-
-	$this->lensType = $lensType;
 
 	return $this;
 }

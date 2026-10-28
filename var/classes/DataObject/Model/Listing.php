@@ -103,6 +103,30 @@ public function filterByPlanAttachment ($data, $operator = '='): static
 }
 
 /**
+* Filter by launchPeriod (Launch Period)
+* @param string|int|float|array|Model\Element\ElementInterface $data  comparison data, can be scalar or array (if operator is e.g. "IN (?)")
+* @param string $operator  SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
+* @return $this
+*/
+public function filterByLaunchPeriod ($data, $operator = '='): static
+{
+	$this->getClass()->getFieldDefinition("launchPeriod")->addListingFilter($this, $data, $operator);
+	return $this;
+}
+
+/**
+* Filter by launchYear (Launch Year)
+* @param string|int|float|array|Model\Element\ElementInterface $data  comparison data, can be scalar or array (if operator is e.g. "IN (?)")
+* @param string $operator  SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
+* @return $this
+*/
+public function filterByLaunchYear ($data, $operator = '='): static
+{
+	$this->getClass()->getFieldDefinition("launchYear")->addListingFilter($this, $data, $operator);
+	return $this;
+}
+
+/**
 * Filter by posMaterialProducts (Pos Material Products)
 * @param mixed $data
 * @param string $operator SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
@@ -339,18 +363,6 @@ public function filterByFacepartReferenceSupplier ($data, $operator = '='): stat
 public function filterByTempleReferenceSupplier ($data, $operator = '='): static
 {
 	$this->getClass()->getFieldDefinition("templeReferenceSupplier")->addListingFilter($this, $data, $operator);
-	return $this;
-}
-
-/**
-* Filter by lensType (Lens Type)
-* @param string|int|float|array|Model\Element\ElementInterface $data  comparison data, can be scalar or array (if operator is e.g. "IN (?)")
-* @param string $operator  SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
-* @return $this
-*/
-public function filterByLensType ($data, $operator = '='): static
-{
-	$this->getClass()->getFieldDefinition("lensType")->addListingFilter($this, $data, $operator);
 	return $this;
 }
 

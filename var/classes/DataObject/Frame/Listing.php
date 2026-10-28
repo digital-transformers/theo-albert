@@ -79,18 +79,6 @@ public function filterByItemGroup ($data, $operator = '='): static
 }
 
 /**
-* Filter by suppliers (Suppliers)
-* @param mixed $data
-* @param string $operator SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
-* @return $this
-*/
-public function filterBySuppliers ($data, $operator = '='): static
-{
-	$this->getClass()->getFieldDefinition("suppliers")->addListingFilter($this, $data, $operator);
-	return $this;
-}
-
-/**
 * Filter by composedColors (Composed Colors)
 * @param mixed $data
 * @param string $operator SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
@@ -147,6 +135,30 @@ public function filterByServicePartProducts ($data, $operator = '='): static
 public function filterByDownloadableAssets ($data, $operator = '='): static
 {
 	$this->getClass()->getFieldDefinition("downloadableAssets")->addListingFilter($this, $data, $operator);
+	return $this;
+}
+
+/**
+* Filter by suppliers (Suppliers)
+* @param mixed $data
+* @param string $operator SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
+* @return $this
+*/
+public function filterBySuppliers ($data, $operator = '='): static
+{
+	$this->getClass()->getFieldDefinition("suppliers")->addListingFilter($this, $data, $operator);
+	return $this;
+}
+
+/**
+* Filter by materialType (Material Type)
+* @param string|int|float|array|Model\Element\ElementInterface $data  comparison data, can be scalar or array (if operator is e.g. "IN (?)")
+* @param string $operator  SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
+* @return $this
+*/
+public function filterByMaterialType ($data, $operator = '='): static
+{
+	$this->getClass()->getFieldDefinition("materialType")->addListingFilter($this, $data, $operator);
 	return $this;
 }
 
@@ -279,6 +291,18 @@ public function filterByActiveFrom ($data, $operator = '='): static
 public function filterByLeadTime ($data, $operator = '='): static
 {
 	$this->getClass()->getFieldDefinition("leadTime")->addListingFilter($this, $data, $operator);
+	return $this;
+}
+
+/**
+* Filter by lensType (Lens Type)
+* @param string|int|float|array|Model\Element\ElementInterface $data  comparison data, can be scalar or array (if operator is e.g. "IN (?)")
+* @param string $operator  SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
+* @return $this
+*/
+public function filterByLensType ($data, $operator = '='): static
+{
+	$this->getClass()->getFieldDefinition("lensType")->addListingFilter($this, $data, $operator);
 	return $this;
 }
 

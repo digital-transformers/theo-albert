@@ -10,12 +10,13 @@
  * - mainColorCode [input]
  * - name [input]
  * - itemGroup [manyToManyObjectRelation]
- * - suppliers [advancedManyToManyObjectRelation]
  * - composedColors [advancedManyToManyObjectRelation]
  * - components [advancedManyToManyObjectRelation]
  * - posMaterialProducts [manyToManyObjectRelation]
  * - servicePartProducts [manyToManyObjectRelation]
  * - downloadableAssets [manyToManyObjectRelation]
+ * - suppliers [advancedManyToManyObjectRelation]
+ * - materialType [select]
  * - artBase [manyToOneRelation]
  * - seriesCode [input]
  * - ecomFileName [input]
@@ -27,6 +28,7 @@
  * - exchangeCode [input]
  * - activeFrom [date]
  * - leadTime [numeric]
+ * - lensType [multiselect]
  * - lensColor [select]
  * - basicUDI [input]
  * - masterUDI [input]
@@ -65,12 +67,13 @@ use Pimcore\Model\DataObject\PreGetValueHookInterface;
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByMainColorCode(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByName(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByItemGroup(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
-* @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getBySuppliers(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByComposedColors(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByComponents(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByPosMaterialProducts(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByServicePartProducts(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByDownloadableAssets(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getBySuppliers(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByMaterialType(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByArtBase(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getBySeriesCode(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByEcomFileName(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
@@ -82,6 +85,7 @@ use Pimcore\Model\DataObject\PreGetValueHookInterface;
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByExchangeCode(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByActiveFrom(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByLeadTime(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByLensType(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByLensColor(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByBasicUDI(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByMasterUDI(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
@@ -109,12 +113,13 @@ public const FIELD_EANCODE = 'EANCode';
 public const FIELD_MAIN_COLOR_CODE = 'mainColorCode';
 public const FIELD_NAME = 'name';
 public const FIELD_ITEM_GROUP = 'itemGroup';
-public const FIELD_SUPPLIERS = 'suppliers';
 public const FIELD_COMPOSED_COLORS = 'composedColors';
 public const FIELD_COMPONENTS = 'components';
 public const FIELD_POS_MATERIAL_PRODUCTS = 'posMaterialProducts';
 public const FIELD_SERVICE_PART_PRODUCTS = 'servicePartProducts';
 public const FIELD_DOWNLOADABLE_ASSETS = 'downloadableAssets';
+public const FIELD_SUPPLIERS = 'suppliers';
+public const FIELD_MATERIAL_TYPE = 'materialType';
 public const FIELD_ART_BASE = 'artBase';
 public const FIELD_SERIES_CODE = 'seriesCode';
 public const FIELD_ECOM_FILE_NAME = 'ecomFileName';
@@ -126,6 +131,7 @@ public const FIELD_COLLECTION_CYCLE = 'collectionCycle';
 public const FIELD_EXCHANGE_CODE = 'exchangeCode';
 public const FIELD_ACTIVE_FROM = 'activeFrom';
 public const FIELD_LEAD_TIME = 'leadTime';
+public const FIELD_LENS_TYPE = 'lensType';
 public const FIELD_LENS_COLOR = 'lensColor';
 public const FIELD_BASIC_UDI = 'basicUDI';
 public const FIELD_MASTER_UDI = 'masterUDI';
@@ -157,12 +163,13 @@ protected $EANCode;
 protected $mainColorCode;
 protected $name;
 protected $itemGroup;
-protected $suppliers;
 protected $composedColors;
 protected $components;
 protected $posMaterialProducts;
 protected $servicePartProducts;
 protected $downloadableAssets;
+protected $suppliers;
+protected $materialType;
 protected $artBase;
 protected $seriesCode;
 protected $ecomFileName;
@@ -174,6 +181,7 @@ protected $collectionCycle;
 protected $exchangeCode;
 protected $activeFrom;
 protected $leadTime;
+protected $lensType;
 protected $lensColor;
 protected $basicUDI;
 protected $masterUDI;
@@ -397,49 +405,6 @@ public function setItemGroup(?array $itemGroup): static
 }
 
 /**
-* Get suppliers - Suppliers
-* @return \Pimcore\Model\DataObject\Data\ObjectMetadata[]
-*/
-public function getSuppliers(): array
-{
-	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
-		$preValue = $this->preGetValue("suppliers");
-		if ($preValue !== null) {
-			return $preValue;
-		}
-	}
-
-	$data = $this->getClass()->getFieldDefinition("suppliers")->preGetData($this);
-
-	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
-		return $data->getPlain();
-	}
-
-	return $data;
-}
-
-/**
-* Set suppliers - Suppliers
-* @param \Pimcore\Model\DataObject\Data\ObjectMetadata[] $suppliers
-* @return $this
-*/
-public function setSuppliers(?array $suppliers): static
-{
-	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation $fd */
-	$fd = $this->getClass()->getFieldDefinition("suppliers");
-	$hideUnpublished = \Pimcore\Model\DataObject\Concrete::getHideUnpublished();
-	\Pimcore\Model\DataObject\Concrete::setHideUnpublished(false);
-	$currentData = $this->getSuppliers();
-	\Pimcore\Model\DataObject\Concrete::setHideUnpublished($hideUnpublished);
-	$isEqual = $fd->isEqual($currentData, $suppliers);
-	if (!$isEqual) {
-		$this->markFieldDirty("suppliers", true);
-	}
-	$this->suppliers = $fd->preSetData($this, $suppliers);
-	return $this;
-}
-
-/**
 * Get composedColors - Composed Colors
 * @return \Pimcore\Model\DataObject\Data\ObjectMetadata[]
 */
@@ -651,6 +616,85 @@ public function setDownloadableAssets(?array $downloadableAssets): static
 		$this->markFieldDirty("downloadableAssets", true);
 	}
 	$this->downloadableAssets = $fd->preSetData($this, $downloadableAssets);
+	return $this;
+}
+
+/**
+* Get suppliers - Suppliers
+* @return \Pimcore\Model\DataObject\Data\ObjectMetadata[]
+*/
+public function getSuppliers(): array
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("suppliers");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->getClass()->getFieldDefinition("suppliers")->preGetData($this);
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set suppliers - Suppliers
+* @param \Pimcore\Model\DataObject\Data\ObjectMetadata[] $suppliers
+* @return $this
+*/
+public function setSuppliers(?array $suppliers): static
+{
+	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation $fd */
+	$fd = $this->getClass()->getFieldDefinition("suppliers");
+	$hideUnpublished = \Pimcore\Model\DataObject\Concrete::getHideUnpublished();
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished(false);
+	$currentData = $this->getSuppliers();
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished($hideUnpublished);
+	$isEqual = $fd->isEqual($currentData, $suppliers);
+	if (!$isEqual) {
+		$this->markFieldDirty("suppliers", true);
+	}
+	$this->suppliers = $fd->preSetData($this, $suppliers);
+	return $this;
+}
+
+/**
+* Get materialType - Material Type
+* @return string|null
+*/
+public function getMaterialType(): ?string
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("materialType");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->materialType;
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set materialType - Material Type
+* @param string|null $materialType
+* @return $this
+*/
+public function setMaterialType(?string $materialType): static
+{
+	$this->markFieldDirty("materialType", true);
+
+	$this->materialType = $materialType;
+
 	return $this;
 }
 
@@ -1059,6 +1103,42 @@ public function setLeadTime(?float $leadTime): static
 	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric $fd */
 	$fd = $this->getClass()->getFieldDefinition("leadTime");
 	$this->leadTime = $fd->preSetData($this, $leadTime);
+	return $this;
+}
+
+/**
+* Get lensType - Lens Type
+* @return string[]|null
+*/
+public function getLensType(): ?array
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("lensType");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->lensType;
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set lensType - Lens Type
+* @param string[]|null $lensType
+* @return $this
+*/
+public function setLensType(?array $lensType): static
+{
+	$this->markFieldDirty("lensType", true);
+
+	$this->lensType = $lensType;
+
 	return $this;
 }
 
@@ -1940,3 +2020,4 @@ public function setQualityControlRemarks(?array $qualityControlRemarks): static
 }
 
 }
+
