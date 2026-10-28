@@ -11,6 +11,8 @@
  * - name [input]
  * - itemGroup [manyToManyObjectRelation]
  * - suppliers [advancedManyToManyObjectRelation]
+ * - lensType [multiselect]
+ * - materialType [select]
  * - composedColors [advancedManyToManyObjectRelation]
  * - components [advancedManyToManyObjectRelation]
  * - posMaterialProducts [manyToManyObjectRelation]
@@ -561,6 +563,114 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 ),
                  'enableBatchEdit' => false,
                  'allowMultipleAssignments' => true,
+              )),
+              11 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect::__set_state(array(
+                 'name' => 'lensType',
+                 'title' => 'Lens Type',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' =>
+                array (
+                ),
+                 'options' =>
+                array (
+                  0 =>
+                  array (
+                    'key' => 'Optic',
+                    'value' => 'optic',
+                  ),
+                  1 =>
+                  array (
+                    'key' => 'Sun',
+                    'value' => 'sun',
+                  ),
+                ),
+                 'maxItems' => NULL,
+                 'renderType' => 'list',
+                 'enforceValidation' => false,
+                 'dynamicOptions' => false,
+                 'defaultValue' =>
+                array (
+                ),
+                 'height' => '',
+                 'width' => '',
+                 'defaultValueGenerator' => '',
+                 'optionsProviderType' => 'configure',
+                 'optionsProviderClass' => '',
+                 'optionsProviderData' => '',
+              )),
+              12 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
+                 'name' => 'materialType',
+                 'title' => 'Material Type',
+                 'tooltip' => '',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' =>
+                array (
+                ),
+                 'options' =>
+                array (
+                  0 =>
+                  array (
+                    'key' => 'Metal Single Color',
+                    'value' => 'metal-single-color',
+                  ),
+                  1 =>
+                  array (
+                    'key' => 'Metal Bi-Color',
+                    'value' => 'metal-bi-color',
+                  ),
+                  2 =>
+                  array (
+                    'key' => 'Acetat',
+                    'value' => 'acetat',
+                  ),
+                  3 =>
+                  array (
+                    'key' => 'Metal-Acetat',
+                    'value' => 'metal-acetat',
+                  ),
+                  4 =>
+                  array (
+                    'key' => 'Horn',
+                    'value' => 'horn',
+                  ),
+                  5 =>
+                  array (
+                    'key' => 'Metal-Hoorn',
+                    'value' => 'metal-horn',
+                  ),
+                ),
+                 'defaultValue' => '',
+                 'columnLength' => 190,
+                 'dynamicOptions' => false,
+                 'enforceValidation' => false,
+                 'defaultValueGenerator' => '',
+                 'width' => '',
+                 'optionsProviderType' => 'configure',
+                 'optionsProviderClass' => '',
+                 'optionsProviderData' => '',
               )),
             ),
              'locked' => false,

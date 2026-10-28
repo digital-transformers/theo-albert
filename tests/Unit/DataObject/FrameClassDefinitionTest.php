@@ -6,6 +6,8 @@ namespace App\Tests\Unit\DataObject;
 use Codeception\Test\Unit;
 use Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation;
 use Pimcore\Model\DataObject\ClassDefinition\Data\Input;
+use Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect;
+use Pimcore\Model\DataObject\ClassDefinition\Data\Select;
 use Pimcore\Model\DataObject\ClassDefinition\Layout;
 
 final class FrameClassDefinitionTest extends Unit
@@ -30,6 +32,26 @@ final class FrameClassDefinitionTest extends Unit
         self::assertSame(['supplierType'], $field->getColumnKeys());
         self::assertSame('multiselect', $field->getColumns()[0]['type']);
         self::assertTrue($field->getAllowMultipleAssignments());
+    }
+
+    public function testFrameOwnsLensAndMaterialTypes(): void
+    {
+        $definition = require dirname(__DIR__, 3) . '/var/classes/definition_frame.php';
+
+        $lensType = $definition->getFieldDefinition('lensType');
+        self::assertInstanceOf(Multiselect::class, $lensType);
+        self::assertSame(['optic', 'sun'], array_column($lensType->getOptions(), 'value'));
+        self::assertSame('configure', $lensType->getOptionsProviderType());
+        self::assertSame('', $lensType->getOptionsProviderClass());
+
+        $materialType = $definition->getFieldDefinition('materialType');
+        self::assertInstanceOf(Select::class, $materialType);
+        self::assertSame(
+            ['metal-single-color', 'metal-bi-color', 'acetat', 'metal-acetat', 'horn', 'metal-horn'],
+            array_column($materialType->getOptions(), 'value')
+        );
+        self::assertSame('configure', $materialType->getOptionsProviderType());
+        self::assertSame('', $materialType->getOptionsProviderClass());
     }
 
     public function testBaseDataChildrenRemainASequentialList(): void
