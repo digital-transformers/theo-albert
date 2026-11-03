@@ -29,7 +29,7 @@ final class FrameClassDefinitionTest extends Unit
 
         self::assertInstanceOf(AdvancedManyToManyObjectRelation::class, $field);
         self::assertSame('supplier', $field->getAllowedClassId());
-        self::assertSame(['supplierType'], $field->getColumnKeys());
+        self::assertSame(['supplierType', 'leadTime', 'workItemGroup'], $field->getColumnKeys());
         self::assertSame('multiselect', $field->getColumns()[0]['type']);
         self::assertTrue($field->getAllowMultipleAssignments());
     }

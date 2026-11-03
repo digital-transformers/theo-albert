@@ -155,9 +155,9 @@ return \Pimcore\Model\DataObject\Fieldcollection\Definition::__set_state(array(
             array (
             ),
              'elementType' => 'input',
-             'calculatorType' => 'expression',
-             'calculatorExpression' => 'object.getBasePriceAmount()?',
-             'calculatorClass' => '',
+             'calculatorType' => 'class',
+             'calculatorExpression' => '',
+             'calculatorClass' => 'App\\DataObject\\Calculator\\ProductPricingAmountCalculator',
              'columnLength' => 190,
              'width' => '',
           )),

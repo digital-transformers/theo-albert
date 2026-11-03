@@ -429,12 +429,20 @@ final class ModelFrameGenerator
             $color = null;
             $name = null;
             $relevant = null;
+            $sapColorCode = null;
+            $orderNr = null;
+            $comment = null;
+            $qty = null;
 
             if ($item instanceof ObjectMetadata) {
                 $object = $item->getObject();
                 $color = $object instanceof Color ? $object : null;
                 $name = $item->getName();
                 $relevant = $item->getRelevant();
+                $sapColorCode = $item->getSapColorCode();
+                $orderNr = $item->getOrderNr();
+                $comment = $item->getComment();
+                $qty = $item->getQty();
             } elseif (is_array($item) && is_scalar($item['id'] ?? null) && (int) $item['id'] > 0) {
                 $object = Color::getById((int) $item['id'], ['force' => true]);
                 $color = $object instanceof Color ? $object : null;
@@ -453,9 +461,15 @@ final class ModelFrameGenerator
                 continue;
             }
 
-            $metadataItem = new ObjectMetadata('composedColors', ['name', 'relevant'], $color);
+            $metadataItem = new ObjectMetadata('composedColors', ['name', 'relevant', 'sapColorCode', 'orderNr', 'comment', 'qty'], $color);
             $metadataItem->setName($this->normalizeString($name) !== '' ? $this->normalizeString($name) : $this->normalizeString($color->getName()));
             $metadataItem->setRelevant($relevant === null ? true : (bool) $relevant);
+            // A Pimcore Color code is not necessarily the exact SAP colour code.
+            // Preserve explicit metadata, but never manufacture an SAP value.
+            $metadataItem->setSapColorCode($this->normalizeString($sapColorCode) !== '' ? $this->normalizeString($sapColorCode) : null);
+            $metadataItem->setOrderNr($orderNr ?? count($metadata) + 1);
+            $metadataItem->setComment($comment);
+            $metadataItem->setQty($qty);
             $metadata[] = $metadataItem;
             $seen[$colorId] = true;
         }
@@ -530,9 +544,10 @@ final class ModelFrameGenerator
                 continue;
             }
 
-            $item = new ObjectMetadata('composedColors', ['name', 'relevant'], $color);
+            $item = new ObjectMetadata('composedColors', ['name', 'relevant', 'sapColorCode', 'orderNr', 'comment', 'qty'], $color);
             $item->setName($this->normalizeString($color->getName()));
             $item->setRelevant(true);
+            $item->setOrderNr(count($metadata) + 1);
             $metadata[] = $item;
             $seen[$colorId] = true;
         }

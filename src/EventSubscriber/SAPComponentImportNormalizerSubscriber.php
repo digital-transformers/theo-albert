@@ -8,6 +8,9 @@ use Pimcore\Event\DataObjectEvents;
 use Pimcore\Event\Model\DataObjectEvent;
 use Pimcore\Model\DataObject\Color\Listing as ColorListing;
 use Pimcore\Model\DataObject\Concrete;
+use Pimcore\Model\DataObject\Data\ObjectMetadata;
+use Pimcore\Model\DataObject\Process;
+use Pimcore\Model\DataObject\Process\Listing as ProcessListing;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class SAPComponentImportNormalizerSubscriber implements EventSubscriberInterface
@@ -45,6 +48,119 @@ final class SAPComponentImportNormalizerSubscriber implements EventSubscriberInt
 
         $this->setItemTypeFromImportType($object);
         $this->setLinkedColorSelectValue($object);
+        $this->synchronizeSupplierProcessRelation($object);
+    }
+
+    private function synchronizeSupplierProcessRelation(Concrete $component): void
+    {
+        $links = $this->getFieldValue($component, 'suppliers');
+        $links = is_array($links) ? $links : [];
+
+        if ($links !== []) {
+            $normalizedLinks = [];
+            foreach ($links as $link) {
+                if (!$link instanceof ObjectMetadata) {
+                    continue;
+                }
+                $supplier = $link->getObject();
+                if (!$supplier instanceof Concrete) {
+                    continue;
+                }
+                $metadata = new ObjectMetadata(
+                    'suppliers',
+                    ['supplierType', 'leadTime', 'workItemGroup'],
+                    $supplier,
+                );
+                $metadata->setData($link->getData());
+                $this->setFieldValue($component, 'supplier', $supplier);
+                $process = $this->processFromMetadata($link);
+                if (!$process instanceof Process) {
+                    $candidate = $this->getFieldValue($component, 'process');
+                    $process = $candidate instanceof Process ? $candidate : $this->singleSupplierProcess($supplier);
+                    if ($process instanceof Process && trim((string) $metadata->getSupplierType()) === '') {
+                        $metadata->setSupplierType((string) $process->getCode());
+                    }
+                }
+                if ($process instanceof Process) {
+                    $this->setFieldValue($component, 'process', $process);
+                }
+                $normalizedLinks[] = $metadata;
+            }
+            if ($normalizedLinks !== []) {
+                $this->setFieldValue($component, 'suppliers', array_slice($normalizedLinks, 0, 1));
+            }
+
+            return;
+        }
+
+        // Backward-compatible import path: legacy supplier + process/step is
+        // converted into the canonical metadata relation on the same save.
+        $supplier = $this->getFieldValue($component, 'supplier');
+        if (!$supplier instanceof Concrete) {
+            return;
+        }
+        $process = $this->getFieldValue($component, 'process');
+        if (!$process instanceof Process) {
+            $step = trim((string) $this->getFieldValue($component, 'step'));
+            $process = $this->findProcess($step);
+        }
+        if (!$process instanceof Process) {
+            $process = $this->singleSupplierProcess($supplier);
+        }
+        if (!$process instanceof Process) {
+            return;
+        }
+
+        $metadata = new ObjectMetadata(
+            'suppliers',
+            ['supplierType', 'leadTime', 'workItemGroup'],
+            $supplier,
+        );
+        $metadata->setSupplierType((string) $process->getCode());
+        $this->setFieldValue($component, 'suppliers', [$metadata]);
+        $this->setFieldValue($component, 'process', $process);
+    }
+
+    private function singleSupplierProcess(Concrete $supplier): ?Process
+    {
+        if (!method_exists($supplier, 'getProcess')) {
+            return null;
+        }
+        $processes = array_values(array_filter(
+            $supplier->getProcess() ?: [],
+            static fn (mixed $candidate): bool => $candidate instanceof Process,
+        ));
+
+        return count($processes) === 1 ? $processes[0] : null;
+    }
+
+    private function processFromMetadata(ObjectMetadata $metadata): ?Process
+    {
+        $value = $metadata->getData()['supplierType'] ?? null;
+        $types = is_array($value) ? $value : (preg_split('/[,;]/', (string) $value) ?: []);
+        foreach ($types as $type) {
+            $process = $this->findProcess((string) $type);
+            if ($process instanceof Process) {
+                return $process;
+            }
+        }
+
+        return null;
+    }
+
+    private function findProcess(string $code): ?Process
+    {
+        $code = strtolower(trim($code));
+        if ($code === '') {
+            return null;
+        }
+        $listing = new ProcessListing();
+        $listing->setUnpublished(true);
+        $listing->setCondition('LOWER(`code`) = ? OR LOWER(`name`) = ?', [$code, $code]);
+        $listing->setLimit(1);
+        $processes = $listing->load();
+
+        return ($processes[0] ?? null) instanceof Process ? $processes[0] : null;
     }
 
     private function setItemTypeFromImportType(Concrete $object): void

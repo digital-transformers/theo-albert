@@ -634,9 +634,10 @@ final class ProductHierarchySyncService
                 continue;
             }
 
-            $item = new ObjectMetadata('composedColors', ['name', 'relevant'], $color);
+            $item = new ObjectMetadata('composedColors', ['name', 'relevant', 'sapColorCode', 'orderNr', 'comment', 'qty'], $color);
             $item->setName($this->stringValue($color->getName()));
             $item->setRelevant($entry['is_relevant']);
+            $item->setOrderNr(count($metadata) + 1);
             $metadata[] = $item;
             $seen[$id] = true;
         }

@@ -17,6 +17,13 @@
  * - downloadableAssets [manyToManyObjectRelation]
  * - suppliers [advancedManyToManyObjectRelation]
  * - materialType [select]
+ * - sapItemCode [input]
+ * - sapItemName [input]
+ * - sapFamily [input]
+ * - combiColor [manyToOneRelation]
+ * - sapActive [checkbox]
+ * - isNew [checkbox]
+ * - ecommerceDescription [textarea]
  * - artBase [manyToOneRelation]
  * - seriesCode [input]
  * - ecomFileName [input]
@@ -54,6 +61,24 @@
  * - qualityControlImages [advancedManyToManyRelation]
  * - qualityControlRemarks [table]
  */
+
+$sapFrameInput = static function (string $name, string $title): \Pimcore\Model\DataObject\ClassDefinition\Data\Input {
+    $field = new \Pimcore\Model\DataObject\ClassDefinition\Data\Input();
+    $field->setName($name);
+    $field->setTitle($title);
+    $field->setColumnLength(190);
+
+    return $field;
+};
+
+$sapFrameCheckbox = static function (string $name, string $title): \Pimcore\Model\DataObject\ClassDefinition\Data\Checkbox {
+    $field = new \Pimcore\Model\DataObject\ClassDefinition\Data\Checkbox();
+    $field->setName($name);
+    $field->setTitle($title);
+    $field->setDefaultValue(0);
+
+    return $field;
+};
 
 return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'dao' => NULL,
@@ -335,11 +360,39 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                     'key' => 'relevant',
                     'label' => 'Relevant',
                   ),
+                  2 => array (
+                    'type' => 'text',
+                    'position' => 3,
+                    'key' => 'sapColorCode',
+                    'label' => 'SAP Color Code',
+                  ),
+                  3 => array (
+                    'type' => 'number',
+                    'position' => 4,
+                    'key' => 'orderNr',
+                    'label' => 'Order',
+                  ),
+                  4 => array (
+                    'type' => 'text',
+                    'position' => 5,
+                    'key' => 'comment',
+                    'label' => 'Comment',
+                  ),
+                  5 => array (
+                    'type' => 'number',
+                    'position' => 6,
+                    'key' => 'qty',
+                    'label' => 'Quantity',
+                  ),
                 ),
                  'columnKeys' => 
                 array (
                   0 => 'name',
                   1 => 'relevant',
+                  2 => 'sapColorCode',
+                  3 => 'orderNr',
+                  4 => 'comment',
+                  5 => 'qty',
                 ),
                  'enableBatchEdit' => false,
                  'allowMultipleAssignments' => false,
@@ -556,10 +609,24 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                     'width' => NULL,
                     'value' => 'Color;Acetate;Metal;Parts;Finishing',
                   ),
+                  1 => array (
+                    'type' => 'number',
+                    'position' => 2,
+                    'key' => 'leadTime',
+                    'label' => 'Lead Time',
+                  ),
+                  2 => array (
+                    'type' => 'text',
+                    'position' => 3,
+                    'key' => 'workItemGroup',
+                    'label' => 'Work Item Group',
+                  ),
                 ),
                  'columnKeys' => 
                 array (
                   0 => 'supplierType',
+                  1 => 'leadTime',
+                  2 => 'workItemGroup',
                 ),
                  'enableBatchEdit' => false,
                  'allowMultipleAssignments' => true,
@@ -626,6 +693,30 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderClass' => '',
                  'optionsProviderData' => '',
               )),
+              12 => $sapFrameInput('sapItemCode', 'SAP Item Code'),
+              13 => $sapFrameInput('sapItemName', 'SAP Item Name'),
+              14 => $sapFrameInput('sapFamily', 'SAP Family'),
+              15 => (static function (): \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation {
+                  $field = new \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation();
+                  $field->setName('combiColor');
+                  $field->setTitle('Combi Color');
+                  $field->setClasses([['classes' => 'color']]);
+                  $field->setObjectsAllowed(true);
+                  $field->setAssetsAllowed(false);
+                  $field->setDocumentsAllowed(false);
+                  $field->setAllowToClearRelation(true);
+
+                  return $field;
+              })(),
+              16 => $sapFrameCheckbox('sapActive', 'SAP Active'),
+              17 => $sapFrameCheckbox('isNew', 'Is New'),
+              18 => (static function (): \Pimcore\Model\DataObject\ClassDefinition\Data\Textarea {
+                  $field = new \Pimcore\Model\DataObject\ClassDefinition\Data\Textarea();
+                  $field->setName('ecommerceDescription');
+                  $field->setTitle('E-commerce Description');
+
+                  return $field;
+              })(),
             ),
              'locked' => false,
              'blockedVarsForExport' => 

@@ -82,6 +82,24 @@ pimcore_data_hub:
                                         attribute: workingTitle
                                         label: 'Working Title'
                                         dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: designers
+                                        label: Designers
+                                        dataType: multiselect
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: designersRelation
+                                        label: 'Designer Objects'
+                                        dataType: manyToManyRelation
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: suppliers
+                                        label: Suppliers
+                                        dataType: advancedManyToManyObjectRelation
                     model:
                         id: model
                         columnConfig:
@@ -140,6 +158,30 @@ pimcore_data_hub:
                                         attribute: material
                                         label: Material
                                         dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: launchPeriod
+                                        label: 'Launch Period'
+                                        dataType: select
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: launchYear
+                                        label: 'Launch Year'
+                                        dataType: numeric
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: components
+                                        label: Components
+                                        dataType: advancedManyToManyObjectRelation
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: suppliers
+                                        label: Suppliers
+                                        dataType: advancedManyToManyObjectRelation
                     frame:
                         id: frame
                         columnConfig:
@@ -204,6 +246,128 @@ pimcore_data_hub:
                                         attribute: exchangeCode
                                         label: 'Exchange Code'
                                         dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: materialType
+                                        label: 'Material Type'
+                                        dataType: select
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: lensType
+                                        label: 'Lens Type'
+                                        dataType: multiselect
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: sapItemCode
+                                        label: 'SAP Item Code'
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: sapItemName
+                                        label: 'SAP Item Name'
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: sapFamily
+                                        label: 'SAP Family'
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: combiColor
+                                        label: 'Combi Color'
+                                        dataType: manyToOneRelation
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: sapActive
+                                        label: 'SAP Active'
+                                        dataType: checkbox
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: isNew
+                                        label: 'Is New'
+                                        dataType: checkbox
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: ecommerceDescription
+                                        label: 'E-commerce Description'
+                                        dataType: textarea
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: composedColors
+                                        label: 'Composed Colors'
+                                        dataType: advancedManyToManyObjectRelation
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: components
+                                        label: Components
+                                        dataType: advancedManyToManyObjectRelation
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: suppliers
+                                        label: Suppliers
+                                        dataType: advancedManyToManyObjectRelation
+                    sapComponent:
+                        id: component
+                        columnConfig:
+                            columns: &sap_component_columns
+                                - { isOperator: false, attributes: { attribute: key, label: Key, dataType: system } }
+                                - { isOperator: false, attributes: { attribute: published, label: Published, dataType: system } }
+                                - { isOperator: false, attributes: { attribute: itemCode, label: 'Item Code', dataType: input } }
+                                - { isOperator: false, attributes: { attribute: itemName, label: 'Item Name', dataType: input } }
+                                - { isOperator: false, attributes: { attribute: itemType, label: 'Item Type', dataType: multiselect } }
+                                - { isOperator: false, attributes: { attribute: step, label: 'Legacy Step', dataType: select } }
+                                - { isOperator: false, attributes: { attribute: supplier, label: 'Legacy Supplier', dataType: manyToOneRelation } }
+                                - { isOperator: false, attributes: { attribute: process, label: Process, dataType: manyToOneRelation } }
+                                - { isOperator: false, attributes: { attribute: suppliers, label: 'Supplier and Process', dataType: advancedManyToManyObjectRelation } }
+                                - { isOperator: false, attributes: { attribute: quantity, label: Quantity, dataType: numeric } }
+                    process:
+                        id: process
+                        columnConfig:
+                            columns: &process_columns
+                                - { isOperator: false, attributes: { attribute: key, label: Key, dataType: system } }
+                                - { isOperator: false, attributes: { attribute: published, label: Published, dataType: system } }
+                                - { isOperator: false, attributes: { attribute: code, label: Code, dataType: input } }
+                                - { isOperator: false, attributes: { attribute: name, label: Name, dataType: input } }
+                                - { isOperator: false, attributes: { attribute: sapStep, label: 'SAP Step', dataType: select } }
+                                - { isOperator: false, attributes: { attribute: order, label: Order, dataType: numeric } }
+                                - { isOperator: false, attributes: { attribute: create, label: Create, dataType: checkbox } }
+                                - { isOperator: false, attributes: { attribute: itemGroup, label: 'Item Group', dataType: manyToOneRelation } }
+                                - { isOperator: false, attributes: { attribute: workItemGroup, label: 'Work Item Group', dataType: manyToOneRelation } }
+                                - { isOperator: false, attributes: { attribute: leadTimeMetalSingleColor, label: 'Lead Time Metal Single Color', dataType: numeric } }
+                                - { isOperator: false, attributes: { attribute: leadTimeMetalBiColor, label: 'Lead Time Metal Bi-Color', dataType: numeric } }
+                                - { isOperator: false, attributes: { attribute: leadTimeAcetate, label: 'Lead Time Acetate', dataType: numeric } }
+                                - { isOperator: false, attributes: { attribute: leadTimeMetalAcetate, label: 'Lead Time Metal-Acetate', dataType: numeric } }
+                    supplier:
+                        id: supplier
+                        columnConfig:
+                            columns: &supplier_columns
+                                - { isOperator: false, attributes: { attribute: key, label: Key, dataType: system } }
+                                - { isOperator: false, attributes: { attribute: published, label: Published, dataType: system } }
+                                - { isOperator: false, attributes: { attribute: code, label: Code, dataType: input } }
+                                - { isOperator: false, attributes: { attribute: name, label: Name, dataType: input } }
+                                - { isOperator: false, attributes: { attribute: process, label: Process, dataType: manyToManyObjectRelation } }
+                                - { isOperator: false, attributes: { attribute: processDetails, label: 'Process Details', dataType: fieldcollections } }
+                    designer:
+                        id: designer
+                        columnConfig:
+                            columns: &designer_columns
+                                - { isOperator: false, attributes: { attribute: key, label: Key, dataType: system } }
+                                - { isOperator: false, attributes: { attribute: published, label: Published, dataType: system } }
+                                - { isOperator: false, attributes: { attribute: firstName, label: 'First Name', dataType: input } }
+                                - { isOperator: false, attributes: { attribute: lastName, label: 'Last Name', dataType: input } }
+                                - { isOperator: false, attributes: { attribute: designerType, label: 'Designer Type', dataType: select } }
                 mutationEntities:
                     family:
                         id: family
@@ -272,6 +436,24 @@ pimcore_data_hub:
                                         attribute: workingTitle
                                         label: 'Working Title'
                                         dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: designers
+                                        label: Designers
+                                        dataType: multiselect
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: designersRelation
+                                        label: 'Designer Objects'
+                                        dataType: manyToManyRelation
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: suppliers
+                                        label: Suppliers
+                                        dataType: advancedManyToManyObjectRelation
                     model:
                         id: model
                         create: true
@@ -327,6 +509,30 @@ pimcore_data_hub:
                                         attribute: material
                                         label: Material
                                         dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: launchPeriod
+                                        label: 'Launch Period'
+                                        dataType: select
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: launchYear
+                                        label: 'Launch Year'
+                                        dataType: numeric
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: components
+                                        label: Components
+                                        dataType: advancedManyToManyObjectRelation
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: suppliers
+                                        label: Suppliers
+                                        dataType: advancedManyToManyObjectRelation
                     frame:
                         id: frame
                         create: true
@@ -388,6 +594,106 @@ pimcore_data_hub:
                                         attribute: exchangeCode
                                         label: 'Exchange Code'
                                         dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: materialType
+                                        label: 'Material Type'
+                                        dataType: select
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: lensType
+                                        label: 'Lens Type'
+                                        dataType: multiselect
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: sapItemCode
+                                        label: 'SAP Item Code'
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: sapItemName
+                                        label: 'SAP Item Name'
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: sapFamily
+                                        label: 'SAP Family'
+                                        dataType: input
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: combiColor
+                                        label: 'Combi Color'
+                                        dataType: manyToOneRelation
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: sapActive
+                                        label: 'SAP Active'
+                                        dataType: checkbox
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: isNew
+                                        label: 'Is New'
+                                        dataType: checkbox
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: ecommerceDescription
+                                        label: 'E-commerce Description'
+                                        dataType: textarea
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: composedColors
+                                        label: 'Composed Colors'
+                                        dataType: advancedManyToManyObjectRelation
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: components
+                                        label: Components
+                                        dataType: advancedManyToManyObjectRelation
+                                -
+                                    isOperator: false
+                                    attributes:
+                                        attribute: suppliers
+                                        label: Suppliers
+                                        dataType: advancedManyToManyObjectRelation
+                    sapComponent:
+                        id: component
+                        create: true
+                        update: true
+                        delete: false
+                        columnConfig:
+                            columns: *sap_component_columns
+                    process:
+                        id: process
+                        create: true
+                        update: true
+                        delete: false
+                        columnConfig:
+                            columns: *process_columns
+                    supplier:
+                        id: supplier
+                        create: true
+                        update: true
+                        delete: false
+                        columnConfig:
+                            columns: *supplier_columns
+                    designer:
+                        id: designer
+                        create: true
+                        update: true
+                        delete: false
+                        columnConfig:
+                            columns: *designer_columns
                 specialEntities:
                     document:
                         read: false

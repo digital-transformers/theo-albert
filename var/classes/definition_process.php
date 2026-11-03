@@ -7,7 +7,40 @@
  * Fields Summary:
  * - code [input]
  * - name [input]
+ * - sapStep [select]
+ * - order [numeric]
+ * - create [checkbox]
+ * - itemGroup [manyToOneRelation]
+ * - workItemGroup [manyToOneRelation]
+ * - leadTimeMetalSingleColor [numeric]
+ * - leadTimeMetalBiColor [numeric]
+ * - leadTimeAcetate [numeric]
+ * - leadTimeMetalAcetate [numeric]
  */
+
+$processNumeric = static function (string $name, string $title): \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric {
+    $field = new \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric();
+    $field->setName($name);
+    $field->setTitle($title);
+    $field->setInteger(true);
+    $field->setUnsigned(true);
+    $field->setMinValue(0);
+
+    return $field;
+};
+
+$processRelation = static function (string $name, string $title): \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation {
+    $field = new \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation();
+    $field->setName($name);
+    $field->setTitle($title);
+    $field->setClasses([['classes' => 'SAPItemGroup']]);
+    $field->setObjectsAllowed(true);
+    $field->setAssetsAllowed(false);
+    $field->setDocumentsAllowed(false);
+    $field->setAllowToClearRelation(true);
+
+    return $field;
+};
 
 return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'dao' => NULL,
@@ -119,6 +152,34 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
+          2 => (static function (): \Pimcore\Model\DataObject\ClassDefinition\Data\Select {
+              $field = new \Pimcore\Model\DataObject\ClassDefinition\Data\Select();
+              $field->setName('sapStep');
+              $field->setTitle('SAP Step');
+              $field->setOptions([
+                  ['key' => 'BRUT / AF', 'value' => 'BRUT_AF'],
+                  ['key' => 'Color', 'value' => 'COLOR'],
+                  ['key' => 'Quality', 'value' => 'QUALITY'],
+              ]);
+              $field->setEnforceValidation(true);
+
+              return $field;
+          })(),
+          3 => $processNumeric('order', 'Order'),
+          4 => (static function (): \Pimcore\Model\DataObject\ClassDefinition\Data\Checkbox {
+              $field = new \Pimcore\Model\DataObject\ClassDefinition\Data\Checkbox();
+              $field->setName('create');
+              $field->setTitle('Create');
+              $field->setDefaultValue(1);
+
+              return $field;
+          })(),
+          5 => $processRelation('itemGroup', 'Item Group'),
+          6 => $processRelation('workItemGroup', 'Work Item Group'),
+          7 => $processNumeric('leadTimeMetalSingleColor', 'Lead Time - Metal Single Color'),
+          8 => $processNumeric('leadTimeMetalBiColor', 'Lead Time - Metal Bi-Color'),
+          9 => $processNumeric('leadTimeAcetate', 'Lead Time - Acetate'),
+          10 => $processNumeric('leadTimeMetalAcetate', 'Lead Time - Metal-Acetate'),
         ),
          'locked' => false,
          'blockedVarsForExport' => 

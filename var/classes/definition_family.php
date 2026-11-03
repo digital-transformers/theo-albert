@@ -463,10 +463,24 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                     'width' => NULL,
                     'value' => 'Color;Acetate;Metal;Parts;Finishing',
                   ),
+                  1 => array (
+                    'type' => 'number',
+                    'position' => 2,
+                    'key' => 'leadTime',
+                    'label' => 'Lead Time',
+                  ),
+                  2 => array (
+                    'type' => 'text',
+                    'position' => 3,
+                    'key' => 'workItemGroup',
+                    'label' => 'Work Item Group',
+                  ),
                 ),
                  'columnKeys' => 
                 array (
                   0 => 'supplierType',
+                  1 => 'leadTime',
+                  2 => 'workItemGroup',
                 ),
                  'enableBatchEdit' => false,
                  'allowMultipleAssignments' => true,

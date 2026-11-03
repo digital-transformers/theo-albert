@@ -18,6 +18,7 @@
  * - servicePartProducts [advancedManyToManyObjectRelation]
  * - downloadableAssets [manyToManyObjectRelation]
  * - suppliers [advancedManyToManyObjectRelation]
+ * - components [advancedManyToManyObjectRelation]
  * - seriesCode [input]
  * - createDate [date]
  * - shape [select]
@@ -93,6 +94,7 @@ use Pimcore\Model\DataObject\PreGetValueHookInterface;
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByServicePartProducts(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByDownloadableAssets(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getBySuppliers(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByComponents(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getBySeriesCode(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByCreateDate(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Model\Listing|\Pimcore\Model\DataObject\Model|null getByShape(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
@@ -156,6 +158,7 @@ public const FIELD_POS_MATERIAL_PRODUCTS = 'posMaterialProducts';
 public const FIELD_SERVICE_PART_PRODUCTS = 'servicePartProducts';
 public const FIELD_DOWNLOADABLE_ASSETS = 'downloadableAssets';
 public const FIELD_SUPPLIERS = 'suppliers';
+public const FIELD_COMPONENTS = 'components';
 public const FIELD_SERIES_CODE = 'seriesCode';
 public const FIELD_CREATE_DATE = 'createDate';
 public const FIELD_SHAPE = 'shape';
@@ -224,6 +227,7 @@ protected $posMaterialProducts;
 protected $servicePartProducts;
 protected $downloadableAssets;
 protected $suppliers;
+protected $components;
 protected $seriesCode;
 protected $createDate;
 protected $shape;
@@ -910,6 +914,59 @@ public function setSuppliers(?array $suppliers): static
 		$this->markFieldDirty("suppliers", true);
 	}
 	$this->suppliers = $fd->preSetData($this, $suppliers);
+	return $this;
+}
+
+/**
+* Get components - Default Components
+* @return \Pimcore\Model\DataObject\Data\ObjectMetadata[]
+*/
+public function getComponents(): array
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("components");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->getClass()->getFieldDefinition("components")->preGetData($this);
+
+	if (\Pimcore\Model\DataObject::doGetInheritedValues() && $this->getClass()->getFieldDefinition("components")->isEmpty($data)) {
+		try {
+			return $this->getValueFromParent("components");
+		} catch (InheritanceParentNotFoundException $e) {
+			// no data from parent available, continue ...
+		}
+	}
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set components - Default Components
+* @param \Pimcore\Model\DataObject\Data\ObjectMetadata[] $components
+* @return $this
+*/
+public function setComponents(?array $components): static
+{
+	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation $fd */
+	$fd = $this->getClass()->getFieldDefinition("components");
+	$hideUnpublished = \Pimcore\Model\DataObject\Concrete::getHideUnpublished();
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished(false);
+	$currentData = \Pimcore\Model\DataObject\Service::useInheritedValues(false, function() {
+		return $this->getComponents();
+	});
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished($hideUnpublished);
+	$isEqual = $fd->isEqual($currentData, $components);
+	if (!$isEqual) {
+		$this->markFieldDirty("components", true);
+	}
+	$this->components = $fd->preSetData($this, $components);
 	return $this;
 }
 

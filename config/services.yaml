@@ -185,6 +185,10 @@ services:
       tags:
         - { name: kernel.event_subscriber }
 
+    App\EventSubscriber\SupplierTypeValidationSubscriber:
+      tags:
+        - { name: kernel.event_subscriber }
+
     App\EventSubscriber\FrameNameFromComposedColorsSubscriber:
       tags:
         - { name: kernel.event_subscriber }

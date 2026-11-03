@@ -18,6 +18,7 @@
  * - servicePartProducts [advancedManyToManyObjectRelation]
  * - downloadableAssets [manyToManyObjectRelation]
  * - suppliers [advancedManyToManyObjectRelation]
+ * - components [advancedManyToManyObjectRelation]
  * - seriesCode [input]
  * - createDate [date]
  * - shape [select]
@@ -657,13 +658,72 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                     'width' => NULL,
                     'value' => 'Color;Acetate;Metal;Parts;Finishing',
                   ),
+                  1 => array (
+                    'type' => 'number',
+                    'position' => 2,
+                    'key' => 'leadTime',
+                    'label' => 'Lead Time',
+                  ),
+                  2 => array (
+                    'type' => 'text',
+                    'position' => 3,
+                    'key' => 'workItemGroup',
+                    'label' => 'Work Item Group',
+                  ),
                 ),
                  'columnKeys' => 
                 array (
                   0 => 'supplierType',
+                  1 => 'leadTime',
+                  2 => 'workItemGroup',
                 ),
                  'enableBatchEdit' => false,
                  'allowMultipleAssignments' => true,
+              )),
+              13 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
+                 'name' => 'components',
+                 'title' => 'Default Components',
+                 'tooltip' => 'Components inherited by frames unless overridden by component type',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => true,
+                 'invisible' => false,
+                 'visibleGridView' => false,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' =>
+                array (
+                ),
+                 'classes' =>
+                array (
+                ),
+                 'displayMode' => NULL,
+                 'pathFormatterClass' => '',
+                 'maxItems' => NULL,
+                 'visibleFields' => 'itemCode,itemName,itemType',
+                 'allowToCreateNewObject' => false,
+                 'allowToClearRelation' => true,
+                 'optimizedAdminLoading' => false,
+                 'enableTextSelection' => false,
+                 'visibleFieldDefinitions' =>
+                array (
+                ),
+                 'width' => '',
+                 'height' => '',
+                 'allowedClassId' => 'SAPComponent',
+                 'columns' =>
+                array (
+                ),
+                 'columnKeys' =>
+                array (
+                ),
+                 'enableBatchEdit' => false,
+                 'allowMultipleAssignments' => false,
               )),
             ),
              'locked' => false,

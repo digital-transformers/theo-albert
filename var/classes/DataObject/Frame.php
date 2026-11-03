@@ -17,6 +17,13 @@
  * - downloadableAssets [manyToManyObjectRelation]
  * - suppliers [advancedManyToManyObjectRelation]
  * - materialType [select]
+ * - sapItemCode [input]
+ * - sapItemName [input]
+ * - sapFamily [input]
+ * - combiColor [manyToOneRelation]
+ * - sapActive [checkbox]
+ * - isNew [checkbox]
+ * - ecommerceDescription [textarea]
  * - artBase [manyToOneRelation]
  * - seriesCode [input]
  * - ecomFileName [input]
@@ -74,6 +81,13 @@ use Pimcore\Model\DataObject\PreGetValueHookInterface;
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByDownloadableAssets(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getBySuppliers(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByMaterialType(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getBySapItemCode(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getBySapItemName(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getBySapFamily(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByCombiColor(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getBySapActive(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByIsNew(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByEcommerceDescription(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByArtBase(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getBySeriesCode(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByEcomFileName(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
@@ -120,6 +134,13 @@ public const FIELD_SERVICE_PART_PRODUCTS = 'servicePartProducts';
 public const FIELD_DOWNLOADABLE_ASSETS = 'downloadableAssets';
 public const FIELD_SUPPLIERS = 'suppliers';
 public const FIELD_MATERIAL_TYPE = 'materialType';
+public const FIELD_SAP_ITEM_CODE = 'sapItemCode';
+public const FIELD_SAP_ITEM_NAME = 'sapItemName';
+public const FIELD_SAP_FAMILY = 'sapFamily';
+public const FIELD_COMBI_COLOR = 'combiColor';
+public const FIELD_SAP_ACTIVE = 'sapActive';
+public const FIELD_IS_NEW = 'isNew';
+public const FIELD_ECOMMERCE_DESCRIPTION = 'ecommerceDescription';
 public const FIELD_ART_BASE = 'artBase';
 public const FIELD_SERIES_CODE = 'seriesCode';
 public const FIELD_ECOM_FILE_NAME = 'ecomFileName';
@@ -170,6 +191,13 @@ protected $servicePartProducts;
 protected $downloadableAssets;
 protected $suppliers;
 protected $materialType;
+protected $sapItemCode;
+protected $sapItemName;
+protected $sapFamily;
+protected $combiColor;
+protected $sapActive;
+protected $isNew;
+protected $ecommerceDescription;
 protected $artBase;
 protected $seriesCode;
 protected $ecomFileName;
@@ -694,6 +722,265 @@ public function setMaterialType(?string $materialType): static
 	$this->markFieldDirty("materialType", true);
 
 	$this->materialType = $materialType;
+
+	return $this;
+}
+
+/**
+* Get sapItemCode - SAP Item Code
+* @return string|null
+*/
+public function getSapItemCode(): ?string
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("sapItemCode");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->sapItemCode;
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set sapItemCode - SAP Item Code
+* @param string|null $sapItemCode
+* @return $this
+*/
+public function setSapItemCode(?string $sapItemCode): static
+{
+	$this->markFieldDirty("sapItemCode", true);
+
+	$this->sapItemCode = $sapItemCode;
+
+	return $this;
+}
+
+/**
+* Get sapItemName - SAP Item Name
+* @return string|null
+*/
+public function getSapItemName(): ?string
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("sapItemName");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->sapItemName;
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set sapItemName - SAP Item Name
+* @param string|null $sapItemName
+* @return $this
+*/
+public function setSapItemName(?string $sapItemName): static
+{
+	$this->markFieldDirty("sapItemName", true);
+
+	$this->sapItemName = $sapItemName;
+
+	return $this;
+}
+
+/**
+* Get sapFamily - SAP Family
+* @return string|null
+*/
+public function getSapFamily(): ?string
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("sapFamily");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->sapFamily;
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set sapFamily - SAP Family
+* @param string|null $sapFamily
+* @return $this
+*/
+public function setSapFamily(?string $sapFamily): static
+{
+	$this->markFieldDirty("sapFamily", true);
+
+	$this->sapFamily = $sapFamily;
+
+	return $this;
+}
+
+/**
+* Get combiColor - Combi Color
+* @return \Pimcore\Model\DataObject\Color|null
+*/
+public function getCombiColor(): ?\Pimcore\Model\Element\AbstractElement
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("combiColor");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->getClass()->getFieldDefinition("combiColor")->preGetData($this);
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set combiColor - Combi Color
+* @param \Pimcore\Model\DataObject\Color|null $combiColor
+* @return $this
+*/
+public function setCombiColor(?\Pimcore\Model\Element\AbstractElement $combiColor): static
+{
+	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation $fd */
+	$fd = $this->getClass()->getFieldDefinition("combiColor");
+	$hideUnpublished = \Pimcore\Model\DataObject\Concrete::getHideUnpublished();
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished(false);
+	$currentData = $this->getCombiColor();
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished($hideUnpublished);
+	$isEqual = $fd->isEqual($currentData, $combiColor);
+	if (!$isEqual) {
+		$this->markFieldDirty("combiColor", true);
+	}
+	$this->combiColor = $fd->preSetData($this, $combiColor);
+	return $this;
+}
+
+/**
+* Get sapActive - SAP Active
+* @return bool|null
+*/
+public function getSapActive(): ?bool
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("sapActive");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->sapActive;
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set sapActive - SAP Active
+* @param bool|null $sapActive
+* @return $this
+*/
+public function setSapActive(?bool $sapActive): static
+{
+	$this->markFieldDirty("sapActive", true);
+
+	$this->sapActive = $sapActive;
+
+	return $this;
+}
+
+/**
+* Get isNew - Is New
+* @return bool|null
+*/
+public function getIsNew(): ?bool
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("isNew");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->isNew;
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set isNew - Is New
+* @param bool|null $isNew
+* @return $this
+*/
+public function setIsNew(?bool $isNew): static
+{
+	$this->markFieldDirty("isNew", true);
+
+	$this->isNew = $isNew;
+
+	return $this;
+}
+
+/**
+* Get ecommerceDescription - E-commerce Description
+* @return string|null
+*/
+public function getEcommerceDescription(): ?string
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("ecommerceDescription");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->ecommerceDescription;
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set ecommerceDescription - E-commerce Description
+* @param string|null $ecommerceDescription
+* @return $this
+*/
+public function setEcommerceDescription(?string $ecommerceDescription): static
+{
+	$this->markFieldDirty("ecommerceDescription", true);
+
+	$this->ecommerceDescription = $ecommerceDescription;
 
 	return $this;
 }

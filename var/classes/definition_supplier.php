@@ -11,6 +11,7 @@
  * - pricelist [manyToOneRelation]
  * - country [country]
  * - pimcoreUser [user]
+ * - processDetails [fieldcollections]
  */
 
 return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
@@ -267,6 +268,15 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'optionsProviderData' => NULL,
              'unique' => true,
           )),
+          6 => (static function (): \Pimcore\Model\DataObject\ClassDefinition\Data\Fieldcollections {
+              $field = new \Pimcore\Model\DataObject\ClassDefinition\Data\Fieldcollections();
+              $field->setName('processDetails');
+              $field->setTitle('Process Details');
+              $field->setAllowedTypes(['supplierProcessDetails']);
+              $field->setLazyLoading(true);
+
+              return $field;
+          })(),
         ),
          'locked' => false,
          'blockedVarsForExport' =>

@@ -30,7 +30,7 @@ final class ModelFrameGeneratorTest extends Unit
 
     private function createColorMetadata(int $id): ObjectMetadata
     {
-        $metadata = new ObjectMetadata('composedColors', ['name', 'relevant']);
+        $metadata = new ObjectMetadata('composedColors', ['name', 'relevant', 'sapColorCode', 'orderNr', 'comment', 'qty']);
         $metadata->setObjectId($id);
         $metadata->setName((string) $id);
         $metadata->setRelevant(true);

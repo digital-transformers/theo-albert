@@ -14,10 +14,13 @@
  * - importType [input]
  * - itemType [multiselect]
  * - step [select]
+ * - process [manyToOneRelation]
+ * - suppliers [advancedManyToManyObjectRelation]
  * - linkedColor [select]
  * - cost [numeric]
  * - supplier [manyToOneRelation]
  * - supCatNum [input]
+ * - quantity [numeric]
  */
 
 return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
@@ -315,6 +318,16 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 'key' => 'Other',
                 'value' => 'other',
               ),
+              4 =>
+              array (
+                'key' => 'Brut',
+                'value' => 'brut',
+              ),
+              5 =>
+              array (
+                'key' => 'Acetate',
+                'value' => 'acetate',
+              ),
             ),
              'maxItems' => NULL,
              'renderType' => 'list',
@@ -343,7 +356,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'permissions' => NULL,
              'fieldtype' => '',
              'relationType' => false,
-             'invisible' => false,
+             'invisible' => true,
              'visibleGridView' => false,
              'visibleSearch' => false,
              'blockedVarsForExport' => 
@@ -459,7 +472,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'permissions' => NULL,
              'fieldtype' => '',
              'relationType' => true,
-             'invisible' => false,
+             'invisible' => true,
              'visibleGridView' => false,
              'visibleSearch' => false,
              'blockedVarsForExport' => 
@@ -518,6 +531,103 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
+          12 =>
+          \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
+             'name' => 'process',
+             'title' => 'Process',
+             'tooltip' => 'Canonical process reference; legacy step is retained during migration',
+             'mandatory' => false,
+             'noteditable' => false,
+             'index' => false,
+             'locked' => false,
+             'style' => '',
+             'permissions' => NULL,
+             'fieldtype' => '',
+             'relationType' => true,
+             'invisible' => false,
+             'visibleGridView' => false,
+             'visibleSearch' => false,
+             'blockedVarsForExport' => array (),
+             'classes' => array (
+               0 => array ('classes' => 'process'),
+             ),
+             'displayMode' => 'grid',
+             'pathFormatterClass' => '',
+             'assetInlineDownloadAllowed' => false,
+             'assetUploadPath' => '',
+             'allowToClearRelation' => true,
+             'objectsAllowed' => true,
+             'assetsAllowed' => false,
+             'assetTypes' => array (),
+             'documentsAllowed' => false,
+             'documentTypes' => array (),
+             'width' => '',
+          )),
+          13 => (static function (): \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation {
+              $field = new \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation();
+              $field->setName('suppliers');
+              $field->setTitle('Supplier and Process');
+              $field->setTooltip('Canonical supplier/process link; legacy supplier and step remain only for migration');
+              $field->setAllowedClassId('supplier');
+              $field->setVisibleFields('code,name');
+              $field->setMaxItems(1);
+              $field->setAllowMultipleAssignments(false);
+              $field->setAllowToCreateNewObject(false);
+              $field->setAllowToClearRelation(true);
+              $field->setColumns([
+                  [
+                      'type' => 'multiselect',
+                      'position' => 1,
+                      'key' => 'supplierType',
+                      'label' => 'Process',
+                      'value' => 'Color;Acetate;Metal;Parts;Finishing',
+                  ],
+                  [
+                      'type' => 'number',
+                      'position' => 2,
+                      'key' => 'leadTime',
+                      'label' => 'Lead Time',
+                  ],
+                  [
+                      'type' => 'text',
+                      'position' => 3,
+                      'key' => 'workItemGroup',
+                      'label' => 'Work Item Group',
+                  ],
+              ]);
+
+              return $field;
+          })(),
+          14 =>
+          \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
+             'name' => 'quantity',
+             'title' => 'Quantity',
+             'tooltip' => 'Standard consumed quantity per frame',
+             'mandatory' => false,
+             'noteditable' => false,
+             'index' => false,
+             'locked' => false,
+             'style' => '',
+             'permissions' => NULL,
+             'fieldtype' => '',
+             'relationType' => false,
+             'invisible' => false,
+             'visibleGridView' => false,
+             'visibleSearch' => false,
+             'blockedVarsForExport' =>
+            array (
+            ),
+             'defaultValue' => 1.0,
+             'integer' => false,
+             'unsigned' => true,
+             'minValue' => 0.0,
+             'maxValue' => NULL,
+             'unique' => false,
+             'decimalSize' => 12,
+             'decimalPrecision' => 4,
+             'width' => '',
+             'defaultValueGenerator' => '',
+          )),
         ),
          'locked' => false,
          'blockedVarsForExport' => 
@@ -573,51 +683,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
     ),
   ),
    'enableGridLocking' => false,
-   'deletedDataComponents' => 
-  array (
-    0 => 
-    \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
-       'name' => 'process',
-       'title' => 'Process',
-       'tooltip' => '',
-       'mandatory' => false,
-       'noteditable' => false,
-       'index' => false,
-       'locked' => false,
-       'style' => '',
-       'permissions' => NULL,
-       'fieldtype' => '',
-       'relationType' => true,
-       'invisible' => false,
-       'visibleGridView' => false,
-       'visibleSearch' => false,
-       'blockedVarsForExport' => 
-      array (
-      ),
-       'classes' => 
-      array (
-        0 => 
-        array (
-          'classes' => 'process',
-        ),
-      ),
-       'displayMode' => 'grid',
-       'pathFormatterClass' => '',
-       'assetInlineDownloadAllowed' => false,
-       'assetUploadPath' => '',
-       'allowToClearRelation' => true,
-       'objectsAllowed' => true,
-       'assetsAllowed' => false,
-       'assetTypes' => 
-      array (
-      ),
-       'documentsAllowed' => false,
-       'documentTypes' => 
-      array (
-      ),
-       'width' => '',
-    )),
-  ),
+   'deletedDataComponents' => array (),
    'blockedVarsForExport' => 
   array (
   ),
