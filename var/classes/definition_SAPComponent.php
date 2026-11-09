@@ -14,12 +14,12 @@
  * - importType [input]
  * - itemType [multiselect]
  * - step [select]
- * - process [manyToOneRelation]
- * - suppliers [advancedManyToManyObjectRelation]
  * - linkedColor [select]
  * - cost [numeric]
  * - supplier [manyToOneRelation]
  * - supCatNum [input]
+ * - process [manyToOneRelation]
+ * - suppliers [advancedManyToManyObjectRelation]
  * - quantity [numeric]
  */
 
@@ -30,9 +30,9 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => 'SAPComponent',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1775711792,
+   'modificationDate' => 1794157288,
    'userOwner' => 2,
-   'userModification' => 2,
+   'userModification' => 5,
    'parentClass' => '',
    'implementsInterfaces' => '',
    'listingParentClass' => '',
@@ -328,6 +328,11 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 'key' => 'Acetate',
                 'value' => 'acetate',
               ),
+              6 =>
+              array (
+                'key' => 'Oper',
+                'value' => 'oper',
+              ),
             ),
              'maxItems' => NULL,
              'renderType' => 'list',
@@ -547,10 +552,16 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'invisible' => false,
              'visibleGridView' => false,
              'visibleSearch' => false,
-             'blockedVarsForExport' => array (),
-             'classes' => array (
-               0 => array ('classes' => 'process'),
-             ),
+             'blockedVarsForExport' =>
+            array (
+            ),
+             'classes' =>
+            array (
+              0 =>
+              array (
+                'classes' => 'process',
+              ),
+            ),
              'displayMode' => 'grid',
              'pathFormatterClass' => '',
              'assetInlineDownloadAllowed' => false,
@@ -558,46 +569,85 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'allowToClearRelation' => true,
              'objectsAllowed' => true,
              'assetsAllowed' => false,
-             'assetTypes' => array (),
+             'assetTypes' =>
+            array (
+            ),
              'documentsAllowed' => false,
-             'documentTypes' => array (),
+             'documentTypes' =>
+            array (
+            ),
              'width' => '',
           )),
-          13 => (static function (): \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation {
-              $field = new \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation();
-              $field->setName('suppliers');
-              $field->setTitle('Supplier and Process');
-              $field->setTooltip('Canonical supplier/process link; legacy supplier and step remain only for migration');
-              $field->setAllowedClassId('supplier');
-              $field->setVisibleFields('code,name');
-              $field->setMaxItems(1);
-              $field->setAllowMultipleAssignments(false);
-              $field->setAllowToCreateNewObject(false);
-              $field->setAllowToClearRelation(true);
-              $field->setColumns([
-                  [
-                      'type' => 'multiselect',
-                      'position' => 1,
-                      'key' => 'supplierType',
-                      'label' => 'Process',
-                      'value' => 'Color;Acetate;Metal;Parts;Finishing',
-                  ],
-                  [
-                      'type' => 'number',
-                      'position' => 2,
-                      'key' => 'leadTime',
-                      'label' => 'Lead Time',
-                  ],
-                  [
-                      'type' => 'text',
-                      'position' => 3,
-                      'key' => 'workItemGroup',
-                      'label' => 'Work Item Group',
-                  ],
-              ]);
-
-              return $field;
-          })(),
+          13 =>
+          \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
+             'name' => 'suppliers',
+             'title' => 'Supplier and Process',
+             'tooltip' => 'Canonical supplier/process link; legacy supplier and step remain only for migration',
+             'mandatory' => false,
+             'noteditable' => false,
+             'index' => false,
+             'locked' => false,
+             'style' => NULL,
+             'permissions' => NULL,
+             'fieldtype' => '',
+             'relationType' => true,
+             'invisible' => false,
+             'visibleGridView' => true,
+             'visibleSearch' => true,
+             'blockedVarsForExport' =>
+            array (
+            ),
+             'classes' =>
+            array (
+            ),
+             'displayMode' => NULL,
+             'pathFormatterClass' => NULL,
+             'maxItems' => 1,
+             'visibleFields' => 'code,name',
+             'allowToCreateNewObject' => false,
+             'allowToClearRelation' => true,
+             'optimizedAdminLoading' => false,
+             'enableTextSelection' => false,
+             'visibleFieldDefinitions' =>
+            array (
+            ),
+             'width' => NULL,
+             'height' => NULL,
+             'allowedClassId' => 'supplier',
+             'columns' =>
+            array (
+              0 =>
+              array (
+                'type' => 'multiselect',
+                'position' => 1,
+                'key' => 'supplierType',
+                'label' => 'Process',
+                'value' => 'Color;Acetate;Metal;Parts;Finishing',
+              ),
+              1 =>
+              array (
+                'type' => 'number',
+                'position' => 2,
+                'key' => 'leadTime',
+                'label' => 'Lead Time',
+              ),
+              2 =>
+              array (
+                'type' => 'text',
+                'position' => 3,
+                'key' => 'workItemGroup',
+                'label' => 'Work Item Group',
+              ),
+            ),
+             'columnKeys' =>
+            array (
+              0 => 'supplierType',
+              1 => 'leadTime',
+              2 => 'workItemGroup',
+            ),
+             'enableBatchEdit' => false,
+             'allowMultipleAssignments' => false,
+          )),
           14 =>
           \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
              'name' => 'quantity',
@@ -617,7 +667,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'blockedVarsForExport' =>
             array (
             ),
-             'defaultValue' => 1.0,
+             'defaultValue' => 1,
              'integer' => false,
              'unsigned' => true,
              'minValue' => 0.0,
@@ -683,7 +733,9 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
     ),
   ),
    'enableGridLocking' => false,
-   'deletedDataComponents' => array (),
+   'deletedDataComponents' =>
+  array (
+  ),
    'blockedVarsForExport' => 
   array (
   ),

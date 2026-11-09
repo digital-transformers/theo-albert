@@ -62,24 +62,6 @@
  * - qualityControlRemarks [table]
  */
 
-$sapFrameInput = static function (string $name, string $title): \Pimcore\Model\DataObject\ClassDefinition\Data\Input {
-    $field = new \Pimcore\Model\DataObject\ClassDefinition\Data\Input();
-    $field->setName($name);
-    $field->setTitle($title);
-    $field->setColumnLength(190);
-
-    return $field;
-};
-
-$sapFrameCheckbox = static function (string $name, string $title): \Pimcore\Model\DataObject\ClassDefinition\Data\Checkbox {
-    $field = new \Pimcore\Model\DataObject\ClassDefinition\Data\Checkbox();
-    $field->setName($name);
-    $field->setTitle($title);
-    $field->setDefaultValue(0);
-
-    return $field;
-};
-
 return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'dao' => NULL,
    'id' => 'finishedProduct',
@@ -87,9 +69,9 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1793176874,
+   'modificationDate' => 1794053816,
    'userOwner' => 2,
-   'userModification' => 2,
+   'userModification' => 5,
    'parentClass' => 'Pimcore\\Model\\DataObject\\Model',
    'implementsInterfaces' => '',
    'listingParentClass' => '',
@@ -360,25 +342,29 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                     'key' => 'relevant',
                     'label' => 'Relevant',
                   ),
-                  2 => array (
+                  2 =>
+                  array (
                     'type' => 'text',
                     'position' => 3,
                     'key' => 'sapColorCode',
                     'label' => 'SAP Color Code',
                   ),
-                  3 => array (
+                  3 =>
+                  array (
                     'type' => 'number',
                     'position' => 4,
                     'key' => 'orderNr',
                     'label' => 'Order',
                   ),
-                  4 => array (
+                  4 =>
+                  array (
                     'type' => 'text',
                     'position' => 5,
                     'key' => 'comment',
                     'label' => 'Comment',
                   ),
-                  5 => array (
+                  5 =>
+                  array (
                     'type' => 'number',
                     'position' => 6,
                     'key' => 'qty',
@@ -607,15 +593,17 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                     'key' => 'supplierType',
                     'label' => 'Supplier Type',
                     'width' => NULL,
-                    'value' => 'Color;Acetate;Metal;Parts;Finishing',
+                    'value' => 'Color;Acetate;Metal;Parts;Finishing;Oper',
                   ),
-                  1 => array (
+                  1 =>
+                  array (
                     'type' => 'number',
                     'position' => 2,
                     'key' => 'leadTime',
                     'label' => 'Lead Time',
                   ),
-                  2 => array (
+                  2 =>
+                  array (
                     'type' => 'text',
                     'position' => 3,
                     'key' => 'workItemGroup',
@@ -693,30 +681,206 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderClass' => '',
                  'optionsProviderData' => '',
               )),
-              12 => $sapFrameInput('sapItemCode', 'SAP Item Code'),
-              13 => $sapFrameInput('sapItemName', 'SAP Item Name'),
-              14 => $sapFrameInput('sapFamily', 'SAP Family'),
-              15 => (static function (): \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation {
-                  $field = new \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation();
-                  $field->setName('combiColor');
-                  $field->setTitle('Combi Color');
-                  $field->setClasses([['classes' => 'color']]);
-                  $field->setObjectsAllowed(true);
-                  $field->setAssetsAllowed(false);
-                  $field->setDocumentsAllowed(false);
-                  $field->setAllowToClearRelation(true);
-
-                  return $field;
-              })(),
-              16 => $sapFrameCheckbox('sapActive', 'SAP Active'),
-              17 => $sapFrameCheckbox('isNew', 'Is New'),
-              18 => (static function (): \Pimcore\Model\DataObject\ClassDefinition\Data\Textarea {
-                  $field = new \Pimcore\Model\DataObject\ClassDefinition\Data\Textarea();
-                  $field->setName('ecommerceDescription');
-                  $field->setTitle('E-commerce Description');
-
-                  return $field;
-              })(),
+              12 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
+                 'name' => 'sapItemCode',
+                 'title' => 'SAP Item Code',
+                 'tooltip' => NULL,
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => NULL,
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => true,
+                 'visibleSearch' => true,
+                 'blockedVarsForExport' =>
+                array (
+                ),
+                 'defaultValue' => NULL,
+                 'columnLength' => 190,
+                 'regex' => '',
+                 'regexFlags' =>
+                array (
+                ),
+                 'unique' => false,
+                 'showCharCount' => false,
+                 'width' => NULL,
+                 'defaultValueGenerator' => '',
+              )),
+              13 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
+                 'name' => 'sapItemName',
+                 'title' => 'SAP Item Name',
+                 'tooltip' => NULL,
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => NULL,
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => true,
+                 'visibleSearch' => true,
+                 'blockedVarsForExport' =>
+                array (
+                ),
+                 'defaultValue' => NULL,
+                 'columnLength' => 190,
+                 'regex' => '',
+                 'regexFlags' =>
+                array (
+                ),
+                 'unique' => false,
+                 'showCharCount' => false,
+                 'width' => NULL,
+                 'defaultValueGenerator' => '',
+              )),
+              14 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
+                 'name' => 'sapFamily',
+                 'title' => 'SAP Family',
+                 'tooltip' => NULL,
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => NULL,
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => true,
+                 'visibleSearch' => true,
+                 'blockedVarsForExport' =>
+                array (
+                ),
+                 'defaultValue' => NULL,
+                 'columnLength' => 190,
+                 'regex' => '',
+                 'regexFlags' =>
+                array (
+                ),
+                 'unique' => false,
+                 'showCharCount' => false,
+                 'width' => NULL,
+                 'defaultValueGenerator' => '',
+              )),
+              15 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
+                 'name' => 'combiColor',
+                 'title' => 'Combi Color',
+                 'tooltip' => NULL,
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => NULL,
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => true,
+                 'invisible' => false,
+                 'visibleGridView' => true,
+                 'visibleSearch' => true,
+                 'blockedVarsForExport' =>
+                array (
+                ),
+                 'classes' =>
+                array (
+                  0 =>
+                  array (
+                    'classes' => 'color',
+                  ),
+                ),
+                 'displayMode' => NULL,
+                 'pathFormatterClass' => NULL,
+                 'assetInlineDownloadAllowed' => false,
+                 'allowToClearRelation' => true,
+                 'objectsAllowed' => true,
+                 'assetsAllowed' => false,
+                 'assetTypes' =>
+                array (
+                ),
+                 'documentsAllowed' => false,
+                 'documentTypes' =>
+                array (
+                ),
+                 'width' => NULL,
+              )),
+              16 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Checkbox::__set_state(array(
+                 'name' => 'sapActive',
+                 'title' => 'SAP Active',
+                 'tooltip' => NULL,
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => NULL,
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => true,
+                 'visibleSearch' => true,
+                 'blockedVarsForExport' =>
+                array (
+                ),
+                 'defaultValue' => 0,
+                 'defaultValueGenerator' => '',
+              )),
+              17 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Checkbox::__set_state(array(
+                 'name' => 'isNew',
+                 'title' => 'Is New',
+                 'tooltip' => NULL,
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => NULL,
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => true,
+                 'visibleSearch' => true,
+                 'blockedVarsForExport' =>
+                array (
+                ),
+                 'defaultValue' => 0,
+                 'defaultValueGenerator' => '',
+              )),
+              18 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Textarea::__set_state(array(
+                 'name' => 'ecommerceDescription',
+                 'title' => 'E-commerce Description',
+                 'tooltip' => NULL,
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => NULL,
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => true,
+                 'visibleSearch' => true,
+                 'blockedVarsForExport' =>
+                array (
+                ),
+                 'maxLength' => NULL,
+                 'showCharCount' => false,
+                 'excludeFromSearchIndex' => false,
+                 'height' => NULL,
+                 'width' => NULL,
+              )),
             ),
              'locked' => false,
              'blockedVarsForExport' => 
@@ -1982,7 +2146,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                     'key' => 'Jerome',
                     'value' => 'sales-app',
                   ),
-                  1 => 
+                  1 =>
                   array (
                     'key' => 'Jules',
                     'value' => 'b2b',

@@ -22,6 +22,7 @@ final class SapSyncClassDefinitionTest extends Unit
         self::assertInstanceOf(Multiselect::class, $itemType);
         self::assertContains('brut', array_column($itemType->getOptions(), 'value'));
         self::assertContains('acetate', array_column($itemType->getOptions(), 'value'));
+        self::assertContains('oper', array_column($itemType->getOptions(), 'value'));
 
         $quantity = $definition->getFieldDefinition('quantity');
         self::assertInstanceOf(Numeric::class, $quantity);

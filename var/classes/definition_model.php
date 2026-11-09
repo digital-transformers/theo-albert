@@ -81,9 +81,9 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1793176971,
+   'modificationDate' => 1794053742,
    'userOwner' => 2,
-   'userModification' => 2,
+   'userModification' => 5,
    'parentClass' => 'Pimcore\\Model\\DataObject\\Family',
    'implementsInterfaces' => '',
    'listingParentClass' => '',
@@ -656,15 +656,17 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                     'key' => 'supplierType',
                     'label' => 'Supplier Type',
                     'width' => NULL,
-                    'value' => 'Color;Acetate;Metal;Parts;Finishing',
+                    'value' => 'Color;Acetate;Metal;Parts;Finishing;Oper',
                   ),
-                  1 => array (
+                  1 =>
+                  array (
                     'type' => 'number',
                     'position' => 2,
                     'key' => 'leadTime',
                     'label' => 'Lead Time',
                   ),
-                  2 => array (
+                  2 =>
+                  array (
                     'type' => 'text',
                     'position' => 3,
                     'key' => 'workItemGroup',

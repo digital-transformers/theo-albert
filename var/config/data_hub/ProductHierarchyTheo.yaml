@@ -7,7 +7,7 @@ pimcore_data_hub:
                 name: ProductHierarchyTheo
                 description: 'Example GraphQL endpoint for family, model, and frame queries/mutations'
                 group: ''
-                modificationDate: 1779341902
+                modificationDate: 1794064847
                 path: null
                 createDate: 1777334400
             schema:
@@ -17,357 +17,1656 @@ pimcore_data_hub:
                         columnConfig:
                             columns:
                                 -
-                                    isOperator: false
                                     attributes:
                                         attribute: key
                                         label: Key
                                         dataType: system
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: fullpath
                                         label: 'Full Path'
                                         dataType: system
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: published
                                         label: Published
                                         dataType: system
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: code
                                         label: Code
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: name
                                         label: Name
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: familyType
                                         label: 'Family Type'
                                         dataType: select
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: description
                                         label: Description
                                         dataType: textarea
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: phase
                                         label: Phase
                                         dataType: select
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: launchPeriod
                                         label: 'Launch Period'
                                         dataType: select
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: launchYear
                                         label: 'Launch Year'
                                         dataType: numeric
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: workingTitle
                                         label: 'Working Title'
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: designers
                                         label: Designers
                                         dataType: multiselect
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: designersRelation
                                         label: 'Designer Objects'
                                         dataType: manyToManyRelation
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: suppliers
                                         label: Suppliers
                                         dataType: advancedManyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: itemGroup
+                                        label: 'Item Group'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: exchangeableBranches
+                                        label: 'Exchangeable Branches'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: exchangeableBranchesPartial
+                                        label: 'Exchangeable Branches Partial'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: startDate
+                                        label: 'Start Date'
+                                        dataType: date
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: posMaterialProducts
+                                        label: 'Pos Material Products'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: servicePartProducts
+                                        label: 'Service Part Products'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: downloadableAssets
+                                        label: 'Downloadable assets'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: basePrice
+                                        label: 'Base Price'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: pricing
+                                        label: Pricing
+                                        dataType: fieldcollections
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: video
+                                        label: Video
+                                        dataType: video
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: attachments
+                                        label: Attachments
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: publicationChannels
+                                        label: 'Publication Channels'
+                                        dataType: multiselect
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: internalFollowupDesigner
+                                        label: 'Internal Followup Designer'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: magicMechanismScore
+                                        label: 'Magic Mechanism Score'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: storytellingShortText
+                                        label: 'Storytelling Short text'
+                                        dataType: textarea
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: storytellingLongText
+                                        label: 'Storytelling Long text'
+                                        dataType: wysiwyg
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: qualityControlDocuments
+                                        label: 'Quality Control Documents'
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: qualityControlImages
+                                        label: 'Quality Control Images'
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
                     model:
                         id: model
                         columnConfig:
                             columns:
                                 -
-                                    isOperator: false
                                     attributes:
                                         attribute: key
                                         label: Key
                                         dataType: system
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: fullpath
                                         label: 'Full Path'
                                         dataType: system
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: published
                                         label: Published
                                         dataType: system
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: code
                                         label: Code
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: name
                                         label: Name
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: frameBaseCode
                                         label: 'Frame Base Code'
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: description
                                         label: Description
                                         dataType: textarea
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: seriesCode
                                         label: 'Series Code'
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: material
                                         label: Material
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: launchPeriod
                                         label: 'Launch Period'
                                         dataType: select
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: launchYear
                                         label: 'Launch Year'
                                         dataType: numeric
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: components
                                         label: Components
                                         dataType: advancedManyToManyObjectRelation
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: suppliers
                                         label: Suppliers
                                         dataType: advancedManyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: itemGroup
+                                        label: 'Item Group'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: outlineImage
+                                        label: 'Outline Image'
+                                        dataType: image
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: imageGallery
+                                        label: 'Image Gallery'
+                                        dataType: imageGallery
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: planAttachment
+                                        label: 'Plan Attachment'
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: posMaterialProducts
+                                        label: 'Pos Material Products'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: servicePartProducts
+                                        label: 'Service Part Products'
+                                        dataType: advancedManyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: downloadableAssets
+                                        label: 'Downloadable assets'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: createDate
+                                        label: 'Create Date'
+                                        dataType: date
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: shape
+                                        label: Shape
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: lookAndFeel
+                                        label: 'Look And Feel'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: typeOfMetal
+                                        label: 'Type Of Metal'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: materialType
+                                        label: 'Material Type'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: metalFacepartTickness
+                                        label: 'Metal Facepart Thickness'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: metalTempleTickness
+                                        label: 'Metal Temple Thickness'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: acetateFacepartTickness
+                                        label: 'Acetate Facepart Thickness'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: acetateTempleTickness
+                                        label: 'Acetate Temple Thickness'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: facepartReference
+                                        label: 'Facepart Reference (Theo)'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: templeReference
+                                        label: 'Temple Reference (Theo)'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: templeLenght
+                                        label: 'Temple Lenght'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: facepartReferenceSupplier
+                                        label: 'Facepart Reference (Supplier)'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: templeReferenceSupplier
+                                        label: 'Temple Reference (Supplier)'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: lensMounting
+                                        label: 'Lens Mounting'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: lensHeight
+                                        label: 'Lens Height'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: boxingSize
+                                        label: 'Boxing Size'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: widthVisibleLens
+                                        label: 'Width Visible Lens'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: distanceBetweenLens
+                                        label: 'Distance Between Lens'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: heightVisibleLens
+                                        label: 'Height Visible Lens'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: totalWidth
+                                        label: 'Total Width'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: hingeRef
+                                        label: 'Hinge Ref.'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: hingeScrewRef
+                                        label: 'Hinge Screw Ref.'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: rlRef
+                                        label: 'RL Ref.'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: rlScrewRef
+                                        label: 'RL Screw Ref.'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: totalTempleLength
+                                        label: 'Total Temple Length'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: templeTipRef
+                                        label: 'Temple Tip Ref.'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: templeTipSupplier
+                                        label: 'Temple Tip Supplier'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: templeTipColor
+                                        label: 'Temple Tip Color'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: templeTipColorRelation
+                                        label: 'Temple Tip Color Relation'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: templeTipMaterial
+                                        label: 'Temple Tip Material'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: templeTipSurface
+                                        label: 'Temple Tip Surface'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: basicUDI
+                                        label: 'Basic UDI'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: masterUDI
+                                        label: 'Master UDI'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: finalProductDetails
+                                        label: 'Final product details'
+                                        dataType: fieldcollections
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: finalProducts
+                                        label: 'Final Products'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: productCase
+                                        label: Case
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: video
+                                        label: Video
+                                        dataType: video
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: attachments
+                                        label: Attachments
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: publicationChannels
+                                        label: 'Publication Channels'
+                                        dataType: multiselect
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: magicMechanismScore
+                                        label: 'Magic Mechanism Score'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: storytellingShortText
+                                        label: 'Storytelling Short text'
+                                        dataType: textarea
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: storytellingLongText
+                                        label: 'Storytelling Long text'
+                                        dataType: wysiwyg
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: qualityControlDocuments
+                                        label: 'Quality Control Documents'
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: qualityControlImages
+                                        label: 'Quality Control Images'
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: id
+                                        label: ID
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: creationDate
+                                        label: 'Creation Date'
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: modificationDate
+                                        label: 'Modification Date'
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: classname
+                                        label: classname
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: index
+                                        label: Indexed
+                                        dataType: system
+                                    isOperator: false
                     frame:
                         id: frame
                         columnConfig:
                             columns:
                                 -
-                                    isOperator: false
                                     attributes:
                                         attribute: key
                                         label: Key
                                         dataType: system
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: fullpath
                                         label: 'Full Path'
                                         dataType: system
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: published
                                         label: Published
                                         dataType: system
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: code
                                         label: Code
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: mainColorCode
                                         label: 'Main Color Code'
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: name
                                         label: Name
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: artBase
                                         label: 'Art Base'
                                         dataType: manyToOneRelation
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: seriesCode
                                         label: 'Series Code'
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: ecomFileName
                                         label: 'Ecom File Name'
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: exchangeCode
                                         label: 'Exchange Code'
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: materialType
                                         label: 'Material Type'
                                         dataType: select
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: lensType
                                         label: 'Lens Type'
                                         dataType: multiselect
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: sapItemCode
                                         label: 'SAP Item Code'
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: sapItemName
                                         label: 'SAP Item Name'
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: sapFamily
                                         label: 'SAP Family'
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: combiColor
                                         label: 'Combi Color'
                                         dataType: manyToOneRelation
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: sapActive
                                         label: 'SAP Active'
                                         dataType: checkbox
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: isNew
                                         label: 'Is New'
                                         dataType: checkbox
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: ecommerceDescription
                                         label: 'E-commerce Description'
                                         dataType: textarea
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: composedColors
                                         label: 'Composed Colors'
                                         dataType: advancedManyToManyObjectRelation
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: components
                                         label: Components
                                         dataType: advancedManyToManyObjectRelation
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: suppliers
                                         label: Suppliers
                                         dataType: advancedManyToManyObjectRelation
-                    sapComponent:
-                        id: component
-                        columnConfig:
-                            columns: &sap_component_columns
-                                - { isOperator: false, attributes: { attribute: key, label: Key, dataType: system } }
-                                - { isOperator: false, attributes: { attribute: published, label: Published, dataType: system } }
-                                - { isOperator: false, attributes: { attribute: itemCode, label: 'Item Code', dataType: input } }
-                                - { isOperator: false, attributes: { attribute: itemName, label: 'Item Name', dataType: input } }
-                                - { isOperator: false, attributes: { attribute: itemType, label: 'Item Type', dataType: multiselect } }
-                                - { isOperator: false, attributes: { attribute: step, label: 'Legacy Step', dataType: select } }
-                                - { isOperator: false, attributes: { attribute: supplier, label: 'Legacy Supplier', dataType: manyToOneRelation } }
-                                - { isOperator: false, attributes: { attribute: process, label: Process, dataType: manyToOneRelation } }
-                                - { isOperator: false, attributes: { attribute: suppliers, label: 'Supplier and Process', dataType: advancedManyToManyObjectRelation } }
-                                - { isOperator: false, attributes: { attribute: quantity, label: Quantity, dataType: numeric } }
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: EANCode
+                                        label: 'EAN Code'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: itemGroup
+                                        label: 'Item Group'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: posMaterialProducts
+                                        label: 'Pos Material Products'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: servicePartProducts
+                                        label: 'Service Part Products'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: downloadableAssets
+                                        label: 'Downloadable assets'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: netMass
+                                        label: 'Net Mass'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: productSegment
+                                        label: 'Product Segment'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: parentItem
+                                        label: 'Parent Item'
+                                        dataType: manyToOneRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: lifeCycle
+                                        label: 'Life Cycle'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: collectionCycle
+                                        label: 'Collection Cycle'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: activeFrom
+                                        label: 'Active From'
+                                        dataType: date
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: leadTime
+                                        label: 'Lead Time'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: lensColor
+                                        label: 'Lens Color'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: basicUDI
+                                        label: 'Basic UDI'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: masterUDI
+                                        label: 'Master UDI'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: countryOfOrigin
+                                        label: 'Country Of Origin'
+                                        dataType: country
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: dsArtCat
+                                        label: DS_ArtCat
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: dsType
+                                        label: DS_Type
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: dsSize
+                                        label: DS_Size
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: dsTarif
+                                        label: 'Ds Tarif'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: intrastatCode
+                                        label: 'Intrastat Code'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: basePrice
+                                        label: 'Base Price'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: pricing
+                                        label: Pricing
+                                        dataType: fieldcollections
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: imageGallery
+                                        label: 'Image Gallery'
+                                        dataType: imageGallery
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: video
+                                        label: Video
+                                        dataType: video
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: attachments
+                                        label: Attachments
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: publicationChannels
+                                        label: 'Publication Channels'
+                                        dataType: multiselect
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: magicMechanismScore
+                                        label: 'Magic Mechanism Score'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: storytellingShortText
+                                        label: 'Storytelling Short text'
+                                        dataType: textarea
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: storytellingLongText
+                                        label: 'Storytelling Long text'
+                                        dataType: wysiwyg
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: qualityControlDocuments
+                                        label: 'Quality Control Documents'
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: qualityControlImages
+                                        label: 'Quality Control Images'
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: id
+                                        label: ID
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: creationDate
+                                        label: 'Creation Date'
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: modificationDate
+                                        label: 'Modification Date'
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: filename
+                                        label: Filename
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: classname
+                                        label: classname
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: index
+                                        label: Indexed
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: imageGallery
+                                        label: 'Image Gallery'
+                                        dataType: imageGallery
+                                    isOperator: false
                     process:
                         id: process
                         columnConfig:
-                            columns: &process_columns
-                                - { isOperator: false, attributes: { attribute: key, label: Key, dataType: system } }
-                                - { isOperator: false, attributes: { attribute: published, label: Published, dataType: system } }
-                                - { isOperator: false, attributes: { attribute: code, label: Code, dataType: input } }
-                                - { isOperator: false, attributes: { attribute: name, label: Name, dataType: input } }
-                                - { isOperator: false, attributes: { attribute: sapStep, label: 'SAP Step', dataType: select } }
-                                - { isOperator: false, attributes: { attribute: order, label: Order, dataType: numeric } }
-                                - { isOperator: false, attributes: { attribute: create, label: Create, dataType: checkbox } }
-                                - { isOperator: false, attributes: { attribute: itemGroup, label: 'Item Group', dataType: manyToOneRelation } }
-                                - { isOperator: false, attributes: { attribute: workItemGroup, label: 'Work Item Group', dataType: manyToOneRelation } }
-                                - { isOperator: false, attributes: { attribute: leadTimeMetalSingleColor, label: 'Lead Time Metal Single Color', dataType: numeric } }
-                                - { isOperator: false, attributes: { attribute: leadTimeMetalBiColor, label: 'Lead Time Metal Bi-Color', dataType: numeric } }
-                                - { isOperator: false, attributes: { attribute: leadTimeAcetate, label: 'Lead Time Acetate', dataType: numeric } }
-                                - { isOperator: false, attributes: { attribute: leadTimeMetalAcetate, label: 'Lead Time Metal-Acetate', dataType: numeric } }
+                            columns:
+                                -
+                                    attributes:
+                                        attribute: key
+                                        label: Key
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: published
+                                        label: Published
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: code
+                                        label: Code
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: name
+                                        label: Name
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: sapStep
+                                        label: 'SAP Step'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: order
+                                        label: Order
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: create
+                                        label: Create
+                                        dataType: checkbox
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: itemGroup
+                                        label: 'Item Group'
+                                        dataType: manyToOneRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: workItemGroup
+                                        label: 'Work Item Group'
+                                        dataType: manyToOneRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: leadTimeMetalSingleColor
+                                        label: 'Lead Time Metal Single Color'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: leadTimeMetalBiColor
+                                        label: 'Lead Time Metal Bi-Color'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: leadTimeAcetate
+                                        label: 'Lead Time Acetate'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: leadTimeMetalAcetate
+                                        label: 'Lead Time Metal-Acetate'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: id
+                                        label: ID
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: fullpath
+                                        label: 'Full Path'
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: creationDate
+                                        label: 'Creation Date'
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: modificationDate
+                                        label: 'Modification Date'
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: classname
+                                        label: classname
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: index
+                                        label: Indexed
+                                        dataType: system
+                                    isOperator: false
                     supplier:
                         id: supplier
                         columnConfig:
-                            columns: &supplier_columns
-                                - { isOperator: false, attributes: { attribute: key, label: Key, dataType: system } }
-                                - { isOperator: false, attributes: { attribute: published, label: Published, dataType: system } }
-                                - { isOperator: false, attributes: { attribute: code, label: Code, dataType: input } }
-                                - { isOperator: false, attributes: { attribute: name, label: Name, dataType: input } }
-                                - { isOperator: false, attributes: { attribute: process, label: Process, dataType: manyToManyObjectRelation } }
-                                - { isOperator: false, attributes: { attribute: processDetails, label: 'Process Details', dataType: fieldcollections } }
+                            columns:
+                                -
+                                    attributes:
+                                        attribute: key
+                                        label: Key
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: published
+                                        label: Published
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: code
+                                        label: Code
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: name
+                                        label: Name
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: process
+                                        label: Process
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: processDetails
+                                        label: 'Process Details'
+                                        dataType: fieldcollections
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: pricelist
+                                        label: Pricelist
+                                        dataType: manyToOneRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: country
+                                        label: Country
+                                        dataType: country
+                                    isOperator: false
                     designer:
                         id: designer
                         columnConfig:
-                            columns: &designer_columns
-                                - { isOperator: false, attributes: { attribute: key, label: Key, dataType: system } }
-                                - { isOperator: false, attributes: { attribute: published, label: Published, dataType: system } }
-                                - { isOperator: false, attributes: { attribute: firstName, label: 'First Name', dataType: input } }
-                                - { isOperator: false, attributes: { attribute: lastName, label: 'Last Name', dataType: input } }
-                                - { isOperator: false, attributes: { attribute: designerType, label: 'Designer Type', dataType: select } }
+                            columns:
+                                -
+                                    attributes:
+                                        attribute: key
+                                        label: Key
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: published
+                                        label: Published
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: firstName
+                                        label: 'First Name'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: lastName
+                                        label: 'Last Name'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: designerType
+                                        label: 'Designer Type'
+                                        dataType: select
+                                    isOperator: false
+                    posMaterialProduct:
+                        id: posMaterialProduct
+                        name: posMaterialProduct
+                        columnConfig:
+                            columns:
+                                -
+                                    attributes:
+                                        attribute: itemCode
+                                        label: Code
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: itemName
+                                        label: Name
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: itemGroup
+                                        label: 'Item Group'
+                                        dataType: multiselect
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: itemGroupRelation
+                                        label: 'Item Group Relation'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: tarifCode
+                                        label: 'Ds Tarif'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: tarifCodeRelation
+                                        label: 'Tarif Code Relation'
+                                        dataType: manyToOneRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: supplier
+                                        label: Supplier
+                                        dataType: manyToOneRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: linkedFamilies
+                                        label: 'Linked Families'
+                                        dataType: reverseObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: linkedModels
+                                        label: 'Linked Models'
+                                        dataType: reverseObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: linkedFrames
+                                        label: 'Linked Frames'
+                                        dataType: reverseObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: videos
+                                        label: Videos
+                                        dataType: video
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: attachments
+                                        label: Attachments
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: publicationChannels
+                                        label: 'Publication Channels'
+                                        dataType: multiselect
+                                    isOperator: false
+                    SAPItemGroup:
+                        id: SAPItemGroup
+                        name: SAPItemGroup
+                        columnConfig:
+                            columns:
+                                -
+                                    attributes:
+                                        attribute: groupNum
+                                        label: Num
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: groupName
+                                        label: Name
+                                        dataType: input
+                                    isOperator: false
+                    color:
+                        id: color
+                        name: color
+                        columnConfig:
+                            columns:
+                                -
+                                    attributes:
+                                        attribute: colorType
+                                        label: 'Color Type'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: genericColor
+                                        label: 'Generic Color'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: code
+                                        label: Code
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: name
+                                        label: Name
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: description
+                                        label: Description/Notes
+                                        dataType: textarea
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: multiColor
+                                        label: 'Multi Color'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: image
+                                        label: Image
+                                        dataType: image
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: alternateCodes
+                                        label: 'Alternate codes'
+                                        dataType: textarea
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: usedInFrames
+                                        label: 'Frames using this color'
+                                        dataType: reverseObjectRelation
+                                    isOperator: false
+                    servicePartsProduct:
+                        id: servicePartsProduct
+                        name: servicePartsProduct
+                        columnConfig:
+                            columns:
+                                -
+                                    attributes:
+                                        attribute: code
+                                        label: 'Pricelist id'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: name
+                                        label: Name
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: itemGroup
+                                        label: 'Item Group'
+                                        dataType: multiselect
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: itemGroupRelation
+                                        label: 'Item Group relation'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: linkedFamilies
+                                        label: 'Linked Families'
+                                        dataType: reverseObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: linkedModels
+                                        label: 'Linked Models'
+                                        dataType: reverseObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: linkedFrames
+                                        label: 'Linked Frames'
+                                        dataType: reverseObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: dsTarif
+                                        label: 'Ds Tarif'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: pricing
+                                        label: Pricing
+                                        dataType: fieldcollections
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: imageGallery
+                                        label: 'Image Gallery'
+                                        dataType: imageGallery
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: videos
+                                        label: Videos
+                                        dataType: video
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: attachments
+                                        label: Attachments
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: publicationChannels
+                                        label: 'Publication Channels'
+                                        dataType: multiselect
+                                    isOperator: false
+                    SAPPricelist:
+                        id: SAPPricelist
+                        name: SAPPricelist
+                        columnConfig:
+                            columns:
+                                -
+                                    attributes:
+                                        attribute: code
+                                        label: 'Pricelist id'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: name
+                                        label: Name
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: description
+                                        label: Description/Notes
+                                        dataType: textarea
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: currency
+                                        label: Currency
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: basePricelist
+                                        label: 'Base Pricelist'
+                                        dataType: manyToOneRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: baseFactor
+                                        label: 'Base Factor'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: commercialPricelist
+                                        label: 'Commercial pricelist'
+                                        dataType: checkbox
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: rounding
+                                        label: Rounding
+                                        dataType: select
+                                    isOperator: false
+                    SAPComponent:
+                        id: SAPComponent
+                        name: SAPComponent
+                        columnConfig:
+                            columns:
+                                -
+                                    attributes:
+                                        attribute: itemCode
+                                        label: Code
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: itemName
+                                        label: Name
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: warehouse
+                                        label: Warehouse
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: itemGroup
+                                        label: 'Item Group'
+                                        dataType: manyToOneRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: pricelist
+                                        label: Pricelist
+                                        dataType: manyToOneRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: importType
+                                        label: 'Import Type'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: itemType
+                                        label: Type
+                                        dataType: multiselect
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: step
+                                        label: Step
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: linkedColor
+                                        label: 'Linked Color'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: cost
+                                        label: Cost
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: supplier
+                                        label: Supplier
+                                        dataType: manyToOneRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: supCatNum
+                                        label: 'Supplier ItemCode'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: process
+                                        label: Process
+                                        dataType: manyToOneRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: suppliers
+                                        label: 'Supplier and Process'
+                                        dataType: advancedManyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: quantity
+                                        label: Quantity
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: id
+                                        label: ID
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: fullpath
+                                        label: 'Full Path'
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: key
+                                        label: Key
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: published
+                                        label: Published
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: creationDate
+                                        label: 'Creation Date'
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: modificationDate
+                                        label: 'Modification Date'
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: filename
+                                        label: Filename
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: classname
+                                        label: classname
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: index
+                                        label: Indexed
+                                        dataType: system
+                                    isOperator: false
+                    TarifCode:
+                        id: TarifCode
+                        name: TarifCode
+                        columnConfig:
+                            columns:
+                                -
+                                    attributes:
+                                        attribute: code
+                                        label: Code
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: name
+                                        label: Name
+                                        dataType: input
+                                    isOperator: false
                 mutationEntities:
                     family:
                         id: family
@@ -377,83 +1676,185 @@ pimcore_data_hub:
                         columnConfig:
                             columns:
                                 -
-                                    isOperator: false
                                     attributes:
                                         attribute: key
                                         label: Key
                                         dataType: system
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: published
                                         label: Published
                                         dataType: system
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: code
                                         label: Code
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: name
                                         label: Name
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: familyType
                                         label: 'Family Type'
                                         dataType: select
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: description
                                         label: Description
                                         dataType: textarea
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: phase
                                         label: Phase
                                         dataType: select
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: launchPeriod
                                         label: 'Launch Period'
                                         dataType: select
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: launchYear
                                         label: 'Launch Year'
                                         dataType: numeric
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: workingTitle
                                         label: 'Working Title'
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: designers
                                         label: Designers
                                         dataType: multiselect
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: designersRelation
                                         label: 'Designer Objects'
                                         dataType: manyToManyRelation
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: suppliers
                                         label: Suppliers
                                         dataType: advancedManyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: itemGroup
+                                        label: 'Item Group'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: exchangeableBranches
+                                        label: 'Exchangeable Branches'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: exchangeableBranchesPartial
+                                        label: 'Exchangeable Branches Partial'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: startDate
+                                        label: 'Start Date'
+                                        dataType: date
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: posMaterialProducts
+                                        label: 'Pos Material Products'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: servicePartProducts
+                                        label: 'Service Part Products'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: downloadableAssets
+                                        label: 'Downloadable assets'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: basePrice
+                                        label: 'Base Price'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: pricing
+                                        label: Pricing
+                                        dataType: fieldcollections
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: attachments
+                                        label: Attachments
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: publicationChannels
+                                        label: 'Publication Channels'
+                                        dataType: multiselect
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: internalFollowupDesigner
+                                        label: 'Internal Followup Designer'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: magicMechanismScore
+                                        label: 'Magic Mechanism Score'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: storytellingShortText
+                                        label: 'Storytelling Short text'
+                                        dataType: textarea
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: storytellingLongText
+                                        label: 'Storytelling Long text'
+                                        dataType: wysiwyg
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: qualityControlDocuments
+                                        label: 'Quality Control Documents'
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: qualityControlImages
+                                        label: 'Quality Control Images'
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
                     model:
                         id: model
                         create: true
@@ -462,77 +1863,377 @@ pimcore_data_hub:
                         columnConfig:
                             columns:
                                 -
-                                    isOperator: false
                                     attributes:
                                         attribute: key
                                         label: Key
                                         dataType: system
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: published
                                         label: Published
                                         dataType: system
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: code
                                         label: Code
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: name
                                         label: Name
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: frameBaseCode
                                         label: 'Frame Base Code'
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: description
                                         label: Description
                                         dataType: textarea
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: seriesCode
                                         label: 'Series Code'
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: material
                                         label: Material
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: launchPeriod
                                         label: 'Launch Period'
                                         dataType: select
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: launchYear
                                         label: 'Launch Year'
                                         dataType: numeric
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: components
                                         label: Components
                                         dataType: advancedManyToManyObjectRelation
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: suppliers
                                         label: Suppliers
                                         dataType: advancedManyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: itemGroup
+                                        label: 'Item Group'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: outlineImage
+                                        label: 'Outline Image'
+                                        dataType: image
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: planAttachment
+                                        label: 'Plan Attachment'
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: posMaterialProducts
+                                        label: 'Pos Material Products'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: servicePartProducts
+                                        label: 'Service Part Products'
+                                        dataType: advancedManyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: downloadableAssets
+                                        label: 'Downloadable assets'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: createDate
+                                        label: 'Create Date'
+                                        dataType: date
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: shape
+                                        label: Shape
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: lookAndFeel
+                                        label: 'Look And Feel'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: typeOfMetal
+                                        label: 'Type Of Metal'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: materialType
+                                        label: 'Material Type'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: metalFacepartTickness
+                                        label: 'Metal Facepart Thickness'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: metalTempleTickness
+                                        label: 'Metal Temple Thickness'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: acetateFacepartTickness
+                                        label: 'Acetate Facepart Thickness'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: acetateTempleTickness
+                                        label: 'Acetate Temple Thickness'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: facepartReference
+                                        label: 'Facepart Reference (Theo)'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: templeReference
+                                        label: 'Temple Reference (Theo)'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: templeLenght
+                                        label: 'Temple Lenght'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: facepartReferenceSupplier
+                                        label: 'Facepart Reference (Supplier)'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: templeReferenceSupplier
+                                        label: 'Temple Reference (Supplier)'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: lensMounting
+                                        label: 'Lens Mounting'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: lensHeight
+                                        label: 'Lens Height'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: boxingSize
+                                        label: 'Boxing Size'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: widthVisibleLens
+                                        label: 'Width Visible Lens'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: distanceBetweenLens
+                                        label: 'Distance Between Lens'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: heightVisibleLens
+                                        label: 'Height Visible Lens'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: totalWidth
+                                        label: 'Total Width'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: hingeRef
+                                        label: 'Hinge Ref.'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: hingeScrewRef
+                                        label: 'Hinge Screw Ref.'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: rlRef
+                                        label: 'RL Ref.'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: rlScrewRef
+                                        label: 'RL Screw Ref.'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: totalTempleLength
+                                        label: 'Total Temple Length'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: templeTipRef
+                                        label: 'Temple Tip Ref.'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: templeTipSupplier
+                                        label: 'Temple Tip Supplier'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: templeTipColor
+                                        label: 'Temple Tip Color'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: templeTipColorRelation
+                                        label: 'Temple Tip Color Relation'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: templeTipMaterial
+                                        label: 'Temple Tip Material'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: templeTipSurface
+                                        label: 'Temple Tip Surface'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: basicUDI
+                                        label: 'Basic UDI'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: masterUDI
+                                        label: 'Master UDI'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: finalProductDetails
+                                        label: 'Final product details'
+                                        dataType: fieldcollections
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: finalProducts
+                                        label: 'Final Products'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: productCase
+                                        label: Case
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: attachments
+                                        label: Attachments
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: publicationChannels
+                                        label: 'Publication Channels'
+                                        dataType: multiselect
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: magicMechanismScore
+                                        label: 'Magic Mechanism Score'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: storytellingShortText
+                                        label: 'Storytelling Short text'
+                                        dataType: textarea
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: storytellingLongText
+                                        label: 'Storytelling Long text'
+                                        dataType: wysiwyg
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: qualityControlDocuments
+                                        label: 'Quality Control Documents'
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: qualityControlImages
+                                        label: 'Quality Control Images'
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
                     frame:
                         id: frame
                         create: true
@@ -541,197 +2242,700 @@ pimcore_data_hub:
                         columnConfig:
                             columns:
                                 -
-                                    isOperator: false
                                     attributes:
                                         attribute: key
                                         label: Key
                                         dataType: system
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: published
                                         label: Published
                                         dataType: system
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: code
                                         label: Code
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: mainColorCode
                                         label: 'Main Color Code'
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: name
                                         label: Name
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: artBase
                                         label: 'Art Base'
                                         dataType: manyToOneRelation
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: seriesCode
                                         label: 'Series Code'
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: ecomFileName
                                         label: 'Ecom File Name'
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: exchangeCode
                                         label: 'Exchange Code'
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: materialType
                                         label: 'Material Type'
                                         dataType: select
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: lensType
                                         label: 'Lens Type'
                                         dataType: multiselect
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: sapItemCode
                                         label: 'SAP Item Code'
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: sapItemName
                                         label: 'SAP Item Name'
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: sapFamily
                                         label: 'SAP Family'
                                         dataType: input
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: combiColor
                                         label: 'Combi Color'
                                         dataType: manyToOneRelation
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: sapActive
                                         label: 'SAP Active'
                                         dataType: checkbox
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: isNew
                                         label: 'Is New'
                                         dataType: checkbox
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: ecommerceDescription
                                         label: 'E-commerce Description'
                                         dataType: textarea
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: composedColors
                                         label: 'Composed Colors'
                                         dataType: advancedManyToManyObjectRelation
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: components
                                         label: Components
                                         dataType: advancedManyToManyObjectRelation
-                                -
                                     isOperator: false
+                                -
                                     attributes:
                                         attribute: suppliers
                                         label: Suppliers
                                         dataType: advancedManyToManyObjectRelation
-                    sapComponent:
-                        id: component
-                        create: true
-                        update: true
-                        delete: false
-                        columnConfig:
-                            columns: *sap_component_columns
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: EANCode
+                                        label: 'EAN Code'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: itemGroup
+                                        label: 'Item Group'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: posMaterialProducts
+                                        label: 'Pos Material Products'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: servicePartProducts
+                                        label: 'Service Part Products'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: downloadableAssets
+                                        label: 'Downloadable assets'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: netMass
+                                        label: 'Net Mass'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: productSegment
+                                        label: 'Product Segment'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: parentItem
+                                        label: 'Parent Item'
+                                        dataType: manyToOneRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: lifeCycle
+                                        label: 'Life Cycle'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: collectionCycle
+                                        label: 'Collection Cycle'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: activeFrom
+                                        label: 'Active From'
+                                        dataType: date
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: leadTime
+                                        label: 'Lead Time'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: lensColor
+                                        label: 'Lens Color'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: basicUDI
+                                        label: 'Basic UDI'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: masterUDI
+                                        label: 'Master UDI'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: countryOfOrigin
+                                        label: 'Country Of Origin'
+                                        dataType: country
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: dsArtCat
+                                        label: DS_ArtCat
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: dsType
+                                        label: DS_Type
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: dsSize
+                                        label: DS_Size
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: dsTarif
+                                        label: 'Ds Tarif'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: intrastatCode
+                                        label: 'Intrastat Code'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: basePrice
+                                        label: 'Base Price'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: pricing
+                                        label: Pricing
+                                        dataType: fieldcollections
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: attachments
+                                        label: Attachments
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: publicationChannels
+                                        label: 'Publication Channels'
+                                        dataType: multiselect
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: magicMechanismScore
+                                        label: 'Magic Mechanism Score'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: storytellingShortText
+                                        label: 'Storytelling Short text'
+                                        dataType: textarea
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: storytellingLongText
+                                        label: 'Storytelling Long text'
+                                        dataType: wysiwyg
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: qualityControlDocuments
+                                        label: 'Quality Control Documents'
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: qualityControlImages
+                                        label: 'Quality Control Images'
+                                        dataType: advancedManyToManyRelation
+                                    isOperator: false
                     process:
                         id: process
                         create: true
                         update: true
-                        delete: false
+                        delete: true
                         columnConfig:
-                            columns: *process_columns
+                            columns:
+                                -
+                                    attributes:
+                                        attribute: key
+                                        label: Key
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: published
+                                        label: Published
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: code
+                                        label: Code
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: name
+                                        label: Name
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: sapStep
+                                        label: 'SAP Step'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: order
+                                        label: Order
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: create
+                                        label: Create
+                                        dataType: checkbox
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: itemGroup
+                                        label: 'Item Group'
+                                        dataType: manyToOneRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: workItemGroup
+                                        label: 'Work Item Group'
+                                        dataType: manyToOneRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: leadTimeMetalSingleColor
+                                        label: 'Lead Time Metal Single Color'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: leadTimeMetalBiColor
+                                        label: 'Lead Time Metal Bi-Color'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: leadTimeAcetate
+                                        label: 'Lead Time Acetate'
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: leadTimeMetalAcetate
+                                        label: 'Lead Time Metal-Acetate'
+                                        dataType: numeric
+                                    isOperator: false
                     supplier:
                         id: supplier
                         create: true
                         update: true
                         delete: false
                         columnConfig:
-                            columns: *supplier_columns
+                            columns:
+                                -
+                                    attributes:
+                                        attribute: key
+                                        label: Key
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: published
+                                        label: Published
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: code
+                                        label: Code
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: name
+                                        label: Name
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: process
+                                        label: Process
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: processDetails
+                                        label: 'Process Details'
+                                        dataType: fieldcollections
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: pricelist
+                                        label: Pricelist
+                                        dataType: manyToOneRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: country
+                                        label: Country
+                                        dataType: country
+                                    isOperator: false
                     designer:
                         id: designer
                         create: true
                         update: true
                         delete: false
                         columnConfig:
-                            columns: *designer_columns
+                            columns:
+                                -
+                                    attributes:
+                                        attribute: key
+                                        label: Key
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: published
+                                        label: Published
+                                        dataType: system
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: firstName
+                                        label: 'First Name'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: lastName
+                                        label: 'Last Name'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: designerType
+                                        label: 'Designer Type'
+                                        dataType: select
+                                    isOperator: false
+                    color:
+                        id: color
+                        name: color
+                        update: true
+                        create: true
+                        columnConfig:
+                            columns:
+                                -
+                                    attributes:
+                                        attribute: colorType
+                                        label: 'Color Type'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: genericColor
+                                        label: 'Generic Color'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: code
+                                        label: Code
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: name
+                                        label: Name
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: description
+                                        label: Description/Notes
+                                        dataType: textarea
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: multiColor
+                                        label: 'Multi Color'
+                                        dataType: manyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: image
+                                        label: Image
+                                        dataType: image
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: alternateCodes
+                                        label: 'Alternate codes'
+                                        dataType: textarea
+                                    isOperator: false
+                        delete: true
+                    SAPComponent:
+                        id: SAPComponent
+                        name: SAPComponent
+                        update: true
+                        create: true
+                        delete: true
+                        columnConfig:
+                            columns:
+                                -
+                                    attributes:
+                                        attribute: itemCode
+                                        label: Code
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: itemName
+                                        label: Name
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: warehouse
+                                        label: Warehouse
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: itemGroup
+                                        label: 'Item Group'
+                                        dataType: manyToOneRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: pricelist
+                                        label: Pricelist
+                                        dataType: manyToOneRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: importType
+                                        label: 'Import Type'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: itemType
+                                        label: Type
+                                        dataType: multiselect
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: step
+                                        label: Step
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: linkedColor
+                                        label: 'Linked Color'
+                                        dataType: select
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: cost
+                                        label: Cost
+                                        dataType: numeric
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: supplier
+                                        label: Supplier
+                                        dataType: manyToOneRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: supCatNum
+                                        label: 'Supplier ItemCode'
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: process
+                                        label: Process
+                                        dataType: manyToOneRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: suppliers
+                                        label: 'Supplier and Process'
+                                        dataType: advancedManyToManyObjectRelation
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: quantity
+                                        label: Quantity
+                                        dataType: numeric
+                                    isOperator: false
+                    TarifCode:
+                        id: TarifCode
+                        name: TarifCode
+                        update: true
+                        create: true
+                        delete: true
+                        columnConfig:
+                            columns:
+                                -
+                                    attributes:
+                                        attribute: code
+                                        label: Code
+                                        dataType: input
+                                    isOperator: false
+                                -
+                                    attributes:
+                                        attribute: name
+                                        label: Name
+                                        dataType: input
+                                    isOperator: false
                 specialEntities:
                     document:
-                        read: false
+                        read: true
                         create: false
                         update: false
                         delete: false
                     document_folder:
-                        read: false
+                        read: true
                         create: false
                         update: false
                         delete: false
                     asset:
-                        read: false
-                        create: false
-                        update: false
-                        delete: false
+                        read: true
+                        create: true
+                        update: true
+                        delete: true
                     asset_folder:
-                        read: false
-                        create: false
-                        update: false
+                        read: true
+                        create: true
+                        update: true
                         delete: false
                     asset_listing:
-                        read: false
+                        read: true
                         create: false
                         update: false
                         delete: false
                     object_folder:
-                        read: false
-                        create: false
-                        update: false
+                        read: true
+                        create: true
+                        update: true
                         delete: false
                     translation:
-                        read: false
+                        read: true
                         create: false
                         update: false
                         delete: false
                     translation_listing:
-                        read: false
+                        read: true
                         create: false
                         update: false
                         delete: false
