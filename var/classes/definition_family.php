@@ -1099,7 +1099,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 array (
                   0 => 
                   array (
-                    'key' => 'Gerome',
+                    'key' => 'Jerome',
                     'value' => 'sales-app',
                   ),
                   1 => 

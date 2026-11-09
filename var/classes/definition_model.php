@@ -1096,7 +1096,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
               7 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'metalFacepartTickness',
-                 'title' => 'Metal Facepart Tickness',
+                 'title' => 'Metal Facepart Thickness',
                  'tooltip' => '',
                  'mandatory' => false,
                  'noteditable' => false,
@@ -1126,7 +1126,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
               8 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'metalTempleTickness',
-                 'title' => 'Metal Temple Tickness',
+                 'title' => 'Metal Temple Thickness',
                  'tooltip' => '',
                  'mandatory' => false,
                  'noteditable' => false,
@@ -1156,7 +1156,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
               9 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'acetateFacepartTickness',
-                 'title' => 'Acetate Facepart Tickness',
+                 'title' => 'Acetate Facepart Thickness',
                  'tooltip' => '',
                  'mandatory' => false,
                  'noteditable' => false,
@@ -1186,7 +1186,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
               10 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
                  'name' => 'acetateTempleTickness',
-                 'title' => 'Acetate Temple Tickness',
+                 'title' => 'Acetate Temple Thickness',
                  'tooltip' => '',
                  'mandatory' => false,
                  'noteditable' => false,
@@ -2430,7 +2430,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 array (
                   0 => 
                   array (
-                    'key' => 'Gerome',
+                    'key' => 'Jerome',
                     'value' => 'sales-app',
                   ),
                   1 => 

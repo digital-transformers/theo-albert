@@ -1279,7 +1279,7 @@ public function setMaterialType(?string $materialType): static
 }
 
 /**
-* Get metalFacepartTickness - Metal Facepart Tickness
+* Get metalFacepartTickness - Metal Facepart Thickness
 * @return float|null
 */
 public function getMetalFacepartTickness(): ?float
@@ -1309,7 +1309,7 @@ public function getMetalFacepartTickness(): ?float
 }
 
 /**
-* Set metalFacepartTickness - Metal Facepart Tickness
+* Set metalFacepartTickness - Metal Facepart Thickness
 * @param float|null $metalFacepartTickness
 * @return $this
 */
@@ -1322,7 +1322,7 @@ public function setMetalFacepartTickness(?float $metalFacepartTickness): static
 }
 
 /**
-* Get metalTempleTickness - Metal Temple Tickness
+* Get metalTempleTickness - Metal Temple Thickness
 * @return float|null
 */
 public function getMetalTempleTickness(): ?float
@@ -1352,7 +1352,7 @@ public function getMetalTempleTickness(): ?float
 }
 
 /**
-* Set metalTempleTickness - Metal Temple Tickness
+* Set metalTempleTickness - Metal Temple Thickness
 * @param float|null $metalTempleTickness
 * @return $this
 */
@@ -1365,7 +1365,7 @@ public function setMetalTempleTickness(?float $metalTempleTickness): static
 }
 
 /**
-* Get acetateFacepartTickness - Acetate Facepart Tickness
+* Get acetateFacepartTickness - Acetate Facepart Thickness
 * @return float|null
 */
 public function getAcetateFacepartTickness(): ?float
@@ -1395,7 +1395,7 @@ public function getAcetateFacepartTickness(): ?float
 }
 
 /**
-* Set acetateFacepartTickness - Acetate Facepart Tickness
+* Set acetateFacepartTickness - Acetate Facepart Thickness
 * @param float|null $acetateFacepartTickness
 * @return $this
 */
@@ -1408,7 +1408,7 @@ public function setAcetateFacepartTickness(?float $acetateFacepartTickness): sta
 }
 
 /**
-* Get acetateTempleTickness - Acetate Temple Tickness
+* Get acetateTempleTickness - Acetate Temple Thickness
 * @return float|null
 */
 public function getAcetateTempleTickness(): ?float
@@ -1438,7 +1438,7 @@ public function getAcetateTempleTickness(): ?float
 }
 
 /**
-* Set acetateTempleTickness - Acetate Temple Tickness
+* Set acetateTempleTickness - Acetate Temple Thickness
 * @param float|null $acetateTempleTickness
 * @return $this
 */

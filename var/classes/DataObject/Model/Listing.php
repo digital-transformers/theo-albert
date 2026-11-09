@@ -271,7 +271,7 @@ public function filterByMaterialType ($data, $operator = '='): static
 }
 
 /**
-* Filter by metalFacepartTickness (Metal Facepart Tickness)
+* Filter by metalFacepartTickness (Metal Facepart Thickness)
 * @param string|int|float|array|Model\Element\ElementInterface $data  comparison data, can be scalar or array (if operator is e.g. "IN (?)")
 * @param string $operator  SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
 * @return $this
@@ -283,7 +283,7 @@ public function filterByMetalFacepartTickness ($data, $operator = '='): static
 }
 
 /**
-* Filter by metalTempleTickness (Metal Temple Tickness)
+* Filter by metalTempleTickness (Metal Temple Thickness)
 * @param string|int|float|array|Model\Element\ElementInterface $data  comparison data, can be scalar or array (if operator is e.g. "IN (?)")
 * @param string $operator  SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
 * @return $this
@@ -295,7 +295,7 @@ public function filterByMetalTempleTickness ($data, $operator = '='): static
 }
 
 /**
-* Filter by acetateFacepartTickness (Acetate Facepart Tickness)
+* Filter by acetateFacepartTickness (Acetate Facepart Thickness)
 * @param string|int|float|array|Model\Element\ElementInterface $data  comparison data, can be scalar or array (if operator is e.g. "IN (?)")
 * @param string $operator  SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
 * @return $this
@@ -307,7 +307,7 @@ public function filterByAcetateFacepartTickness ($data, $operator = '='): static
 }
 
 /**
-* Filter by acetateTempleTickness (Acetate Temple Tickness)
+* Filter by acetateTempleTickness (Acetate Temple Thickness)
 * @param string|int|float|array|Model\Element\ElementInterface $data  comparison data, can be scalar or array (if operator is e.g. "IN (?)")
 * @param string $operator  SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
 * @return $this
