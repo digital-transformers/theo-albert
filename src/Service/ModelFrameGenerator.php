@@ -437,17 +437,24 @@ final class ModelFrameGenerator
             if ($item instanceof ObjectMetadata) {
                 $object = $item->getObject();
                 $color = $object instanceof Color ? $object : null;
-                $name = $item->getName();
-                $relevant = $item->getRelevant();
-                $sapColorCode = $item->getSapColorCode();
-                $orderNr = $item->getOrderNr();
-                $comment = $item->getComment();
-                $qty = $item->getQty();
+                // Legacy finalProductDetails relations only have name/relevant.
+                // Dynamic getters throw when a metadata column is not defined.
+                $data = $item->getData();
+                $name = $data['name'] ?? null;
+                $relevant = $data['relevant'] ?? null;
+                $sapColorCode = $data['sapColorCode'] ?? null;
+                $orderNr = $data['orderNr'] ?? null;
+                $comment = $data['comment'] ?? null;
+                $qty = $data['qty'] ?? null;
             } elseif (is_array($item) && is_scalar($item['id'] ?? null) && (int) $item['id'] > 0) {
                 $object = Color::getById((int) $item['id'], ['force' => true]);
                 $color = $object instanceof Color ? $object : null;
                 $name = $item['name'] ?? null;
                 $relevant = $item['relevant'] ?? null;
+                $sapColorCode = $item['sapColorCode'] ?? null;
+                $orderNr = $item['orderNr'] ?? null;
+                $comment = $item['comment'] ?? null;
+                $qty = $item['qty'] ?? null;
             } elseif ($item instanceof Color) {
                 $color = $item;
             }
