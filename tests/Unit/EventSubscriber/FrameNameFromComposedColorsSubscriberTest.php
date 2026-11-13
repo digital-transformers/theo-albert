@@ -18,16 +18,6 @@ final class FrameNameFromComposedColorsSubscriberTest extends Unit
         self::assertSame('WHOOHOO', $baseName);
     }
 
-    public function testFormatColorCodesUsesPlusSeparator(): void
-    {
-        $subscriber = new FrameNameFromComposedColorsSubscriber();
-        $method = new \ReflectionMethod($subscriber, 'formatColorCodes');
-
-        $suffix = $method->invoke($subscriber, ['508', '184']);
-
-        self::assertSame('508 + 184', $suffix);
-    }
-
     public function testExistingFrameNameIsPreserved(): void
     {
         $subscriber = new FrameNameFromComposedColorsSubscriber();

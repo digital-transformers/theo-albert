@@ -52,15 +52,18 @@ final class ModelFrameGenerator
                 continue;
             }
 
-            $code = $this->joinNonEmpty([$baseFrameCode, $mainColorCode], ' ');
-            $name = $this->buildFrameName($baseName, $composedColors, $mainColorCode);
+            $code = FrameIdentityFormatter::code($baseFrameCode, $mainColorCode);
+            $name = FrameIdentityFormatter::name($baseName, $mainColorCode, $composedColors);
 
             if ($code === '') {
                 $errors[] = sprintf('Fieldcollection item %d has no generated frame code', $index + 1);
                 continue;
             }
 
-            if ($this->findExistingChildFrame($model, $code) instanceof Frame) {
+            $legacyCode = $this->joinNonEmpty([$baseFrameCode, $mainColorCode], ' ');
+            if ($this->findExistingChildFrame($model, $code) instanceof Frame
+                || ($legacyCode !== $code && $this->findExistingChildFrame($model, $legacyCode) instanceof Frame)
+            ) {
                 $skipped[] = [
                     'code' => $code,
                     'reason' => 'A child frame with this code already exists',
@@ -640,31 +643,6 @@ final class ModelFrameGenerator
         }
 
         return $objects;
-    }
-
-    /**
-     * @param list<ObjectMetadata> $composedColors
-     */
-    private function buildFrameName(string $baseName, array $composedColors, string $mainColorCode): string
-    {
-        $colorCodes = [];
-        foreach ($composedColors as $metadata) {
-            $composedColor = $metadata->getObject();
-            if (!$composedColor instanceof Color) {
-                continue;
-            }
-
-            $code = $this->normalizeString($composedColor->getCode());
-            if ($code !== '') {
-                $colorCodes[] = $code;
-            }
-        }
-
-        if ($colorCodes === [] && $mainColorCode !== '') {
-            $colorCodes[] = $mainColorCode;
-        }
-
-        return $this->joinNonEmpty([$baseName, implode(' + ', $colorCodes)], ' ');
     }
 
     private function buildUniqueKey(ModelObject $model, string $code, string $name, int $detailIndex, string $mainColorCode): string

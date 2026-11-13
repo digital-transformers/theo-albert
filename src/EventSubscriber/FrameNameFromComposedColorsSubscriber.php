@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
+use App\Service\FrameIdentityFormatter;
 use Pimcore\Event\DataObjectEvents;
 use Pimcore\Event\Model\DataObjectEvent;
-use Pimcore\Model\DataObject\Color;
-use Pimcore\Model\DataObject\Data\ObjectMetadata;
 use Pimcore\Model\DataObject\Frame;
+use Pimcore\Model\DataObject\Model;
 use Pimcore\Model\Element\Service as ElementService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -29,69 +29,34 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
         }
 
         $mainColorCode = $this->getFieldString($frame, 'mainColorCode');
-        $colorCodes = $this->resolveColorCodes($frame, $mainColorCode);
         $baseFrameCode = $this->resolveBaseFrameCode($frame, $mainColorCode);
-        $baseName = $this->resolveBaseName($frame, $colorCodes);
 
         $currentCode = $this->getFieldString($frame, 'code');
-        $rebuiltCode = $this->joinNonEmpty([$baseFrameCode, $mainColorCode], ' ');
+        $rebuiltCode = FrameIdentityFormatter::code($baseFrameCode, $mainColorCode);
         $code = $rebuiltCode !== '' ? $rebuiltCode : $currentCode;
         if ($rebuiltCode !== '' && $currentCode !== $rebuiltCode) {
             $this->setFieldValue($frame, 'code', $rebuiltCode);
         }
 
         $currentName = $this->getFieldString($frame, 'name');
-        $rebuiltName = $this->joinNonEmpty([$baseName, $this->formatColorCodes($colorCodes)], ' ');
-        $name = $rebuiltName !== '' ? $rebuiltName : $currentName;
-        if ($this->shouldGenerateName($currentName, $rebuiltName)) {
-            $this->setFieldValue($frame, 'name', $rebuiltName);
+        $name = $currentName;
+        if ($currentName === '') {
+            $model = $this->getFieldValue($frame, 'artBase') ?? $frame->getParent();
+            $rebuiltName = FrameIdentityFormatter::name(
+                $model instanceof Model ? $this->getFieldString($model, 'name') : '',
+                $mainColorCode,
+                $this->getFieldValue($frame, 'composedColors') ?: []
+            );
+            if ($this->shouldGenerateName($currentName, $rebuiltName)) {
+                $this->setFieldValue($frame, 'name', $rebuiltName);
+                $name = $rebuiltName;
+            }
         }
 
         $key = $this->buildUniqueKey($frame, $code, $name);
         if ($key !== '' && $this->normalizeString($frame->getKey()) !== $key) {
             $frame->setKey($key);
         }
-    }
-
-    /**
-     * @return list<string>
-     */
-    private function resolveColorCodes(Frame $frame, string $mainColorCode): array
-    {
-        $codes = [];
-        $seen = [];
-
-        foreach (($this->getFieldValue($frame, 'composedColors') ?: []) as $metadata) {
-            $color = $this->resolveMetadataColor($metadata);
-            if (!$color instanceof Color) {
-                continue;
-            }
-
-            $code = $this->normalizeString($color->getCode());
-            if ($code === '' || isset($seen[$code])) {
-                continue;
-            }
-
-            $codes[] = $code;
-            $seen[$code] = true;
-        }
-
-        if ($codes !== []) {
-            return $codes;
-        }
-
-        return $mainColorCode !== '' ? [$mainColorCode] : [];
-    }
-
-    private function resolveMetadataColor(mixed $metadata): ?Color
-    {
-        if ($metadata instanceof ObjectMetadata) {
-            $color = $metadata->getObject();
-
-            return $color instanceof Color ? $color : null;
-        }
-
-        return $metadata instanceof Color ? $metadata : null;
     }
 
     private function resolveBaseFrameCode(Frame $frame, string $mainColorCode): string
@@ -105,15 +70,14 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
             return $currentCode;
         }
 
-        return $this->stripTrailingColorCodes($currentCode, [$mainColorCode]);
-    }
+        if ($currentCode === $mainColorCode) {
+            return '';
+        }
+        if (strlen($mainColorCode) < 3 && str_ends_with($currentCode, '-' . $mainColorCode)) {
+            return rtrim(substr($currentCode, 0, -strlen($mainColorCode) - 1));
+        }
 
-    /**
-     * @param list<string> $colorCodes
-     */
-    private function resolveBaseName(Frame $frame, array $colorCodes): string
-    {
-        return $this->stripTrailingColorCodes($this->getFieldString($frame, 'name'), $colorCodes);
+        return $this->stripTrailingColorCodes($currentCode, [$mainColorCode]);
     }
 
     private function buildUniqueKey(Frame $frame, string $code, string $name): string
@@ -164,14 +128,6 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
         }
 
         return $base;
-    }
-
-    /**
-     * @param list<string> $colorCodes
-     */
-    private function formatColorCodes(array $colorCodes): string
-    {
-        return implode(' + ', $colorCodes);
     }
 
     private function shouldGenerateName(string $currentName, string $rebuiltName): bool
@@ -227,16 +183,6 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
             } catch (\Throwable) {
             }
         }
-    }
-
-    /**
-     * @param list<string> $parts
-     */
-    private function joinNonEmpty(array $parts, string $separator): string
-    {
-        $parts = array_values(array_filter(array_map($this->normalizeString(...), $parts), static fn (string $part): bool => $part !== ''));
-
-        return implode($separator, $parts);
     }
 
     private function normalizeString(mixed $value): string
