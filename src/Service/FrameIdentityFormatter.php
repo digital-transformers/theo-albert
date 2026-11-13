@@ -14,7 +14,7 @@ final class FrameIdentityFormatter
             return $base . $mainColor;
         }
 
-        return $base . (strlen($mainColor) < 3 ? '-' : ' ') . $mainColor;
+        return $base . (strlen($mainColor) < 3 ? ' -' : ' ') . $mainColor;
     }
 
     public static function name(string $modelName, string $mainColor, array $colors): string

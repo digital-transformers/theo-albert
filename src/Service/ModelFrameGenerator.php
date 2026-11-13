@@ -61,8 +61,10 @@ final class ModelFrameGenerator
             }
 
             $legacyCode = $this->joinNonEmpty([$baseFrameCode, $mainColorCode], ' ');
+            $compactCode = $baseFrameCode !== '' && strlen($mainColorCode) < 3 ? $baseFrameCode . '-' . $mainColorCode : $code;
             if ($this->findExistingChildFrame($model, $code) instanceof Frame
                 || ($legacyCode !== $code && $this->findExistingChildFrame($model, $legacyCode) instanceof Frame)
+                || ($compactCode !== $code && $this->findExistingChildFrame($model, $compactCode) instanceof Frame)
             ) {
                 $skipped[] = [
                     'code' => $code,

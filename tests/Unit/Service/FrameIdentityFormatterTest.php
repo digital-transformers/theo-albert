@@ -12,8 +12,8 @@ final class FrameIdentityFormatterTest extends Unit
 {
     public function testFrameCodeUsesRawMainColor(): void
     {
-        self::assertSame('BALL-5', FrameIdentityFormatter::code('BALL', '5'));
-        self::assertSame('BALL-36', FrameIdentityFormatter::code('BALL', '36'));
+        self::assertSame('BALL -5', FrameIdentityFormatter::code('BALL', '5'));
+        self::assertSame('BALL -36', FrameIdentityFormatter::code('BALL', '36'));
         self::assertSame('APRE 304', FrameIdentityFormatter::code('APRE', '304'));
     }
 
