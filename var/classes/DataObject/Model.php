@@ -49,7 +49,7 @@
  * - totalTempleLength [numeric]
  * - templeTipRef [input]
  * - templeTipSupplier [manyToManyObjectRelation]
- * - templeTipColor [select]
+ * - templeTipColor [input]
  * - templeTipColorRelation [manyToManyObjectRelation]
  * - templeTipMaterial [input]
  * - templeTipSurface [input]

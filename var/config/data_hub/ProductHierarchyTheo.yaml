@@ -504,7 +504,7 @@ pimcore_data_hub:
                                     attributes:
                                         attribute: templeTipColor
                                         label: 'Temple Tip Color'
-                                        dataType: select
+                                        dataType: input
                                     isOperator: false
                                 -
                                     attributes:
@@ -2142,7 +2142,7 @@ pimcore_data_hub:
                                     attributes:
                                         attribute: templeTipColor
                                         label: 'Temple Tip Color'
-                                        dataType: select
+                                        dataType: input
                                     isOperator: false
                                 -
                                     attributes:

@@ -49,7 +49,7 @@
  * - totalTempleLength [numeric]
  * - templeTipRef [input]
  * - templeTipSupplier [manyToManyObjectRelation]
- * - templeTipColor [select]
+ * - templeTipColor [input]
  * - templeTipColorRelation [manyToManyObjectRelation]
  * - templeTipMaterial [input]
  * - templeTipSurface [input]
@@ -1833,7 +1833,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                      'height' => '',
                   )),
                   3 => 
-                  \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
+                  \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                      'name' => 'templeTipColor',
                      'title' => 'Temple Tip Color',
                      'tooltip' => '',
@@ -1853,13 +1853,12 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                     ),
                      'defaultValue' => NULL,
                      'columnLength' => 190,
-                     'dynamicOptions' => false,
-                     'enforceValidation' => false,
+                     'regex' => '',
+                     'regexFlags' => [],
+                     'unique' => false,
+                     'showCharCount' => false,
                      'defaultValueGenerator' => '',
                      'width' => '',
-                     'optionsProviderType' => 'class',
-                     'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\ColorOptionsProvider',
-                     'optionsProviderData' => '',
                   )),
                   4 => 
                   \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToManyObjectRelation::__set_state(array(
