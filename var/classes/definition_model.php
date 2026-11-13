@@ -1874,7 +1874,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                      'fieldtype' => '',
                      'relationType' => true,
                      'invisible' => true,
-                     'visibleGridView' => true,
+                     'visibleGridView' => false,
                      'visibleSearch' => false,
                      'blockedVarsForExport' => 
                     array (

@@ -508,12 +508,6 @@ pimcore_data_hub:
                                     isOperator: false
                                 -
                                     attributes:
-                                        attribute: templeTipColorRelation
-                                        label: 'Temple Tip Color Relation'
-                                        dataType: manyToManyObjectRelation
-                                    isOperator: false
-                                -
-                                    attributes:
                                         attribute: templeTipMaterial
                                         label: 'Temple Tip Material'
                                         dataType: input
@@ -2143,12 +2137,6 @@ pimcore_data_hub:
                                         attribute: templeTipColor
                                         label: 'Temple Tip Color'
                                         dataType: input
-                                    isOperator: false
-                                -
-                                    attributes:
-                                        attribute: templeTipColorRelation
-                                        label: 'Temple Tip Color Relation'
-                                        dataType: manyToManyObjectRelation
                                     isOperator: false
                                 -
                                     attributes:
