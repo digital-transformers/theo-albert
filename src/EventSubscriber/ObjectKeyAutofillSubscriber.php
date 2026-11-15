@@ -38,7 +38,12 @@ final class ObjectKeyAutofillSubscriber implements EventSubscriberInterface
             return;
         }
 
-        match (strtolower((string) $object->getClassName())) {
+        $class = strtolower((string) $object->getClassName());
+        if ($class === 'frame' && !$autofillFromKey) {
+            return;
+        }
+
+        match ($class) {
             'family', 'model' => $this->normalizeFamilyOrModel($object, $key, $autofillFromKey),
             'frame' => $this->setIfEmpty($object, 'Code', $key),
             default => null,

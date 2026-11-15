@@ -17,7 +17,6 @@ final class FrameNameFromComposedColorsSubscriber implements EventSubscriberInte
     {
         return [
             DataObjectEvents::PRE_ADD => ['onPreSave', -20],
-            DataObjectEvents::PRE_UPDATE => ['onPreSave', -20],
         ];
     }
 

@@ -5,9 +5,15 @@ namespace App\Tests\Unit\EventSubscriber;
 
 use App\EventSubscriber\FrameNameFromComposedColorsSubscriber;
 use Codeception\Test\Unit;
+use Pimcore\Event\DataObjectEvents;
 
 final class FrameNameFromComposedColorsSubscriberTest extends Unit
 {
+    public function testFormattingOnlyRunsOnCreation(): void
+    {
+        self::assertSame([DataObjectEvents::PRE_ADD], array_keys(FrameNameFromComposedColorsSubscriber::getSubscribedEvents()));
+    }
+
     public function testStripTrailingColorCodesHandlesPreviousPlusSeparatedOrder(): void
     {
         $subscriber = new FrameNameFromComposedColorsSubscriber();
