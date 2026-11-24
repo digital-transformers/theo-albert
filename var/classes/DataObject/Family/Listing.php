@@ -223,6 +223,78 @@ public function filterByDownloadableAssets ($data, $operator = '='): static
 }
 
 /**
+* Filter by line (Line)
+* @param string|int|float|array|Model\Element\ElementInterface $data  comparison data, can be scalar or array (if operator is e.g. "IN (?)")
+* @param string $operator  SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
+* @return $this
+*/
+public function filterByLine ($data, $operator = '='): static
+{
+	$this->getClass()->getFieldDefinition("line")->addListingFilter($this, $data, $operator);
+	return $this;
+}
+
+/**
+* Filter by lineRelation (Line Relation)
+* @param mixed $data
+* @param string $operator SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
+* @return $this
+*/
+public function filterByLineRelation ($data, $operator = '='): static
+{
+	$this->getClass()->getFieldDefinition("lineRelation")->addListingFilter($this, $data, $operator);
+	return $this;
+}
+
+/**
+* Filter by boldnessBar (Boldness Bar)
+* @param string|int|float|array|Model\Element\ElementInterface $data  comparison data, can be scalar or array (if operator is e.g. "IN (?)")
+* @param string $operator  SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
+* @return $this
+*/
+public function filterByBoldnessBar ($data, $operator = '='): static
+{
+	$this->getClass()->getFieldDefinition("boldnessBar")->addListingFilter($this, $data, $operator);
+	return $this;
+}
+
+/**
+* Filter by boldnessBarRelation (Boldness Bar Relation)
+* @param mixed $data
+* @param string $operator SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
+* @return $this
+*/
+public function filterByBoldnessBarRelation ($data, $operator = '='): static
+{
+	$this->getClass()->getFieldDefinition("boldnessBarRelation")->addListingFilter($this, $data, $operator);
+	return $this;
+}
+
+/**
+* Filter by exclusivityIndex (Exclusivity Index)
+* @param string|int|float|array|Model\Element\ElementInterface $data  comparison data, can be scalar or array (if operator is e.g. "IN (?)")
+* @param string $operator  SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
+* @return $this
+*/
+public function filterByExclusivityIndex ($data, $operator = '='): static
+{
+	$this->getClass()->getFieldDefinition("exclusivityIndex")->addListingFilter($this, $data, $operator);
+	return $this;
+}
+
+/**
+* Filter by exclusivityIndexRelation (Exclusivity Index Relation)
+* @param mixed $data
+* @param string $operator SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"
+* @return $this
+*/
+public function filterByExclusivityIndexRelation ($data, $operator = '='): static
+{
+	$this->getClass()->getFieldDefinition("exclusivityIndexRelation")->addListingFilter($this, $data, $operator);
+	return $this;
+}
+
+/**
 * Filter by basePrice (Base Price)
 * @param string|int|float|array|Model\Element\ElementInterface $data  comparison data, can be scalar or array (if operator is e.g. "IN (?)")
 * @param string $operator  SQL comparison operator, e.g. =, <, >= etc. You can use "?" as placeholder, e.g. "IN (?)"

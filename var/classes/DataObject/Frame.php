@@ -24,6 +24,12 @@
  * - sapActive [checkbox]
  * - isNew [checkbox]
  * - ecommerceDescription [textarea]
+ * - line [select]
+ * - lineRelation [manyToOneRelation]
+ * - boldnessBar [select]
+ * - boldnessBarRelation [manyToOneRelation]
+ * - exclusivityIndex [select]
+ * - exclusivityIndexRelation [manyToOneRelation]
  * - artBase [manyToOneRelation]
  * - seriesCode [input]
  * - ecomFileName [input]
@@ -88,6 +94,12 @@ use Pimcore\Model\DataObject\PreGetValueHookInterface;
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getBySapActive(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByIsNew(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByEcommerceDescription(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByLine(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByLineRelation(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByBoldnessBar(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByBoldnessBarRelation(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByExclusivityIndex(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByExclusivityIndexRelation(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByArtBase(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getBySeriesCode(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Frame\Listing|\Pimcore\Model\DataObject\Frame|null getByEcomFileName(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
@@ -141,6 +153,12 @@ public const FIELD_COMBI_COLOR = 'combiColor';
 public const FIELD_SAP_ACTIVE = 'sapActive';
 public const FIELD_IS_NEW = 'isNew';
 public const FIELD_ECOMMERCE_DESCRIPTION = 'ecommerceDescription';
+public const FIELD_LINE = 'line';
+public const FIELD_LINE_RELATION = 'lineRelation';
+public const FIELD_BOLDNESS_BAR = 'boldnessBar';
+public const FIELD_BOLDNESS_BAR_RELATION = 'boldnessBarRelation';
+public const FIELD_EXCLUSIVITY_INDEX = 'exclusivityIndex';
+public const FIELD_EXCLUSIVITY_INDEX_RELATION = 'exclusivityIndexRelation';
 public const FIELD_ART_BASE = 'artBase';
 public const FIELD_SERIES_CODE = 'seriesCode';
 public const FIELD_ECOM_FILE_NAME = 'ecomFileName';
@@ -198,6 +216,12 @@ protected $combiColor;
 protected $sapActive;
 protected $isNew;
 protected $ecommerceDescription;
+protected $line;
+protected $lineRelation;
+protected $boldnessBar;
+protected $boldnessBarRelation;
+protected $exclusivityIndex;
+protected $exclusivityIndexRelation;
 protected $artBase;
 protected $seriesCode;
 protected $ecomFileName;
@@ -982,6 +1006,243 @@ public function setEcommerceDescription(?string $ecommerceDescription): static
 
 	$this->ecommerceDescription = $ecommerceDescription;
 
+	return $this;
+}
+
+/**
+* Get line - Line
+* @return string|null
+*/
+public function getLine(): ?string
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("line");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->line;
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set line - Line
+* @param string|null $line
+* @return $this
+*/
+public function setLine(?string $line): static
+{
+	$this->markFieldDirty("line", true);
+
+	$this->line = $line;
+
+	return $this;
+}
+
+/**
+* Get lineRelation - Line Relation
+* @return \Pimcore\Model\DataObject\Line|null
+*/
+public function getLineRelation(): ?\Pimcore\Model\Element\AbstractElement
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("lineRelation");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->getClass()->getFieldDefinition("lineRelation")->preGetData($this);
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set lineRelation - Line Relation
+* @param \Pimcore\Model\DataObject\Line|null $lineRelation
+* @return $this
+*/
+public function setLineRelation(?\Pimcore\Model\Element\AbstractElement $lineRelation): static
+{
+	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation $fd */
+	$fd = $this->getClass()->getFieldDefinition("lineRelation");
+	$hideUnpublished = \Pimcore\Model\DataObject\Concrete::getHideUnpublished();
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished(false);
+	$currentData = $this->getLineRelation();
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished($hideUnpublished);
+	$isEqual = $fd->isEqual($currentData, $lineRelation);
+	if (!$isEqual) {
+		$this->markFieldDirty("lineRelation", true);
+	}
+	$this->lineRelation = $fd->preSetData($this, $lineRelation);
+	return $this;
+}
+
+/**
+* Get boldnessBar - Boldness Bar
+* @return string|null
+*/
+public function getBoldnessBar(): ?string
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("boldnessBar");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->boldnessBar;
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set boldnessBar - Boldness Bar
+* @param string|null $boldnessBar
+* @return $this
+*/
+public function setBoldnessBar(?string $boldnessBar): static
+{
+	$this->markFieldDirty("boldnessBar", true);
+
+	$this->boldnessBar = $boldnessBar;
+
+	return $this;
+}
+
+/**
+* Get boldnessBarRelation - Boldness Bar Relation
+* @return \Pimcore\Model\DataObject\BoldnessBar|null
+*/
+public function getBoldnessBarRelation(): ?\Pimcore\Model\Element\AbstractElement
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("boldnessBarRelation");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->getClass()->getFieldDefinition("boldnessBarRelation")->preGetData($this);
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set boldnessBarRelation - Boldness Bar Relation
+* @param \Pimcore\Model\DataObject\BoldnessBar|null $boldnessBarRelation
+* @return $this
+*/
+public function setBoldnessBarRelation(?\Pimcore\Model\Element\AbstractElement $boldnessBarRelation): static
+{
+	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation $fd */
+	$fd = $this->getClass()->getFieldDefinition("boldnessBarRelation");
+	$hideUnpublished = \Pimcore\Model\DataObject\Concrete::getHideUnpublished();
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished(false);
+	$currentData = $this->getBoldnessBarRelation();
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished($hideUnpublished);
+	$isEqual = $fd->isEqual($currentData, $boldnessBarRelation);
+	if (!$isEqual) {
+		$this->markFieldDirty("boldnessBarRelation", true);
+	}
+	$this->boldnessBarRelation = $fd->preSetData($this, $boldnessBarRelation);
+	return $this;
+}
+
+/**
+* Get exclusivityIndex - Exclusivity Index
+* @return string|null
+*/
+public function getExclusivityIndex(): ?string
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("exclusivityIndex");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->exclusivityIndex;
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set exclusivityIndex - Exclusivity Index
+* @param string|null $exclusivityIndex
+* @return $this
+*/
+public function setExclusivityIndex(?string $exclusivityIndex): static
+{
+	$this->markFieldDirty("exclusivityIndex", true);
+
+	$this->exclusivityIndex = $exclusivityIndex;
+
+	return $this;
+}
+
+/**
+* Get exclusivityIndexRelation - Exclusivity Index Relation
+* @return \Pimcore\Model\DataObject\ExclusivityIndex|null
+*/
+public function getExclusivityIndexRelation(): ?\Pimcore\Model\Element\AbstractElement
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("exclusivityIndexRelation");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->getClass()->getFieldDefinition("exclusivityIndexRelation")->preGetData($this);
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set exclusivityIndexRelation - Exclusivity Index Relation
+* @param \Pimcore\Model\DataObject\ExclusivityIndex|null $exclusivityIndexRelation
+* @return $this
+*/
+public function setExclusivityIndexRelation(?\Pimcore\Model\Element\AbstractElement $exclusivityIndexRelation): static
+{
+	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation $fd */
+	$fd = $this->getClass()->getFieldDefinition("exclusivityIndexRelation");
+	$hideUnpublished = \Pimcore\Model\DataObject\Concrete::getHideUnpublished();
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished(false);
+	$currentData = $this->getExclusivityIndexRelation();
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished($hideUnpublished);
+	$isEqual = $fd->isEqual($currentData, $exclusivityIndexRelation);
+	if (!$isEqual) {
+		$this->markFieldDirty("exclusivityIndexRelation", true);
+	}
+	$this->exclusivityIndexRelation = $fd->preSetData($this, $exclusivityIndexRelation);
 	return $this;
 }
 

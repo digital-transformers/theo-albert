@@ -774,6 +774,48 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => '',
                  'height' => '',
               )),
+              17 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
+                 'name' => 'line',
+                 'title' => 'Line',
+                 'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\ProductClassificationOptionsProvider',
+              )),
+              18 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
+                 'name' => 'lineRelation',
+                 'title' => 'Line Relation',
+                 'invisible' => true,
+                 'objectsAllowed' => true,
+                 'classes' => array(array('classes' => 'line')),
+              )),
+              19 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
+                 'name' => 'boldnessBar',
+                 'title' => 'Boldness Bar',
+                 'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\ProductClassificationOptionsProvider',
+              )),
+              20 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
+                 'name' => 'boldnessBarRelation',
+                 'title' => 'Boldness Bar Relation',
+                 'invisible' => true,
+                 'objectsAllowed' => true,
+                 'classes' => array(array('classes' => 'boldnessBar')),
+              )),
+              21 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
+                 'name' => 'exclusivityIndex',
+                 'title' => 'Exclusivity Index',
+                 'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\ProductClassificationOptionsProvider',
+              )),
+              22 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
+                 'name' => 'exclusivityIndexRelation',
+                 'title' => 'Exclusivity Index Relation',
+                 'invisible' => true,
+                 'objectsAllowed' => true,
+                 'classes' => array(array('classes' => 'exclusivityIndex')),
+              )),
             ),
              'locked' => false,
              'blockedVarsForExport' => 

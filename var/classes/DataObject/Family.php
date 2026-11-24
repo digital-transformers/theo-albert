@@ -22,6 +22,12 @@
  * - posMaterialProducts [manyToManyObjectRelation]
  * - servicePartProducts [manyToManyObjectRelation]
  * - downloadableAssets [manyToManyObjectRelation]
+ * - line [select]
+ * - lineRelation [manyToOneRelation]
+ * - boldnessBar [select]
+ * - boldnessBarRelation [manyToOneRelation]
+ * - exclusivityIndex [select]
+ * - exclusivityIndexRelation [manyToOneRelation]
  * - basePrice [numeric]
  * - pricing [fieldcollections]
  * - imageGallery [imageGallery]
@@ -65,6 +71,12 @@ use Pimcore\Model\DataObject\PreGetValueHookInterface;
 * @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByPosMaterialProducts(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByServicePartProducts(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByDownloadableAssets(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByLine(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByLineRelation(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByBoldnessBar(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByBoldnessBarRelation(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByExclusivityIndex(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
+* @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByExclusivityIndexRelation(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByBasePrice(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByAttachments(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
 * @method static \Pimcore\Model\DataObject\Family\Listing|\Pimcore\Model\DataObject\Family|null getByPublicationChannels(mixed $value, ?int $limit = null, int $offset = 0, ?array $objectTypes = null)
@@ -97,6 +109,12 @@ public const FIELD_LAUNCH_YEAR = 'launchYear';
 public const FIELD_POS_MATERIAL_PRODUCTS = 'posMaterialProducts';
 public const FIELD_SERVICE_PART_PRODUCTS = 'servicePartProducts';
 public const FIELD_DOWNLOADABLE_ASSETS = 'downloadableAssets';
+public const FIELD_LINE = 'line';
+public const FIELD_LINE_RELATION = 'lineRelation';
+public const FIELD_BOLDNESS_BAR = 'boldnessBar';
+public const FIELD_BOLDNESS_BAR_RELATION = 'boldnessBarRelation';
+public const FIELD_EXCLUSIVITY_INDEX = 'exclusivityIndex';
+public const FIELD_EXCLUSIVITY_INDEX_RELATION = 'exclusivityIndexRelation';
 public const FIELD_BASE_PRICE = 'basePrice';
 public const FIELD_PRICING = 'pricing';
 public const FIELD_IMAGE_GALLERY = 'imageGallery';
@@ -133,6 +151,12 @@ protected $launchYear;
 protected $posMaterialProducts;
 protected $servicePartProducts;
 protected $downloadableAssets;
+protected $line;
+protected $lineRelation;
+protected $boldnessBar;
+protected $boldnessBarRelation;
+protected $exclusivityIndex;
+protected $exclusivityIndexRelation;
 protected $basePrice;
 protected $pricing;
 protected $imageGallery;
@@ -959,6 +983,297 @@ public function setDownloadableAssets(?array $downloadableAssets): static
 		$this->markFieldDirty("downloadableAssets", true);
 	}
 	$this->downloadableAssets = $fd->preSetData($this, $downloadableAssets);
+	return $this;
+}
+
+/**
+* Get line - Line
+* @return string|null
+*/
+public function getLine(): ?string
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("line");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->line;
+
+	if (\Pimcore\Model\DataObject::doGetInheritedValues() && $this->getClass()->getFieldDefinition("line")->isEmpty($data)) {
+		try {
+			return $this->getValueFromParent("line");
+		} catch (InheritanceParentNotFoundException $e) {
+			// no data from parent available, continue ...
+		}
+	}
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set line - Line
+* @param string|null $line
+* @return $this
+*/
+public function setLine(?string $line): static
+{
+	$this->markFieldDirty("line", true);
+
+	$this->line = $line;
+
+	return $this;
+}
+
+/**
+* Get lineRelation - Line Relation
+* @return \Pimcore\Model\DataObject\Line|null
+*/
+public function getLineRelation(): ?\Pimcore\Model\Element\AbstractElement
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("lineRelation");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->getClass()->getFieldDefinition("lineRelation")->preGetData($this);
+
+	if (\Pimcore\Model\DataObject::doGetInheritedValues() && $this->getClass()->getFieldDefinition("lineRelation")->isEmpty($data)) {
+		try {
+			return $this->getValueFromParent("lineRelation");
+		} catch (InheritanceParentNotFoundException $e) {
+			// no data from parent available, continue ...
+		}
+	}
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set lineRelation - Line Relation
+* @param \Pimcore\Model\DataObject\Line|null $lineRelation
+* @return $this
+*/
+public function setLineRelation(?\Pimcore\Model\Element\AbstractElement $lineRelation): static
+{
+	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation $fd */
+	$fd = $this->getClass()->getFieldDefinition("lineRelation");
+	$hideUnpublished = \Pimcore\Model\DataObject\Concrete::getHideUnpublished();
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished(false);
+	$currentData = \Pimcore\Model\DataObject\Service::useInheritedValues(false, function() {
+		return $this->getLineRelation();
+	});
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished($hideUnpublished);
+	$isEqual = $fd->isEqual($currentData, $lineRelation);
+	if (!$isEqual) {
+		$this->markFieldDirty("lineRelation", true);
+	}
+	$this->lineRelation = $fd->preSetData($this, $lineRelation);
+	return $this;
+}
+
+/**
+* Get boldnessBar - Boldness Bar
+* @return string|null
+*/
+public function getBoldnessBar(): ?string
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("boldnessBar");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->boldnessBar;
+
+	if (\Pimcore\Model\DataObject::doGetInheritedValues() && $this->getClass()->getFieldDefinition("boldnessBar")->isEmpty($data)) {
+		try {
+			return $this->getValueFromParent("boldnessBar");
+		} catch (InheritanceParentNotFoundException $e) {
+			// no data from parent available, continue ...
+		}
+	}
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set boldnessBar - Boldness Bar
+* @param string|null $boldnessBar
+* @return $this
+*/
+public function setBoldnessBar(?string $boldnessBar): static
+{
+	$this->markFieldDirty("boldnessBar", true);
+
+	$this->boldnessBar = $boldnessBar;
+
+	return $this;
+}
+
+/**
+* Get boldnessBarRelation - Boldness Bar Relation
+* @return \Pimcore\Model\DataObject\BoldnessBar|null
+*/
+public function getBoldnessBarRelation(): ?\Pimcore\Model\Element\AbstractElement
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("boldnessBarRelation");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->getClass()->getFieldDefinition("boldnessBarRelation")->preGetData($this);
+
+	if (\Pimcore\Model\DataObject::doGetInheritedValues() && $this->getClass()->getFieldDefinition("boldnessBarRelation")->isEmpty($data)) {
+		try {
+			return $this->getValueFromParent("boldnessBarRelation");
+		} catch (InheritanceParentNotFoundException $e) {
+			// no data from parent available, continue ...
+		}
+	}
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set boldnessBarRelation - Boldness Bar Relation
+* @param \Pimcore\Model\DataObject\BoldnessBar|null $boldnessBarRelation
+* @return $this
+*/
+public function setBoldnessBarRelation(?\Pimcore\Model\Element\AbstractElement $boldnessBarRelation): static
+{
+	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation $fd */
+	$fd = $this->getClass()->getFieldDefinition("boldnessBarRelation");
+	$hideUnpublished = \Pimcore\Model\DataObject\Concrete::getHideUnpublished();
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished(false);
+	$currentData = \Pimcore\Model\DataObject\Service::useInheritedValues(false, function() {
+		return $this->getBoldnessBarRelation();
+	});
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished($hideUnpublished);
+	$isEqual = $fd->isEqual($currentData, $boldnessBarRelation);
+	if (!$isEqual) {
+		$this->markFieldDirty("boldnessBarRelation", true);
+	}
+	$this->boldnessBarRelation = $fd->preSetData($this, $boldnessBarRelation);
+	return $this;
+}
+
+/**
+* Get exclusivityIndex - Exclusivity Index
+* @return string|null
+*/
+public function getExclusivityIndex(): ?string
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("exclusivityIndex");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->exclusivityIndex;
+
+	if (\Pimcore\Model\DataObject::doGetInheritedValues() && $this->getClass()->getFieldDefinition("exclusivityIndex")->isEmpty($data)) {
+		try {
+			return $this->getValueFromParent("exclusivityIndex");
+		} catch (InheritanceParentNotFoundException $e) {
+			// no data from parent available, continue ...
+		}
+	}
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set exclusivityIndex - Exclusivity Index
+* @param string|null $exclusivityIndex
+* @return $this
+*/
+public function setExclusivityIndex(?string $exclusivityIndex): static
+{
+	$this->markFieldDirty("exclusivityIndex", true);
+
+	$this->exclusivityIndex = $exclusivityIndex;
+
+	return $this;
+}
+
+/**
+* Get exclusivityIndexRelation - Exclusivity Index Relation
+* @return \Pimcore\Model\DataObject\ExclusivityIndex|null
+*/
+public function getExclusivityIndexRelation(): ?\Pimcore\Model\Element\AbstractElement
+{
+	if ($this instanceof PreGetValueHookInterface && !\Pimcore::inAdmin()) {
+		$preValue = $this->preGetValue("exclusivityIndexRelation");
+		if ($preValue !== null) {
+			return $preValue;
+		}
+	}
+
+	$data = $this->getClass()->getFieldDefinition("exclusivityIndexRelation")->preGetData($this);
+
+	if (\Pimcore\Model\DataObject::doGetInheritedValues() && $this->getClass()->getFieldDefinition("exclusivityIndexRelation")->isEmpty($data)) {
+		try {
+			return $this->getValueFromParent("exclusivityIndexRelation");
+		} catch (InheritanceParentNotFoundException $e) {
+			// no data from parent available, continue ...
+		}
+	}
+
+	if ($data instanceof \Pimcore\Model\DataObject\Data\EncryptedField) {
+		return $data->getPlain();
+	}
+
+	return $data;
+}
+
+/**
+* Set exclusivityIndexRelation - Exclusivity Index Relation
+* @param \Pimcore\Model\DataObject\ExclusivityIndex|null $exclusivityIndexRelation
+* @return $this
+*/
+public function setExclusivityIndexRelation(?\Pimcore\Model\Element\AbstractElement $exclusivityIndexRelation): static
+{
+	/** @var \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation $fd */
+	$fd = $this->getClass()->getFieldDefinition("exclusivityIndexRelation");
+	$hideUnpublished = \Pimcore\Model\DataObject\Concrete::getHideUnpublished();
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished(false);
+	$currentData = \Pimcore\Model\DataObject\Service::useInheritedValues(false, function() {
+		return $this->getExclusivityIndexRelation();
+	});
+	\Pimcore\Model\DataObject\Concrete::setHideUnpublished($hideUnpublished);
+	$isEqual = $fd->isEqual($currentData, $exclusivityIndexRelation);
+	if (!$isEqual) {
+		$this->markFieldDirty("exclusivityIndexRelation", true);
+	}
+	$this->exclusivityIndexRelation = $fd->preSetData($this, $exclusivityIndexRelation);
 	return $this;
 }
 

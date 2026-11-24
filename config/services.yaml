@@ -95,6 +95,12 @@ services:
       arguments:
         $importToken: '%env(PRESTASHOP_IMPORT_TOKEN)%'
 
+    App\EventSubscriber\ProductClassificationSubscriber: ~
+
+    App\Model\DataObject\ClassDefinition\Data\ProductClassificationOptionsProvider:
+      tags:
+        - { name: pimcore.dataobject.class_definition.dynamic_options_provider }
+
     App\Model\DataObject\ClassDefinition\Data\ColorOptionsProvider:
       tags:
         - { name: pimcore.dataobject.class_definition.dynamic_options_provider }
