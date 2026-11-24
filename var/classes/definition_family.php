@@ -462,14 +462,14 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                     'width' => NULL,
                     'value' => 'Color;Acetate;Metal;Parts;Finishing;Oper',
                   ),
-                  1 =>
+                  1 => 
                   array (
                     'type' => 'number',
                     'position' => 2,
                     'key' => 'leadTime',
                     'label' => 'Lead Time',
                   ),
-                  2 =>
+                  2 => 
                   array (
                     'type' => 'text',
                     'position' => 3,

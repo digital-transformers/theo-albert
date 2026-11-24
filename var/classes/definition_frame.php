@@ -342,28 +342,28 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                     'key' => 'relevant',
                     'label' => 'Relevant',
                   ),
-                  2 =>
+                  2 => 
                   array (
                     'type' => 'text',
                     'position' => 3,
                     'key' => 'sapColorCode',
                     'label' => 'SAP Color Code',
                   ),
-                  3 =>
+                  3 => 
                   array (
                     'type' => 'number',
                     'position' => 4,
                     'key' => 'orderNr',
                     'label' => 'Order',
                   ),
-                  4 =>
+                  4 => 
                   array (
                     'type' => 'text',
                     'position' => 5,
                     'key' => 'comment',
                     'label' => 'Comment',
                   ),
-                  5 =>
+                  5 => 
                   array (
                     'type' => 'number',
                     'position' => 6,
@@ -595,14 +595,14 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                     'width' => NULL,
                     'value' => 'Color;Acetate;Metal;Parts;Finishing;Oper',
                   ),
-                  1 =>
+                  1 => 
                   array (
                     'type' => 'number',
                     'position' => 2,
                     'key' => 'leadTime',
                     'label' => 'Lead Time',
                   ),
-                  2 =>
+                  2 => 
                   array (
                     'type' => 'text',
                     'position' => 3,
@@ -681,7 +681,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'optionsProviderClass' => '',
                  'optionsProviderData' => '',
               )),
-              12 =>
+              12 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'sapItemCode',
                  'title' => 'SAP Item Code',
@@ -697,13 +697,13 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'invisible' => false,
                  'visibleGridView' => true,
                  'visibleSearch' => true,
-                 'blockedVarsForExport' =>
+                 'blockedVarsForExport' => 
                 array (
                 ),
                  'defaultValue' => NULL,
                  'columnLength' => 190,
                  'regex' => '',
-                 'regexFlags' =>
+                 'regexFlags' => 
                 array (
                 ),
                  'unique' => false,
@@ -711,7 +711,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => NULL,
                  'defaultValueGenerator' => '',
               )),
-              13 =>
+              13 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'sapItemName',
                  'title' => 'SAP Item Name',
@@ -727,13 +727,13 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'invisible' => false,
                  'visibleGridView' => true,
                  'visibleSearch' => true,
-                 'blockedVarsForExport' =>
+                 'blockedVarsForExport' => 
                 array (
                 ),
                  'defaultValue' => NULL,
                  'columnLength' => 190,
                  'regex' => '',
-                 'regexFlags' =>
+                 'regexFlags' => 
                 array (
                 ),
                  'unique' => false,
@@ -741,7 +741,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => NULL,
                  'defaultValueGenerator' => '',
               )),
-              14 =>
+              14 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
                  'name' => 'sapFamily',
                  'title' => 'SAP Family',
@@ -757,13 +757,13 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'invisible' => false,
                  'visibleGridView' => true,
                  'visibleSearch' => true,
-                 'blockedVarsForExport' =>
+                 'blockedVarsForExport' => 
                 array (
                 ),
                  'defaultValue' => NULL,
                  'columnLength' => 190,
                  'regex' => '',
-                 'regexFlags' =>
+                 'regexFlags' => 
                 array (
                 ),
                  'unique' => false,
@@ -771,7 +771,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'width' => NULL,
                  'defaultValueGenerator' => '',
               )),
-              15 =>
+              15 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
                  'name' => 'combiColor',
                  'title' => 'Combi Color',
@@ -787,12 +787,12 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'invisible' => false,
                  'visibleGridView' => true,
                  'visibleSearch' => true,
-                 'blockedVarsForExport' =>
+                 'blockedVarsForExport' => 
                 array (
                 ),
-                 'classes' =>
+                 'classes' => 
                 array (
-                  0 =>
+                  0 => 
                   array (
                     'classes' => 'color',
                   ),
@@ -803,16 +803,16 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'allowToClearRelation' => true,
                  'objectsAllowed' => true,
                  'assetsAllowed' => false,
-                 'assetTypes' =>
+                 'assetTypes' => 
                 array (
                 ),
                  'documentsAllowed' => false,
-                 'documentTypes' =>
+                 'documentTypes' => 
                 array (
                 ),
                  'width' => NULL,
               )),
-              16 =>
+              16 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Checkbox::__set_state(array(
                  'name' => 'sapActive',
                  'title' => 'SAP Active',
@@ -828,13 +828,13 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'invisible' => false,
                  'visibleGridView' => true,
                  'visibleSearch' => true,
-                 'blockedVarsForExport' =>
+                 'blockedVarsForExport' => 
                 array (
                 ),
                  'defaultValue' => 0,
                  'defaultValueGenerator' => '',
               )),
-              17 =>
+              17 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Checkbox::__set_state(array(
                  'name' => 'isNew',
                  'title' => 'Is New',
@@ -850,13 +850,13 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'invisible' => false,
                  'visibleGridView' => true,
                  'visibleSearch' => true,
-                 'blockedVarsForExport' =>
+                 'blockedVarsForExport' => 
                 array (
                 ),
                  'defaultValue' => 0,
                  'defaultValueGenerator' => '',
               )),
-              18 =>
+              18 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\Textarea::__set_state(array(
                  'name' => 'ecommerceDescription',
                  'title' => 'E-commerce Description',
@@ -872,7 +872,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'invisible' => false,
                  'visibleGridView' => true,
                  'visibleSearch' => true,
-                 'blockedVarsForExport' =>
+                 'blockedVarsForExport' => 
                 array (
                 ),
                  'maxLength' => NULL,

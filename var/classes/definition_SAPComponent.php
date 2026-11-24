@@ -318,17 +318,17 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 'key' => 'Other',
                 'value' => 'other',
               ),
-              4 =>
+              4 => 
               array (
                 'key' => 'Brut',
                 'value' => 'brut',
               ),
-              5 =>
+              5 => 
               array (
                 'key' => 'Acetate',
                 'value' => 'acetate',
               ),
-              6 =>
+              6 => 
               array (
                 'key' => 'Oper',
                 'value' => 'oper',
@@ -536,7 +536,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
-          12 =>
+          12 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
              'name' => 'process',
              'title' => 'Process',
@@ -552,12 +552,12 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'invisible' => false,
              'visibleGridView' => false,
              'visibleSearch' => false,
-             'blockedVarsForExport' =>
+             'blockedVarsForExport' => 
             array (
             ),
-             'classes' =>
+             'classes' => 
             array (
-              0 =>
+              0 => 
               array (
                 'classes' => 'process',
               ),
@@ -569,16 +569,16 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'allowToClearRelation' => true,
              'objectsAllowed' => true,
              'assetsAllowed' => false,
-             'assetTypes' =>
+             'assetTypes' => 
             array (
             ),
              'documentsAllowed' => false,
-             'documentTypes' =>
+             'documentTypes' => 
             array (
             ),
              'width' => '',
           )),
-          13 =>
+          13 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
              'name' => 'suppliers',
              'title' => 'Supplier and Process',
@@ -594,10 +594,10 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'invisible' => false,
              'visibleGridView' => true,
              'visibleSearch' => true,
-             'blockedVarsForExport' =>
+             'blockedVarsForExport' => 
             array (
             ),
-             'classes' =>
+             'classes' => 
             array (
             ),
              'displayMode' => NULL,
@@ -608,15 +608,15 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'allowToClearRelation' => true,
              'optimizedAdminLoading' => false,
              'enableTextSelection' => false,
-             'visibleFieldDefinitions' =>
+             'visibleFieldDefinitions' => 
             array (
             ),
              'width' => NULL,
              'height' => NULL,
              'allowedClassId' => 'supplier',
-             'columns' =>
+             'columns' => 
             array (
-              0 =>
+              0 => 
               array (
                 'type' => 'multiselect',
                 'position' => 1,
@@ -624,14 +624,14 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 'label' => 'Process',
                 'value' => 'Color;Acetate;Metal;Parts;Finishing',
               ),
-              1 =>
+              1 => 
               array (
                 'type' => 'number',
                 'position' => 2,
                 'key' => 'leadTime',
                 'label' => 'Lead Time',
               ),
-              2 =>
+              2 => 
               array (
                 'type' => 'text',
                 'position' => 3,
@@ -639,7 +639,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 'label' => 'Work Item Group',
               ),
             ),
-             'columnKeys' =>
+             'columnKeys' => 
             array (
               0 => 'supplierType',
               1 => 'leadTime',
@@ -648,7 +648,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'enableBatchEdit' => false,
              'allowMultipleAssignments' => false,
           )),
-          14 =>
+          14 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
              'name' => 'quantity',
              'title' => 'Quantity',
@@ -664,7 +664,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'invisible' => false,
              'visibleGridView' => false,
              'visibleSearch' => false,
-             'blockedVarsForExport' =>
+             'blockedVarsForExport' => 
             array (
             ),
              'defaultValue' => 1,
@@ -733,7 +733,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
     ),
   ),
    'enableGridLocking' => false,
-   'deletedDataComponents' =>
+   'deletedDataComponents' => 
   array (
   ),
    'blockedVarsForExport' => 

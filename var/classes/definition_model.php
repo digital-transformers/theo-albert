@@ -658,14 +658,14 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                     'width' => NULL,
                     'value' => 'Color;Acetate;Metal;Parts;Finishing;Oper',
                   ),
-                  1 =>
+                  1 => 
                   array (
                     'type' => 'number',
                     'position' => 2,
                     'key' => 'leadTime',
                     'label' => 'Lead Time',
                   ),
-                  2 =>
+                  2 => 
                   array (
                     'type' => 'text',
                     'position' => 3,
@@ -682,7 +682,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'enableBatchEdit' => false,
                  'allowMultipleAssignments' => true,
               )),
-              13 =>
+              13 => 
               \Pimcore\Model\DataObject\ClassDefinition\Data\AdvancedManyToManyObjectRelation::__set_state(array(
                  'name' => 'components',
                  'title' => 'Default Components',
@@ -698,10 +698,10 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'invisible' => false,
                  'visibleGridView' => false,
                  'visibleSearch' => false,
-                 'blockedVarsForExport' =>
+                 'blockedVarsForExport' => 
                 array (
                 ),
-                 'classes' =>
+                 'classes' => 
                 array (
                 ),
                  'displayMode' => NULL,
@@ -712,16 +712,16 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'allowToClearRelation' => true,
                  'optimizedAdminLoading' => false,
                  'enableTextSelection' => false,
-                 'visibleFieldDefinitions' =>
+                 'visibleFieldDefinitions' => 
                 array (
                 ),
                  'width' => '',
                  'height' => '',
                  'allowedClassId' => 'SAPComponent',
-                 'columns' =>
+                 'columns' => 
                 array (
                 ),
-                 'columnKeys' =>
+                 'columnKeys' => 
                 array (
                 ),
                  'enableBatchEdit' => false,
