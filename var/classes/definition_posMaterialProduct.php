@@ -334,7 +334,49 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                 ),
                  'width' => '',
               )),
-              7 => 
+              7 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
+                 'name' => 'line',
+                 'title' => 'Line',
+                 'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\ProductClassificationOptionsProvider',
+              )),
+              8 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
+                 'name' => 'lineRelation',
+                 'title' => 'Line Relation',
+                 'invisible' => true,
+                 'objectsAllowed' => true,
+                 'classes' => array(array('classes' => 'line')),
+              )),
+              9 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
+                 'name' => 'boldnessBar',
+                 'title' => 'Boldness Bar',
+                 'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\ProductClassificationOptionsProvider',
+              )),
+              10 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
+                 'name' => 'boldnessBarRelation',
+                 'title' => 'Boldness Bar Relation',
+                 'invisible' => true,
+                 'objectsAllowed' => true,
+                 'classes' => array(array('classes' => 'boldnessBar')),
+              )),
+              11 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
+                 'name' => 'exclusivityIndex',
+                 'title' => 'Exclusivity Index',
+                 'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\ProductClassificationOptionsProvider',
+              )),
+              12 =>
+              \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
+                 'name' => 'exclusivityIndexRelation',
+                 'title' => 'Exclusivity Index Relation',
+                 'invisible' => true,
+                 'objectsAllowed' => true,
+                 'classes' => array(array('classes' => 'exclusivityIndex')),
+              )),
+              13 =>
               \Pimcore\Model\DataObject\ClassDefinition\Data\ReverseObjectRelation::__set_state(array(
                  'name' => 'linkedFamilies',
                  'title' => 'Linked Families',
@@ -374,7 +416,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'ownerFieldName' => 'posMaterialProducts',
                  'lazyLoading' => true,
               )),
-              8 => 
+              14 =>
               \Pimcore\Model\DataObject\ClassDefinition\Data\ReverseObjectRelation::__set_state(array(
                  'name' => 'linkedModels',
                  'title' => 'Linked Models',
@@ -414,7 +456,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'ownerFieldName' => 'posMaterialProducts',
                  'lazyLoading' => true,
               )),
-              9 => 
+              15 =>
               \Pimcore\Model\DataObject\ClassDefinition\Data\ReverseObjectRelation::__set_state(array(
                  'name' => 'linkedFrames',
                  'title' => 'Linked Frames',
@@ -453,48 +495,6 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'ownerClassId' => 'finishedProduct',
                  'ownerFieldName' => 'posMaterialProducts',
                  'lazyLoading' => true,
-              )),
-              10 =>
-              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
-                 'name' => 'line',
-                 'title' => 'Line',
-                 'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\ProductClassificationOptionsProvider',
-              )),
-              11 =>
-              \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
-                 'name' => 'lineRelation',
-                 'title' => 'Line Relation',
-                 'invisible' => true,
-                 'objectsAllowed' => true,
-                 'classes' => array(array('classes' => 'line')),
-              )),
-              12 =>
-              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
-                 'name' => 'boldnessBar',
-                 'title' => 'Boldness Bar',
-                 'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\ProductClassificationOptionsProvider',
-              )),
-              13 =>
-              \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
-                 'name' => 'boldnessBarRelation',
-                 'title' => 'Boldness Bar Relation',
-                 'invisible' => true,
-                 'objectsAllowed' => true,
-                 'classes' => array(array('classes' => 'boldnessBar')),
-              )),
-              14 =>
-              \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
-                 'name' => 'exclusivityIndex',
-                 'title' => 'Exclusivity Index',
-                 'optionsProviderClass' => 'App\\Model\\DataObject\\ClassDefinition\\Data\\ProductClassificationOptionsProvider',
-              )),
-              15 =>
-              \Pimcore\Model\DataObject\ClassDefinition\Data\ManyToOneRelation::__set_state(array(
-                 'name' => 'exclusivityIndexRelation',
-                 'title' => 'Exclusivity Index Relation',
-                 'invisible' => true,
-                 'objectsAllowed' => true,
-                 'classes' => array(array('classes' => 'exclusivityIndex')),
               )),
             ),
              'locked' => false,
